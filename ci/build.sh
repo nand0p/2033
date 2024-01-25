@@ -5,13 +5,15 @@
 # bash -ex ci/build.sh
 
 
-NAME=${git rev-parse --show-toplevel}
+NAME=$(basename "$PWD")
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7
 VERSION=$(cat version.txt)
 
-TAG="${REPO}/${NAME}:${VERSION}"
+
+TAG="${NAME}:${VERSION}"
+#TAG="${REPO}/${NAME}:${VERSION}"
 
 if [ -n ${VERSION} ]; then
   echo "building docker image ${NAME}:${VERSION}"

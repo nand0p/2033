@@ -4,8 +4,10 @@
 NAME=2030
 VERSION=$(cat version.txt)
 
-docker build --tag $NAME --label $NAME:VERSION --progress plain .
+KILL=$(docker container ls --filter label=repo=${NAME} --format {{.ID}})
 
-docker run -d -p 5000:80 2030
+for CONTAINER in ${KILL}; do
+  docker kill ${CONTAINER}
+done
 
 docker ps

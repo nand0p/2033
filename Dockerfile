@@ -1,5 +1,7 @@
 FROM python:3.8-slim-buster
 
+ENV STOCKS=None
+
 WORKDIR /
 
 COPY requirements.txt requirements.txt

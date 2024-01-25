@@ -1,11 +1,47 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 
-NAME=$(git rev-parse --show-toplevel)
+# 0 or 1
+DAEMONIZE=0
+DRY_RUN=0
+
+
+NAME=$(basename "${PWD}")
 VERSION=$(cat version.txt)
+STOCKS=$(cat 2030.txt)
+PORTS="80:5000"
 
-docker build --tag $NAME --label $NAME:VERSION --progress plain .
+TAG="${NAME}:${VERSION}"
+#TAG="${REPO}/${NAME}:${VERSION}"
 
-docker run -d -p 5000:80 2030
+echo "running ${NAME}:${VERSION} with"
+STOCKS="\"$(echo ${STOCKS})\""
+echo ${STOCKS}
+
+
+
+if [ "${DRY_RUN}" == "1" ]; then
+  echo
+  echo "DRY_RUN = 1"
+  echo
+  echo "docker run --publish ${PORTS}"
+  echo "           --env STOCKS=${STOCKS}"
+  echo "           ${TAG}"
+  echo 
+  exit 1
+else
+  if [ "${DAEMONIZE}" == "1" ]; then
+    docker run --daemon \
+               --publish ${PORTS} \
+               --env "STOCKS=${STOCKS}" \
+               ${TAG}
+  elif [ "${DAEMONIZE}" == "0" ]; then
+    docker run --interactive \
+               --tty \
+               --publish ${PORTS} \
+               --env "STOCKS=${STOCKS}" \
+               ${TAG}
+  fi
+fi
 
 docker ps
