@@ -6,6 +6,14 @@ import json
 warnings.filterwarnings("ignore", category=FutureWarning) 
 
 
+def get_score_color(score):
+  if score > 10:
+    return 'green'
+  elif score > 5:
+    return 'yellow'
+  else:
+    return 'red'
+
 def load_or_get_data(stock, period, interval):
   df = get_ticker(stock, period=period, interval=interval)
   return df
@@ -60,14 +68,14 @@ def find_average(df, dim):
 
 
 def current_compare(current, test):
-  print('current', current)
-  print('test', test)
-  print(current/test)
   if current/test <= 0.94:
     color = 'green'
+    score = 2
   elif current/test >= 0.99:
     color = 'red'
+    score = 0
   else:
     color = 'yellow'
+    score = 1
 
-  return color
+  return color, score

@@ -2,7 +2,7 @@
 
 
 # 0 or 1
-DAEMONIZE=0
+DAEMONIZE=1
 DRY_RUN=0
 
 
@@ -31,7 +31,7 @@ if [ "${DRY_RUN}" == "1" ]; then
   exit 1
 else
   if [ "${DAEMONIZE}" == "1" ]; then
-    docker run --daemon \
+    docker run --detach \
                --publish ${PORTS} \
                --env "STOCKS=${STOCKS}" \
                ${TAG}

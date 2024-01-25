@@ -1,5 +1,6 @@
-from flask import Flask
 from yf_utils import utils
+from flask import Flask
+
 import yfinance as yf
 import matplotlib
 import os
@@ -12,6 +13,7 @@ stocks = app.config['STOCKS'].strip('\"').upper().split()
 avg_periods = [ 5, 10, 20, 50, 100, 200, 500 ]
 period = '5y'
 interval = '1d'
+minimum_score = 10
 
  
 def generate_price_chart(stock, df):
@@ -23,26 +25,27 @@ def generate_price_chart(stock, df):
   return html
 
 
-def calculate_high_low(stock, df, current):
-  html = ''
+def calculate_high_low(stock, df, current, html, score):
   low = utils.find_low_price(df)
   high = utils.find_high_price(df)
-  color = utils.current_compare(current, high)
+  color, s = utils.current_compare(current, high)
+  score = score + s
   html += '<p>LOW: ' + str(low)
   html += '<p>HIGH: ' + str(high)
   html += '<p style="color:' + color + ';">CURRENT: ' + str(current) + '</p>'
-  return html
+  return html, score
 
 
-def calculate_averages(stock, df, current):
-  html = '<hr>'
+def calculate_averages(stock, df, current, html, score):
+  html += '<hr>'
   for period in avg_periods:
     average = utils.find_average(df, period)
-    html += '<p style="color:' + \
-            utils.current_compare(current, average) + \
+    color, s = utils.current_compare(current, average)
+    score = score + s
+    html += '<p style="color:' + color + \
             ';">AVG ' + str(period) + ': ' + \
             str(average) + '</p>'
-  return html
+  return html, score
 
 
 def stock_info(stock):
@@ -54,6 +57,17 @@ def stock_info(stock):
   return html
 
 
+def footer(score, minimum_score):
+  html = '</table><p><br><p><hr><center><b>'
+  score = sorted(score.items(), key=lambda x: x[1], reverse=True)
+  for stock, score in score:
+    if score >= minimum_score:
+      html += stock + ': ' + str(score) + '<br>'
+  html += '<body></html>'
+  return html
+
+
+
 @app.route('/')
 def flaskapp():
   html = ''
@@ -62,7 +76,9 @@ def flaskapp():
   html += str(stocks)
   html += '<table border=3 colspan=3 width=100%>'
       
+  score = {}
   for stock in stocks:
+    score[stock] = 0
     df = utils.load_or_get_data(stock, period, interval)
     current = utils.find_current_price(df)
     html += '<tr><td>'
@@ -70,11 +86,14 @@ def flaskapp():
     html += '</td><td>'
     html += generate_price_chart(stock, df)
     html += '</td><td width=150>'
-    html += calculate_high_low(stock, df, current)
-    html += calculate_averages(stock, df, current)
-    html += '</td></tr>'
+    html, score[stock] = calculate_high_low(stock, df, current, html, score[stock])
+    html, score[stock] = calculate_averages(stock, df, current, html, score[stock])
+    color = utils.get_score_color(score[stock])
+    html += '<hr><table width=100%><tr><td bgcolor=' + color + '>'
+    html += '<p><br><p><center>Score: ' + str(score[stock])
+    html += '<p><br><p></td></tr></table></td></tr>'
 
-  html += '</table><body></html>'
+  html += footer(score, minimum_score)
 
   return html
 
