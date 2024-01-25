@@ -1,11 +1,16 @@
-#!/bin/bash -ex
+#!/bin/bash -x
 
 
-NAME=2030
-VERSION=$(cat version.txt)
+TEST=$(curl -s http://localhost/test)
 
-docker build --tag $NAME --label $NAME:VERSION --progress plain .
+if [ -z ${TEST} ]; then
+  echo
+  echo "service not available"
+  echo
+  exit 1
+elif [[ "success" == *${TEST}* ]]; then
+  echo
+  echo success
+  echo
+fi
 
-docker run -d -p 5000:80 2030
-
-docker ps

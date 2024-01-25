@@ -1,4 +1,3 @@
-#!/bin/bash -ex
+#!/bin/bash
 
-docker container prune
-docker images prune
+docker system prune -a
