@@ -9,26 +9,24 @@ app = Flask(__name__)
 stocks = []
 app.config['STOCKS'] = os.environ.get('STOCKS')
 stocks = app.config['STOCKS'].strip('\"').upper().split()
+avg_periods = [ 5, 10, 20, 50, 100, 200, 500 ]
+period = '5y'
+interval = '1d'
 
  
-def load_or_get_data(stock):
-  df = utils.get_ticker(stock, period='5y', interval='1d')
-  return df
-
-
 def generate_price_chart(stock, df):
   html = ''
   ax = df.plot.line()
   ax.figure.savefig('static/' + stock + '.png')
+  matplotlib.pyplot.close()
   html += '<center><img src=static/' + stock + '.png></center>'
   return html
 
 
-def calculate_high_low(stock, df):
+def calculate_high_low(stock, df, current):
   html = ''
   low = utils.find_low_price(df)
   high = utils.find_high_price(df)
-  current = utils.find_current_price(df)
   color = utils.current_compare(current, high)
   html += '<p>LOW: ' + str(low)
   html += '<p>HIGH: ' + str(high)
@@ -36,18 +34,14 @@ def calculate_high_low(stock, df):
   return html
 
 
-def calculate_averages(stock, df):
+def calculate_averages(stock, df, current):
   html = '<hr>'
-  current = utils.find_current_price(df)
-  short_avg = utils.find_average(df, 15)
-  medium_avg = utils.find_average(df, 60)
-  long_avg = utils.find_average(df, 200)
-  color = utils.current_compare(current, short_avg)
-  html += '<p style="color:' + color + ';">ShortAVG: ' + str(short_avg) + '</p>'
-  color = utils.current_compare(current, medium_avg)
-  html += '<p style="color:' + color + ';">MediumAVG: ' + str(medium_avg) + '</p>'
-  color = utils.current_compare(current, long_avg)
-  html += '<p style="color:' + color + ';">LongAVG: ' + str(long_avg) + '</p>'
+  for period in avg_periods:
+    average = utils.find_average(df, period)
+    html += '<p style="color:' + \
+            utils.current_compare(current, average) + \
+            ';">AVG ' + str(period) + ': ' + \
+            str(average) + '</p>'
   return html
 
 
@@ -69,14 +63,15 @@ def flaskapp():
   html += '<table border=3 colspan=3 width=100%>'
       
   for stock in stocks:
-    df = load_or_get_data(stock)
+    df = utils.load_or_get_data(stock, period, interval)
+    current = utils.find_current_price(df)
     html += '<tr><td>'
     html += stock_info(stock)
     html += '</td><td>'
     html += generate_price_chart(stock, df)
     html += '</td><td width=150>'
-    html += calculate_high_low(stock, df)
-    html += calculate_averages(stock, df)
+    html += calculate_high_low(stock, df, current)
+    html += calculate_averages(stock, df, current)
     html += '</td></tr>'
 
   html += '</table><body></html>'
@@ -90,4 +85,4 @@ def test():
 
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  app.run(debug=True, passthrough_errors=True)

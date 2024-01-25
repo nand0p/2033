@@ -6,6 +6,11 @@ import json
 warnings.filterwarnings("ignore", category=FutureWarning) 
 
 
+def load_or_get_data(stock, period, interval):
+  df = get_ticker(stock, period=period, interval=interval)
+  return df
+
+
 def download_quote(stock, period, interval):
   data = yf.download(stock, period=period, interval=interval)
   return data
@@ -30,6 +35,7 @@ def save_json(stock, df, path):
 def save_images(stock, df, path):
   ax = df.plot.line()
   ax.figure.savefig(path + '/' + stock + '.png')
+  matplotlib.pyplot.close()
 
 
 def find_low_price(df):
@@ -53,9 +59,15 @@ def find_average(df, dim):
   return average
 
 
-def current_compare(current, high):
-  if current < high:
+def current_compare(current, test):
+  print('current', current)
+  print('test', test)
+  print(current/test)
+  if current/test <= 0.94:
     color = 'green'
-  else:
+  elif current/test >= 0.99:
     color = 'red'
+  else:
+    color = 'yellow'
+
   return color
