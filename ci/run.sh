@@ -2,7 +2,13 @@
 
 
 # 0 or 1
-DAEMONIZE=1
+if [ -z "$1" ]; then
+  DAEMONIZE=0
+else
+  DAEMONIZE=1
+fi
+
+
 DRY_RUN=0
 
 

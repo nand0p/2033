@@ -1,5 +1,5 @@
 #!/bin/bash
 
-ci/build.sh
+bash ci/build.sh
 
-ci/run.sh
+bash ci/run.sh
