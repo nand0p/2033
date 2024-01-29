@@ -1,11 +1,9 @@
-from yf_utils import utils
-import pandas as pd
-import yfinance as yf
+from utils import yf, disk
 import os
 
 
-img_path = 'images'
-data_path = 'data'
+img_path = 'images/stocks/'
+data_path = 'data/stocks/'
 text_file = open("2030.txt", "r")
 lines = text_file.readlines()
 text_file.close()
@@ -20,7 +18,7 @@ if not os.path.exists(data_path):
 
 for stock in lines:
   stock = stock.upper().strip()
-  df = utils.get_ticker(stock, period='max', interval='1d')
-  utils.save_images(stock, df, 'images/')
-  utils.save_csv(stock, df, 'data/')
-  utils.save_json(stock, df, 'data/')
+  df = yf.get_ticker(stock, period='max', interval='1d')
+  disk.save_images(stock, df, img_path)
+  disk.save_csv(stock, df, data_path)
+  disk.save_json(stock, df, data_path)
