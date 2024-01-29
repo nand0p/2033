@@ -1,3 +1,4 @@
+flask_classful
 matplotlib
 yfinance
 flask
