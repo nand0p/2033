@@ -33,11 +33,11 @@ def _current_compare(current, test):
   return color, score
 
 
-def calculate_high_low(stock, df, current, html, avg_periods):
-  score = 0
+def calculate_high_low(stock, df, price, html, score, avg_periods):
+  html += '<td width=200>'
   low = _find_low_price(df)
   high = _find_high_price(df)
-  color, s = _current_compare(current, high)
+  color, s = _current_compare(price, high)
 
   # high-low is double score value
   if s > 0:
@@ -48,7 +48,12 @@ def calculate_high_low(stock, df, current, html, avg_periods):
   score = score + s
   html += '<p>LOW: ' + str(low)
   html += '<p>HIGH: ' + str(high)
-  html += '<p style="color:' + color + ';">CURRENT: ' + str(current) + '</p>'
+  html += '<p style="color:' + \
+          color + \
+          ';">CURRENT: ' + \
+          str(price) + \
+          '</p>'
+
   return html, score
 
 
@@ -67,22 +72,39 @@ def header(stocks):
 
 
 
-def generate_price_chart(stock, df):
-  html = ''
+def generate_price_chart(stock, df, html, score):
+  ax = df.plot.line()
+  df['sma90'] = df.Close.rolling(window=90).mean()
+  df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
   ax.figure.savefig('static/' + stock + '.png')
   matplotlib.pyplot.close()
-  html += '<center><img src=static/' + stock + '.png></center>'
-  return html
+
+  if int(df['sma90'][-1]) < int(df['sma365'][-1]):
+    score = score + 10
+  else:
+    score = score - 5
+
+  html += '<td><center><img src=static/' + \
+          stock + \
+          '.png><br>sma90:' + \
+          str(round(df['sma90'][-1],4)) + \
+          ' sma365:' + \
+          str(round(df['sma365'][-1],4)) + \
+          ' newscore:' + \
+          str(score) + \
+          '</center></td>'
+
+  return html, score
 
 
 
-def calculate_averages(stock, df, current, html, score, avg_periods):
+def calculate_averages(stock, df, price, html, score, avg_periods):
   html += '<hr>'
   count = 1
   for period in avg_periods:
     average = _find_average(df, period)
-    color, s = _current_compare(current, average)
+    color, s = _current_compare(price, average)
 
     # the longer the period, the more the weight
     if s > 0:
@@ -90,11 +112,15 @@ def calculate_averages(stock, df, current, html, score, avg_periods):
     if s == 0:
       s = s - count
     score = score + s
-
-    html += '<p style="color:' + color + \
-            ';">AVG ' + str(period) + ': ' + \
-            str(average) + '</p>'
     count = count + 1
+
+    html += '<p style="color:' + \
+            color + \
+            ';">AVG ' + \
+            str(period) + \
+            ': ' + \
+            str(average) + \
+            '</p>'
   return html, score
 
 
@@ -105,15 +131,17 @@ def stock_info(stock):
     stock_info = s.info
   except:
     stock_info = {'longBusinessSummary':'None'}
-  html += '<h2><center>' + stock + '</center></h2>'
-  html += '<p>' + textwrap.shorten(str(stock_info.get('longBusinessSummary')),
-                                   width=100,
-                                   placeholder="...")
+  html += '<tr><td width=200><h2><center><a href=https://finance.yahoo.com/quote/'
+  html += stock + ' target=_blank>' + stock + '</a></center></h2><p>'
+  html += textwrap.shorten(str(stock_info.get('longBusinessSummary')),
+                               width=140,
+                               placeholder="...")
+  html += '</td>'
   return html
 
 
 def footer(score, minimum_score):
-  html = '<p><br><p><hr><center><b>'
+  html = '</table><p><br><p><hr><center><b>'
   score = sorted(score.items(), key=lambda x: x[1], reverse=True)
   for stock, score in score:
     if score >= minimum_score:
@@ -125,3 +153,11 @@ def footer(score, minimum_score):
   html += '<p><br><p><center><a href=https://github.com/nand0p/2030>'
   html += 'https://github.com/nand0p/2030</a><body></html>'
   return html
+
+
+def scores(color, score):
+  return '<hr><table width=100%><tr><td bgcolor=' + \
+         color + \
+         '><p><br><p><center>Score: ' + \
+         str(score) + \
+         '<p><br><p></td></tr></table></td></tr>'

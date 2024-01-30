@@ -17,7 +17,6 @@ pltr
 now
 ibm
 clou
-tdoc
 idna
 crsp
 rwlk
