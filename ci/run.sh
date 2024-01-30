@@ -38,19 +38,31 @@ if [ "${DRY_RUN}" == "1" ]; then
   exit 1
 else
   if [ "${DAEMONIZE}" == "1" ]; then
-    docker run --detach \
-               --publish ${PORTS} \
-               -v data:/data \
-               --env "STOCKS=${STOCKS}" \
-               ${TAG}
-  elif [ "${DAEMONIZE}" == "0" ]; then
-    docker run --interactive \
-               --tty \
-               --publish ${PORTS} \
-               -v data:/data \
-               --env "STOCKS=${STOCKS}" \
-               ${TAG}
+    CONTAINER=$(docker run --detach \
+                --publish ${PORTS} \
+                -v data:/data \
+                --env "STOCKS=${STOCKS}" \
+                ${TAG})
+    echo container ${CONTAINER}
+    sleep 3
+
+    echo hit endpoint
+    curl -s -o /dev/null localhost
+    sleep 3
+
+    echo get container scores
+    docker cp ${CONTAINER}:/data/ data
+    rm data/data/stocks -rf
+
+    echo docker containers
+    docker ps
+  else
+    CONTAINER=$(docker run --interactive \
+                --tty \
+                --publish ${PORTS} \
+                -v data:/data \
+                --env "STOCKS=${STOCKS}" \
+                ${TAG})
   fi
 fi
 
-docker ps
