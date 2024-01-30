@@ -35,9 +35,7 @@ aws s3 cp --recursive --acl public-read ./localhost/ s3://${S3_BUCKET}/
 aws s3 website s3://${S3_BUCKET} --index-document index.html
 
 CONTAINER=$(docker ps --latest --format {{.ID}})
-docker cp "${CONTAINER}:/data/scores-*.json" "data/"
+DATE=$(date +%Y-%m-%d)
+docker cp "${CONTAINER}:/data/scores-${DATE}.json" "data/"
 
-
-echo "kill 2030 docker container"
-cd ..
-bash kill.sh
+echo success

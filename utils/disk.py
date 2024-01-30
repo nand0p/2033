@@ -1,3 +1,4 @@
+import matplotlib
 import datetime
 import boto3    
 import json
