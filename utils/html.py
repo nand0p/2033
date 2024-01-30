@@ -33,7 +33,8 @@ def _current_compare(current, test):
   return color, score
 
 
-def calculate_high_low(stock, df, current, html, score, avg_periods):
+def calculate_high_low(stock, df, current, html, avg_periods):
+  score = 0
   low = _find_low_price(df)
   high = _find_high_price(df)
   color, s = _current_compare(current, high)
@@ -112,7 +113,7 @@ def stock_info(stock):
 
 
 def footer(score, minimum_score):
-  html = '</table><p><br><p><hr><center><b>'
+  html = '<p><br><p><hr><center><b>'
   score = sorted(score.items(), key=lambda x: x[1], reverse=True)
   for stock, score in score:
     if score >= minimum_score:
