@@ -50,14 +50,16 @@ jobs:
       - name: download html
         run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
 
-      - name: Release Binary to S3 index
-        uses: mostlytyped/s3-put-action@v1.0.0
+      - name: release website to s3
+        uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl-public
+          args: --acl public-read --follow-symlinks --delete
         env:
-          LOCAL_FILE: ./localhost/*
-          REMOTE_FILE: /
-          AWS_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: 2030.hex7.com
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-          INCLUDE_SHA256: true
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: 'localhost'
+
+       - name: test website
+         run: curl http://2030.hex7.com
