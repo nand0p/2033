@@ -21,9 +21,6 @@ jobs:
           username: nand0p
           password: ${{ secrets.DOCKERHUB }}
 
-      #- name: build container
-      #  run: bash ./ci/build.sh
-
       - name: docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -53,7 +50,7 @@ jobs:
       - name: release website to s3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --follow-symlinks --delete
+          args: --acl public-read --follow-symlinks
         env:
           AWS_S3_BUCKET: 2030.hex7.com
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}

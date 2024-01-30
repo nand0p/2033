@@ -11,8 +11,9 @@ resource "aws_iam_access_key" "x2030" {
 data "aws_iam_policy_document" "x2030" {
   statement {
     effect    = "Allow"
-    actions   = ["s3:*"]
-    resources = ["arn:aws:s3:::2030.hex7.com"]
+    actions   = ["*"]
+    resources = ["arn:aws:s3:::2030.hex7.com",
+                 "arn:aws:s3:::2030.hex7.com/*" ]
   }
 }
 
