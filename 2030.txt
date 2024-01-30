@@ -19,6 +19,8 @@ ibm
 clou
 skyy
 cibr
+crwd
+okta
 bug
 wcld
 idna

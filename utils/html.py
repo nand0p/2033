@@ -125,7 +125,7 @@ def stock_info(stock):
   html += '<tr><td width=200><h2><center><a href=https://finance.yahoo.com/quote/'
   html += stock + ' target=_blank>' + stock + '</a></center></h2><p>'
   html += textwrap.shorten(str(stock_info.get('longBusinessSummary')),
-                               width=140,
+                               width=250,
                                placeholder="...")
   html += '</td>'
   return html

@@ -64,7 +64,6 @@ else
                 -v data:/data \
                 --env "STOCKS=${STOCKS}" \
                 ${TAG})
-    docker logs ${CONTAINER}
   fi
 fi
 
