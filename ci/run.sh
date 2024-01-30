@@ -56,6 +56,7 @@ else
 
     echo docker containers
     docker ps
+    docker logs ${CONTAINER}
   else
     CONTAINER=$(docker run --interactive \
                 --tty \
@@ -63,6 +64,7 @@ else
                 -v data:/data \
                 --env "STOCKS=${STOCKS}" \
                 ${TAG})
+    docker logs ${CONTAINER}
   fi
 fi
 

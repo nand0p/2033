@@ -31,6 +31,6 @@ def get_ticker(stock, period, interval):
   return hist[['Close']]
 
 
-def find_current_price(df):
+def get_current_price(df):
   current_price = round(float(str(df.get('Close').iat[-1])), 4)
   return current_price

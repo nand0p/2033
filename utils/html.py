@@ -81,20 +81,11 @@ def generate_price_chart(stock, df, html, score):
   matplotlib.pyplot.close()
 
   if int(df['sma90'][-1]) < int(df['sma365'][-1]):
-    score = score + 10
+    score = score + 20
   else:
-    score = score - 5
+    score = score - 10
 
-  html += '<td><center><img src=static/' + \
-          stock + \
-          '.png><br>sma90:' + \
-          str(round(df['sma90'][-1],4)) + \
-          ' sma365:' + \
-          str(round(df['sma365'][-1],4)) + \
-          ' newscore:' + \
-          str(score) + \
-          '</center></td>'
-
+  html += '<td><center><img src=static/' + stock + '.png></center></td>'
   return html, score
 
 
@@ -140,17 +131,19 @@ def stock_info(stock):
   return html
 
 
-def footer(score, minimum_score):
-  html = '</table><p><br><p><hr><center><b>'
+def footer(stocks, score, minimum_score):
   score = sorted(score.items(), key=lambda x: x[1], reverse=True)
+  html = '</table><p><br><p><hr><b><table border=1 width=100%>'
   for stock, score in score:
+    html += '<tr><td width=100%><center>'
     if score >= minimum_score:
       html += '<h1><font color=green>' + stock + ': ' + str(score) + '</font></h1>'
     elif score >= 0:
       html += '<h3>' + stock + ': ' + str(score) + '</h3>'
     else:
       html += '<h6>' + stock + ': ' + str(score) + '</h6>'
-  html += '<p><br><p><center><a href=https://github.com/nand0p/2030>'
+    html += '</td></tr>'
+  html += '</table><p><br><p><center><a href=https://github.com/nand0p/2030>'
   html += 'https://github.com/nand0p/2030</a><body></html>'
   return html
 

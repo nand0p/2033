@@ -34,6 +34,9 @@ echo "upload to s3 static website"
 aws s3 cp --recursive --acl public-read ./localhost/ s3://${S3_BUCKET}/ 
 aws s3 website s3://${S3_BUCKET} --index-document index.html
 
+CONTAINER=$(docker ps --latest --format {{.ID}})
+docker cp "${CONTAINER}:/data/scores-*.json" "data/"
+
 
 echo "kill 2030 docker container"
 cd ..
