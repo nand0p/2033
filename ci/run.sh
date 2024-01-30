@@ -13,7 +13,7 @@ DRY_RUN=0
 
 
 REPO=nand0p
-NAME=$(basename "${PWD}")
+NAME=x2030
 VERSION=$(cat version.txt)
 STOCKS=$(cat 2030.txt)
 PORTS="80:5000"

@@ -5,7 +5,7 @@
 # bash -ex ci/build.sh
 
 
-NAME=$(basename "$PWD")
+NAME=x2030
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7
