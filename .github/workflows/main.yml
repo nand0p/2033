@@ -40,8 +40,20 @@ jobs:
       - name: dump env
         run: env
 
-      - name: upload
-        run: bash upload.sh
+      - name: run container
+        run: bash ./ci/run.sh daemonize
+
+      - name: download html
+        run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
+
+      - name: Release Binary to S3 index
+        uses: mostlytyped/s3-put-action@v1.0.0
+        with:
+          args: --acl-public
         env:
+          LOCAL_FILE: ./localhost/*
+          REMOTE_FILE: /
+          AWS_BUCKET: 2030.hex7.com
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          INCLUDE_SHA256: true
