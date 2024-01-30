@@ -12,13 +12,14 @@ fi
 DRY_RUN=0
 
 
+REPO=nand0p
 NAME=$(basename "${PWD}")
 VERSION=$(cat version.txt)
 STOCKS=$(cat 2030.txt)
 PORTS="80:5000"
 
-TAG="${NAME}:${VERSION}"
-#TAG="${REPO}/${NAME}:${VERSION}"
+#TAG="${NAME}:${VERSION}"
+TAG="${REPO}/${NAME}:${VERSION}"
 
 echo "running ${NAME}:${VERSION} with"
 STOCKS="\"$(echo ${STOCKS})\""

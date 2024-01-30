@@ -12,8 +12,8 @@ OWNER=hex7
 VERSION=$(cat version.txt)
 
 
-TAG="${NAME}:${VERSION}"
-#TAG="${REPO}/${NAME}:${VERSION}"
+#TAG="${NAME}:${VERSION}"
+TAG="${REPO}/${NAME}:${VERSION}"
 
 if [ -n ${VERSION} ]; then
   echo "building docker image ${NAME}:${VERSION}"
