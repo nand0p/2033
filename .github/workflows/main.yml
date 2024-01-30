@@ -58,5 +58,11 @@ jobs:
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: 'localhost'
 
+      - name: upload scores
+        run: upload_scores.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+
       - name: test website
         run: curl http://2030.hex7.com
