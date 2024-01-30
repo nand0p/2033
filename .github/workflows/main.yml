@@ -61,5 +61,5 @@ jobs:
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: 'localhost'
 
-       - name: test website
-         run: curl http://2030.hex7.com
+      - name: test website
+        run: curl http://2030.hex7.com
