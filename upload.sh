@@ -34,8 +34,11 @@ echo "upload to s3 static website"
 aws s3 cp --recursive --acl public-read ./localhost/ s3://${S3_BUCKET}/ 
 aws s3 website s3://${S3_BUCKET} --index-document index.html
 
+
 CONTAINER=$(docker ps --latest --format {{.ID}})
 DATE=$(date +%Y-%m-%d)
-docker cp "${CONTAINER}:/data/scores-${DATE}.json" "data/"
+mkdir -pv tmp/data
+docker cp "${CONTAINER}:/data/scores-${DATE}.json" "tmp/data/"
+aws s3 cp ./tmp/data/scores-${DATE}.json s3://${S3_BUCKET}/scores-${DATE}.json
 
 echo success
