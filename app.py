@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 class X2030(FlaskView):
   def __init__(self):
-    self.stocks = sorted(os.environ.get('STOCKS').strip('\"').upper().split())
+    self.stocks = disk.get_stocks(os.environ.get('STOCKS'))
     self.avg_periods = [ 9, 21, 50, 75, 100, 200, 365, 500 ]
     self.period = '5y'
     self.interval = '1d'
