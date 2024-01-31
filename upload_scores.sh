@@ -1,5 +1,10 @@
 #!/bin/bash
 
+which docker
+which date
+which mkdir
+which aws
+
 CONTAINER=$(docker ps --latest --format {{.ID}})
 DATE=$(date +%Y-%m-%d)
 mkdir -pv tmp/data
