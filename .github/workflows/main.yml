@@ -9,6 +9,11 @@ on:
 
 jobs:
   build:
+    #defaults:
+    #  run:
+    #    shell: bash
+    #    working-directory: ./
+
     runs-on: ubuntu-latest
 
     steps:
@@ -60,13 +65,9 @@ jobs:
 
       - name: upload scores
         run: bash ./upload_scores.sh
-          shell: bash
-          working-directory: ./
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
       - name: test website
         run: curl http://2030.hex7.com
-          shell: bash
-          working-directory: ./
