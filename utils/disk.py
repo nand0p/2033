@@ -9,8 +9,8 @@ date = datetime.datetime.now().isoformat().split('T')[0]
 scores_key = 'scores-' + date + '.json'
 
 
-def get_stocks(stocks):
-  stocks = stocks.strip('\"').upper().split()
+def get_stocks(stocks, cat):
+  stocks = sorted(set(stocks.strip('\"').upper().split()))
   stocks_1 = []  #  large cap
   stocks_2 = []  #  small cap
   stocks_3 = []  #  cloud etf
@@ -30,9 +30,19 @@ def get_stocks(stocks):
     elif int(v) == 5:
       stocks_5.append(s)
 
+  if int(cat) == 1:
+    return stocks_1
+  elif int(cat) == 2:
+    return stocks_2
+  elif int(cat) == 3:
+    return stocks_3
+  elif int(cat) == 4:
+    return stocks_4
+  elif int(cat) == 5:
+    return stocks_5
+  else:
+    return stocks_1 + stocks_2 + stocks_3 + stocks_4 + stocks_5
 
-  return sorted(set(stocks_1 + stocks_2 + stocks_3 + stocks_4))
-  #return sorted(set(stocks_1 + stocks_2 + stocks_3 + stocks_4 + stocks_5))
 
 def save_scores(scores, data_dir):
   with open(data_dir + scores_key, 'w') as out:

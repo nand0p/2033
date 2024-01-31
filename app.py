@@ -1,4 +1,4 @@
-from flask_classful import FlaskView, route
+from flask_classful import FlaskView, route, request
 from utils import html, yf, disk
 from flask import Flask
 import json
@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 class X2030(FlaskView):
   def __init__(self):
-    self.stocks = disk.get_stocks(os.environ.get('STOCKS'))
+    self.stocks = []
     self.avg_periods = [ 9, 21, 50, 75, 100, 200, 365, 500 ]
     self.period = '5y'
     self.interval = '1d'
@@ -23,7 +23,11 @@ class X2030(FlaskView):
     self.html = ''
 
 
+  @route('/', methods = ['GET'])
   def index(self):
+    self.scores = {}
+    self.stocks = disk.get_stocks(os.environ.get('STOCKS'),
+                                  request.args.get('cat',0))
     self.html = html.header(self.stocks)
 
     for stock in self.stocks:
