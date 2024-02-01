@@ -11,37 +11,15 @@ scores_key = 'scores-' + date + '.json'
 
 def get_stocks(stocks, cat):
   stocks = sorted(set(stocks.strip('\"').upper().split()))
-  stocks_1 = []  #  large cap
-  stocks_2 = []  #  small cap
-  stocks_3 = []  #  cloud etf
-  stocks_4 = []  #  biotech
-  stocks_5 = []  #  renewable
+  r = {}
 
   for stock in stocks:
     s, v = stock.split(':')
-    if int(v) == 1:
-      stocks_1.append(s)
-    elif int(v) == 2:
-      stocks_2.append(s)
-    elif int(v) == 3:
-      stocks_3.append(s)
-    elif int(v) == 4:
-      stocks_4.append(s)
-    elif int(v) == 5:
-      stocks_5.append(s)
+    r[s] = {}
+    r[s]['ticker'] = s
+    r[s]['category'] = v
 
-  if int(cat) == 1:
-    return stocks_1
-  elif int(cat) == 2:
-    return stocks_2
-  elif int(cat) == 3:
-    return stocks_3
-  elif int(cat) == 4:
-    return stocks_4
-  elif int(cat) == 5:
-    return stocks_5
-  else:
-    return stocks_1 + stocks_2 + stocks_3 + stocks_4 + stocks_5
+  return r
 
 
 def save_scores(scores, data_dir):

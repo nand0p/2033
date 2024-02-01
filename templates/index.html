@@ -14,42 +14,37 @@
   <h1>Stock Hunter 2030</h1>
   <table border=3 colspan=3 width=100%>
 
-    {% for stock in stocks %}
+    {% for stock, v in stocks.items() %}
       <tr>
         <td width=200>
           <h2>
           <center>
-          <a href=https://finance.yahoo.com/quote/{{ stock.ticker }}  target=_blank>{{ stock.ticker }}</a>
+          <a href=https://finance.yahoo.com/quote/{{ stock }}  target=_blank>{{ stock }}</a>
           </center>
           </h2>
-          <p>{{ stock.info }}</p>
+          <p>{{ v.info }}</p>
         </td>
 
         <td>
           <center>
-          <img src=static/{{ stock.ticker }}.png>
+          <img src=static/{{ stock }}.png>
           </center>
         </td>
 
         <td width=200>
-          <p>LOW: {{ stock.low }}</p>
-          <p>HIGH: {{ stock.high }}</p>
-          <p style="color:{{ stock.current_color }};">CURRENT: {{ stock.current_price }}</p>
+          <p>LOW: {{ v.low }}</p>
+          <p>HIGH: {{ v.high }}</p>
+          <p style="color:{{ v.current_color }};">CURRENT: {{ v.current_price }}</p>
           <hr>
-          <p style="color:{{ stock.avg_9_color }};">AVG 9: {{ stock.avg_9_price }}</p>
-          <p style="color:{{ stock.avg_21_color }};">AVG 21: {{ stock.avg_21_price }}</p>
-          <p style="color:{{ stock.avg_50_color }};">AVG 50: {{ stock.avg_50_price }}</p>
-          <p style="color:{{ stock.avg_75_color }};">AVG 75: {{ stock.avg_75_price }}</p>
-          <p style="color:{{ stock.avg_100_color }};">AVG 100: {{ stock.avg_100_price }}</p>
-          <p style="color:{{ stock_avg_200_color }};">AVG 200: {{ stock.avg_200_price }}</p>
-          <p style="color:{{ stock_avg_365_color }};">AVG 365: {{ stock.avg_365_price }}</p>
-          <p style="color:{{ stock_avg_500_color }};">AVG 500: {{ stock.avg_500_price }}</p>
+            {% for avg, a in v.averages.items() %}
+              <p style="color:{{ a.color }};">AVG {{ avg }}: {{ a.price }}</p>
+            {% endfor %}
           <hr>
           <table width=100%>
             <tr>
               <td bgcolor=red>
                 <p><br><p>
-                <center>Score: {{ stock.score }}
+                <center>Score: {{ v.score }}
                 <p><br><p>
               </td>
             </tr>
@@ -61,12 +56,11 @@
   </table>
   <table border=10>
 
-    {% for stock in stocks %}
-      {% if stock.score %}
+    {% for s, v in stocks.items() %}
+      {% if v.score %}
         <tr>
           <td width=100%>
-            <center>
-            <h6>{{ stock.ticker }}: {{ stock.score }}</h6>
+            <h6><center>{{ s }}: {{ v.score }}</h6>
           </td>
         </tr>
       {% endif %}
