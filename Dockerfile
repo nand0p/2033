@@ -1,6 +1,7 @@
 FROM python:3.8-slim-buster
 
 ENV STOCKS=None
+ENV MPLCONFIGDIR=/tmp/.cache
 
 WORKDIR /
 

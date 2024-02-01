@@ -1,0 +1,83 @@
+<!doctype html>
+
+<html>
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3SZL2VYX8Q">
+  </script>
+  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date()); gtag("config", "G-3SZL2VYX8Q");
+  </script>
+  <title>Stock Hunter 2030</title>
+</head>
+
+<body>
+  <h1>Stock Hunter 2030</h1>
+  <table border=3 colspan=3 width=100%>
+
+    {% for stock in stocks %}
+      <tr>
+        <td width=200>
+          <h2>
+          <center>
+          <a href=https://finance.yahoo.com/quote/{{ stock.ticker }}  target=_blank>{{ stock.ticker }}</a>
+          </center>
+          </h2>
+          <p>{{ stock.info }}</p>
+        </td>
+
+        <td>
+          <center>
+          <img src=static/{{ stock.ticker }}.png>
+          </center>
+        </td>
+
+        <td width=200>
+          <p>LOW: {{ stock.low }}</p>
+          <p>HIGH: {{ stock.high }}</p>
+          <p style="color:{{ stock.current_color }};">CURRENT: {{ stock.current_price }}</p>
+          <hr>
+          <p style="color:{{ stock.avg_9_color }};">AVG 9: {{ stock.avg_9_price }}</p>
+          <p style="color:{{ stock.avg_21_color }};">AVG 21: {{ stock.avg_21_price }}</p>
+          <p style="color:{{ stock.avg_50_color }};">AVG 50: {{ stock.avg_50_price }}</p>
+          <p style="color:{{ stock.avg_75_color }};">AVG 75: {{ stock.avg_75_price }}</p>
+          <p style="color:{{ stock.avg_100_color }};">AVG 100: {{ stock.avg_100_price }}</p>
+          <p style="color:{{ stock_avg_200_color }};">AVG 200: {{ stock.avg_200_price }}</p>
+          <p style="color:{{ stock_avg_365_color }};">AVG 365: {{ stock.avg_365_price }}</p>
+          <p style="color:{{ stock_avg_500_color }};">AVG 500: {{ stock.avg_500_price }}</p>
+          <hr>
+          <table width=100%>
+            <tr>
+              <td bgcolor=red>
+                <p><br><p>
+                <center>Score: {{ stock.score }}
+                <p><br><p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    {% endfor %}
+
+  </table>
+  <table border=10>
+
+    {% for stock in stocks %}
+      {% if stock.score %}
+        <tr>
+          <td width=100%>
+            <center>
+            <h6>{{ stock.ticker }}: {{ stock.score }}</h6>
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  
+  </table>
+  <p>
+  <br>
+  <p>
+  <center>
+  <a href=https://github.com/nand0p/2030>https://github.com/nand0p/2030</a>
+
+</body>
+</html>

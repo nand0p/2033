@@ -131,7 +131,7 @@ def stock_info(stock):
   return html
 
 
-def footer(stocks, score, minimum_score):
+def get_score_table(score, minimum_score):
   score = sorted(score.items(), key=lambda x: x[1], reverse=True)
   html = '</table><p><br><p><hr><b><table border=1 width=100%>'
   for stock, score in score:
@@ -143,12 +143,17 @@ def footer(stocks, score, minimum_score):
     else:
       html += '<h6>' + stock + ': ' + str(score) + '</h6>'
     html += '</td></tr>'
-  html += '</table><p><br><p><center><a href=https://github.com/nand0p/2030>'
+  html += '</table>'
+  return html
+
+
+def get_footer():
+  html = '<p><br><p><center><a href=https://github.com/nand0p/2030>'
   html += 'https://github.com/nand0p/2030</a><body></html>'
   return html
 
 
-def scores(color, score):
+def get_score(color, score):
   return '<hr><table width=100%><tr><td bgcolor=' + \
          color + \
          '><p><br><p><center>Score: ' + \

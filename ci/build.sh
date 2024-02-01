@@ -20,7 +20,7 @@ if [ -n ${VERSION} ]; then
   docker build --tag ${TAG} \
                --label "repo=${NAME}" \
                --label "version=${VERSION}" \
-               --label "owner=${HEX7}" \
+               --label "owner=${OWNER}" \
                --label "author=${AUTHOR}" \
                --progress plain .
 else

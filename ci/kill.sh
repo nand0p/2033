@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 
-NAME=2030
+NAME=x2030
 VERSION=$(cat version.txt)
 
 KILL=$(docker container ls --filter label=repo=${NAME} --format {{.ID}})

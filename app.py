@@ -53,9 +53,10 @@ class X2030(FlaskView):
                                                       score=self.scores[stock],
                                                       avg_periods=self.avg_periods)
       self.color[stock] = yf.get_score_color(self.scores[stock])
-      self.html += html.scores(self.color[stock], self.scores[stock])
+      self.html += html.get_score(self.color[stock], self.scores[stock])
 
-    self.html += html.footer(self.stocks, self.scores, self.minimum_score)
+    self.html += html.get_score_table(self.scores, self.minimum_score)
+    self.html += html.get_footer()
     disk.save_scores(self.scores, self.data_dir)
     return self.html
 
