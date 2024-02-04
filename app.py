@@ -10,18 +10,19 @@ app = Flask(__name__)
 
 class X2030(FlaskView):
   def __init__(self):
+    self.df = {}
     self.stocks = {}
     self.avg_periods = [ 9, 21, 50, 75, 100, 200, 365, 500 ]
     self.period = '5y'
     self.interval = '1d'
     self.minimum_score = 25
     self.data_dir = './data/'
-    self.df = {}
+    self.tolerance = 0.075
 
 
   @route('/', methods = ['GET'])
   def index(self):
-    self.stocks = disk.get_stocks(os.environ.get('STOCKS'), request.args.get('cat',0))
+    self.stocks = disk.get_stocks(os.environ.get('STOCKS'), request.args.get('cat', '0'))
 
     for stock in self.stocks:
       self.df[stock] = yf.load_or_get_data(stock, self.period, self.interval)
@@ -30,24 +31,25 @@ class X2030(FlaskView):
       self.stocks[stock]['averages'] = {}
       self.stocks[stock]['low'] = helpers.get_low_price(self.df[stock])
       self.stocks[stock]['high'] = helpers.get_high_price(self.df[stock])
-      self.stocks[stock]['current_price'] = yf.get_current_price(self.df[stock])
+      self.stocks[stock]['current_price'] = helpers.get_current_price(self.df[stock])
+      self.stocks[stock]['current_color'] = helpers.get_current_color(self.stocks[stock]['current_price'],
+                                                                      self.stocks[stock]['high'],
+                                                                      self.tolerance)
       self.stocks[stock]['info'] = helpers.stock_info(stock)
       self.stocks[stock]['score'] = helpers.generate_price_chart(stock=stock, df=self.df[stock])
 
       self.stocks[stock]['score'] = helpers.calculate_high_low(current=self.stocks[stock]['current_price'],
                                                                 high=self.stocks[stock]['high'],
-                                                                avg_periods=self.avg_periods )
+                                                                avg_periods=self.avg_periods,
+                                                                score=self.stocks[stock]['score'] )
 
       (self.stocks[stock]['averages'], self.stocks[stock]['score']) = helpers.calculate_averages(df=self.df[stock],
                                                                                                  score=self.stocks[stock]['score'],
-                                                                                                 high=self.stocks[stock]['high'],
+                                                                                                 current=self.stocks[stock]['current_price'],
                                                                                                  avg_periods=self.avg_periods)
 
-      self.stocks[stock]['color'] = yf.get_score_color(self.stocks[stock]['score'])
-      #self.html += html.get_score(self.color[stock], self.scores[stock])
+      self.stocks[stock]['score_color'] = helpers.get_score_color(self.stocks[stock]['score'])
 
-    #self.html += html.get_score_table(self.scores, self.minimum_score)
-    #self.html += html.get_footer()
     #disk.save_scores(self.scores, self.data_dir)
     return render_template('index.html', stocks=self.stocks)
 

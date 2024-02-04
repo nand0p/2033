@@ -1,6 +1,7 @@
 import yfinance as yf
 import matplotlib
 import textwrap
+import math
 import os
 
 
@@ -22,19 +23,22 @@ def _find_average(df, dim):
 
 def _current_compare(current, test):
   if current/test <= 0.94:
-    return (2, 'red')
+    return 2
   elif current/test >= 0.99:
-    return (0, 'yellow')
+    return 0
   else:
-    return (1, 'green')
+    return 1
 
 
-def calculate_high_low(current, high, avg_periods):
-  (score, color) = _current_compare(current, high)
-  if score > 0:
-    return score * len(avg_periods) + score
+def calculate_high_low(current, high, avg_periods, score):
+  s = _current_compare(current, high)
+  if s > 0:
+    s = s * len(avg_periods)
   else:
-    return score -(len(avg_periods)) 
+    s = s * -(len(avg_periods))
+
+  score = score + s
+  return score
 
 
 def generate_price_chart(stock, df):
@@ -51,23 +55,27 @@ def generate_price_chart(stock, df):
     return -10
 
 
-
-def calculate_averages(df, high, score, avg_periods):
+def calculate_averages(df, current, score, avg_periods):
   r = {}
   count = 1
   for period in sorted(avg_periods):
     r[period] = {}
     r[period]['price'] = _find_average(df, period)
-    (s, r[period]['color']) = _current_compare(high, r[period]['price'])
+    s = _current_compare(current, r[period]['price'])
 
-    # the longer the period, the more the weight
-    if s > 0:
+    # the longer the period, the greater the weight
+    if s == 2:
       s = s + count
-    if s == 0:
+      color = 'green'
+    elif s == 0:
       s = s - count
+      color = 'red'
+    else:
+      color = 'orange'
 
     score = score + s
     count = count + 1
+    r[period]['color'] = color
 
   return r, score
 
@@ -81,3 +89,27 @@ def stock_info(stock):
 
   return textwrap.shorten(str(stock_info.get('longBusinessSummary')),
                           width=250, placeholder="...")
+
+
+def get_score_color(score):
+  if score > 10:
+    return 'green'
+  elif score > 5:
+    return 'yellow'
+  else:
+    return 'red'
+
+
+def get_current_price(df):
+  current_price = round(float(str(df.get('Close').iat[-1])), 4)
+  return current_price
+
+
+def get_current_color(current, high, tolerance):
+  if current < high:
+    if math.isclose(current, high, rel_tol=tolerance):
+      return 'orange'
+    else:
+      return 'green'
+  else:
+    return 'red'

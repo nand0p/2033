@@ -3,15 +3,16 @@
 <html>
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3SZL2VYX8Q">
-  </script>
-  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date()); gtag("config", "G-3SZL2VYX8Q");
-  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3SZL2VYX8Q"></script>
+  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date()); gtag("config", "G-3SZL2VYX8Q");</script>
   <title>Stock Hunter 2030</title>
 </head>
 
 <body>
   <h1>Stock Hunter 2030</h1>
+  {% for stock, v in stocks.items() %}
+    .{{ stock }}.
+  {% endfor %}
   <table border=3 colspan=3 width=100%>
 
     {% for stock, v in stocks.items() %}
@@ -34,7 +35,7 @@
         <td width=200>
           <p>LOW: {{ v.low }}</p>
           <p>HIGH: {{ v.high }}</p>
-          <p style="color:{{ v.current_color }};">CURRENT: {{ v.current_price }}</p>
+          <p style="color:{{ v.current_color }};"><b>CURRENT: {{ v.current_price }}</v></p>
           <hr>
             {% for avg, a in v.averages.items() %}
               <p style="color:{{ a.color }};">AVG {{ avg }}: {{ a.price }}</p>
@@ -42,9 +43,9 @@
           <hr>
           <table width=100%>
             <tr>
-              <td bgcolor=red>
+              <td bgcolor={{ v.score_color }}>
                 <p><br><p>
-                <center>Score: {{ v.score }}
+                <center><h2>{{ v.score }}</h2>
                 <p><br><p>
               </td>
             </tr>
@@ -53,17 +54,27 @@
       </tr>
     {% endfor %}
 
-  </table>
-  <table border=10>
+  </table><center>
+  <table width=100% border=10>
 
-    {% for s, v in stocks.items() %}
-      {% if v.score %}
-        <tr>
-          <td width=100%>
-            <h6><center>{{ s }}: {{ v.score }}</h6>
-          </td>
-        </tr>
-      {% endif %}
+    {% for s, v in stocks.items()|sort(attribute='1.score') %}
+      <tr colspan=3>
+        <td width=200 bgcolor={{ v.score_color }}>
+          ........................................
+        </td>
+        <td width=100%>
+        {% if v.score_color == 'green' %}
+          <h1><center>{{ s }}: {{ v.score }}</h1>
+        {% elif v.score_color == 'yellow' %}
+          <h3><center>{{ s }}: {{ v.score }}</h3>
+        {% else %}
+          <h6><center>{{ s }}: {{ v.score }}</h6>
+        {% endif %}
+        </td>
+        <td width=200 bgcolor={{ v.score_color }}>
+          ........................................
+        </td>
+      </tr>
     {% endfor %}
   
   </table>

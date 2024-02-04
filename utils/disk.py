@@ -15,9 +15,10 @@ def get_stocks(stocks, cat):
 
   for stock in stocks:
     s, v = stock.split(':')
-    r[s] = {}
-    r[s]['ticker'] = s
-    r[s]['category'] = v
+    if v == cat or cat == '0':
+      r[s] = {}
+      r[s]['ticker'] = s
+      r[s]['category'] = v
 
   return r
 
