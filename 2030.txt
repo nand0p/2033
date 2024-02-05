@@ -4,11 +4,11 @@ amzn:1
 nvda:1
 googl:1
 tsla:1
-now:1
 ibm:1
 btc-usd:1
 eth-usd:1
 
+now:2
 rxt:2
 docn:2
 hcp:2
@@ -16,7 +16,10 @@ gtlb:2
 dt:2
 anet:2
 net:2
-vrsn:2
+chkp:2
+jnpr:2
+ntap:2
+akam:2
 panw:2
 pltr:2
 amat:2
