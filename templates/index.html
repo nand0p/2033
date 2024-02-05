@@ -11,7 +11,7 @@
 <body>
   <h1>Stock Hunter 2030</h1>
   {% for stock, v in stocks.items() %}
-    .{{ stock }}.
+    .{{ stock }}:{{ v.category }}.
   {% endfor %}
   <table border=3 colspan=3 width=100%>
 
@@ -20,7 +20,9 @@
         <td width=200>
           <h2>
           <center>
-          <a href=https://finance.yahoo.com/quote/{{ stock }}  target=_blank>{{ stock }}</a>
+          <a href=https://finance.yahoo.com/quote/{{ stock }} target=_blank>{{ stock }}</a>
+          <br>
+          <p>category: {{ v.category }}</p>
           </center>
           </h2>
           <p>{{ v.info }}</p>
@@ -59,20 +61,20 @@
 
     {% for s, v in stocks.items()|sort(attribute='1.score') %}
       <tr colspan=3>
-        <td width=200 bgcolor={{ v.score_color }}>
-          ........................................
+        <td bgcolor={{ v.score_color }}>
+          -------=======*=======-------
         </td>
         <td width=100%>
         {% if v.score_color == 'green' %}
-          <h1><center>{{ s }}: {{ v.score }}</h1>
+          <h1><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h1>
         {% elif v.score_color == 'yellow' %}
-          <h3><center>{{ s }}: {{ v.score }}</h3>
+          <h3><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h3>
         {% else %}
-          <h6><center>{{ s }}: {{ v.score }}</h6>
+          <h6><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h6>
         {% endif %}
         </td>
-        <td width=200 bgcolor={{ v.score_color }}>
-          ........................................
+        <td bgcolor={{ v.score_color }}>
+          -------=======*=======-------
         </td>
       </tr>
     {% endfor %}
