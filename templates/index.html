@@ -13,7 +13,7 @@
   {% for stock, v in stocks.items() %}
     .{{ stock }}:{{ v.category }}.
   {% endfor %}
-  <table border=3 colspan=3 width=100%>
+  <table border=3 width=100%>
 
     {% for stock, v in stocks.items() %}
       <tr>
@@ -56,15 +56,20 @@
       </tr>
     {% endfor %}
 
-  </table><center>
-  <table width=100% border=10>
+  </table>
+  <hr>
+  <hr>
+  <hr>
+  <table border=3 width=100%>
 
     {% for s, v in stocks.items()|sort(attribute='1.score') %}
-      <tr colspan=3>
+      <tr>
         <td bgcolor={{ v.score_color }}>
-          -------=======*=======-------
+          <center>
+            -------=======*=======-------
+          </center>
         </td>
-        <td width=100%>
+        <td width=400>
         {% if v.score_color == 'green' %}
           <h1><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h1>
         {% elif v.score_color == 'yellow' %}
@@ -74,7 +79,9 @@
         {% endif %}
         </td>
         <td bgcolor={{ v.score_color }}>
-          -------=======*=======-------
+          <center>
+            -------=======*=======-------
+          </center>
         </td>
       </tr>
     {% endfor %}
