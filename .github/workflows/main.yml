@@ -32,7 +32,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: nand0p/x2030:$(cat version)
+          tags: nand0p/x2030:${{ vars.APP_VERSION }}
           build-args: DATE=$(date),REVISION=${{ github.sha }}
 
       - name: echo digest
