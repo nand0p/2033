@@ -96,14 +96,6 @@ jobs:
          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
-        #uses: hkusu/s3-upload-action@v2
-        #with:
-        #  aws-access-key-id: ${{ secrets.S3_USER }}
-        #  aws-secret-access-key: ${{ secrets.S3_SECRET }}
-        #  aws-region: 'us-east-1'
-        #  aws-bucket: 2030.hex7.com
-        #  file-path: ${{ steps.scores.outputs.FILE }}
-
 
       - name: test website
         run: curl http://2030.hex7.com
