@@ -88,6 +88,12 @@ class X2030(FlaskView):
     return self.df
 
 
+  @route('/robots.txt')
+  def robots(self):
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'robots.txt', mimetype='text/plain')
+
+
   @route('/favicon.ico')
   def favicon(self):
     return send_from_directory(os.path.join(app.root_path, 'static'),
