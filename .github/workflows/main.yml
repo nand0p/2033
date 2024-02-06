@@ -74,7 +74,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.S3_SECRET }}
           aws-region: 'us-east-1'
           aws-bucket: 2030.hex7.com
-          file-path: "/github/workspace/${{ steps.scores.outputs.FILE }}"
+          file-path: ${{ steps.scores.outputs.FILE }}
 
       - name: test website
         run: curl http://2030.hex7.com
