@@ -15,15 +15,18 @@ jobs:
       - name: check out repo
         uses: actions/checkout@v2
 
+
       - name: login dockerhub
         uses: docker/login-action@v1
         with:
           username: nand0p
           password: ${{ secrets.DOCKERHUB }}
 
+
       - name: docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
+
 
       - name: build and push
         id: docker_build
@@ -35,26 +38,34 @@ jobs:
           tags: nand0p/x2030:${{ vars.APP_VERSION }}
           build-args: DATE=$(date),REVISION=${{ github.sha }}
 
+
       - name: echo digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
 
       - name: dump env
         run: env
 
+
       - name: run container
-        run: bash ./ci/run.sh daemonize
+        run: bash -ex ./ci/run.sh daemonize
+
 
       - name: test container
-        run: bash ./ci/test_container.sh
+        run: bash -ex ./ci/test_container.sh
+
 
       - name: test single stock
-        run: bash ./ci/test_single_stock.sh
+        run: bash -ex ./ci/test_single_stock.sh
+
 
       - name: test full site
-        run: bash ./ci/test_full_site.sh
+        run: bash -ex ./ci/test_full_site.sh
+
 
       - name: download html
         run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
+
 
       - name: release website to s3
         uses: jakejarvis/s3-sync-action@master
@@ -67,9 +78,11 @@ jobs:
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: 'localhost'
 
+
       - name: prepare scores for upload
         id: scores
-        run: bash ./ci/upload_scores.sh
+        run: bash -ex ./ci/upload_scores.sh
+
 
       - name: upload scores to s3
         uses: zdurham/s3-upload-github-action@master
@@ -83,9 +96,6 @@ jobs:
          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
-
-
-
         #uses: hkusu/s3-upload-action@v2
         #with:
         #  aws-access-key-id: ${{ secrets.S3_USER }}
@@ -93,6 +103,7 @@ jobs:
         #  aws-region: 'us-east-1'
         #  aws-bucket: 2030.hex7.com
         #  file-path: ${{ steps.scores.outputs.FILE }}
+
 
       - name: test website
         run: curl http://2030.hex7.com
