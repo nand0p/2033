@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "==>hit endpoint"
+echo "==> test single stock <=="
 sleep 2
-curl -s -o /dev/null localhost?cat=7
+curl http://localhost?cat=7
 sleep 1

@@ -44,6 +44,12 @@ jobs:
       - name: run container
         run: bash ./ci/run.sh daemonize
 
+      - name: test container
+        run: bash ./ci/test_container.sh
+
+      - name: test single stock
+        run: bash ./ci/test_single_stock.sh
+
       - name: download html
         run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
 

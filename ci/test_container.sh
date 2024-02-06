@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 
-TEST=$(curl -s http://localhost/test)
+TEST=$(curl http://localhost/test)
 
 if [ -z ${TEST} ]; then
   echo
