@@ -5,7 +5,7 @@ on:
     branches: [ master ]
     workflow_dispatch:
   schedule:
-    - cron: '5 6-20 * * 1-5'
+    - cron: '35 6-20 * * 1-5'
 
 jobs:
   build:
@@ -72,13 +72,27 @@ jobs:
         run: bash ./ci/upload_scores.sh
 
       - name: upload scores to s3
-        uses: hkusu/s3-upload-action@v2
+        uses: zdurham/s3-upload-github-action@master
         with:
-          aws-access-key-id: ${{ secrets.S3_USER }}
-          aws-secret-access-key: ${{ secrets.S3_SECRET }}
-          aws-region: 'us-east-1'
-          aws-bucket: 2030.hex7.com
-          file-path: ${{ steps.scores.outputs.FILE }}
+          args: --acl public-read
+        env:
+         FILE: "${{ steps.scores.outputs.FILE_PATH }}/${{ steps.scores.outputs.FILE_NAME }}"
+         AWS_REGION: 'us-east-1'
+         S3_BUCKET: '2030.hex7.com'
+         S3_KEY: ${{ steps.scores.outputs.FILE_NAME }}
+         AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
+
+
+
+        #uses: hkusu/s3-upload-action@v2
+        #with:
+        #  aws-access-key-id: ${{ secrets.S3_USER }}
+        #  aws-secret-access-key: ${{ secrets.S3_SECRET }}
+        #  aws-region: 'us-east-1'
+        #  aws-bucket: 2030.hex7.com
+        #  file-path: ${{ steps.scores.outputs.FILE }}
 
       - name: test website
         run: curl http://2030.hex7.com

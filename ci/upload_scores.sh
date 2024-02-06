@@ -23,4 +23,5 @@ docker cp "${CONTAINER}:/data/${FILE}" "${SAVE_PATH}"
 echo ensure data copy out success
 cat ${SAVE_PATH}/${FILE}
 
-echo "FILE=${SAVE_PATH}/${FILE}" >> $GITHUB_OUTPUT
+echo "FILE_PATH=${SAVE_PATH}" >> $GITHUB_OUTPUT
+echo "FILE_NAME=${SAVE_PATH}/${FILE}" >> $GITHUB_OUTPUT
