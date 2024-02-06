@@ -18,9 +18,12 @@ mkdir -pv tmp/data
 echo copy score data out of container
 docker cp "${CONTAINER}:/data/scores-${DATE}.json" "tmp/data/"
 
+echo ensure data copy out success
+cat tmp/data/scores-${DATE}.json
+
 echo copy score data to s3
 aws s3 cp ./tmp/data/scores-${DATE}.json s3://${S3_BUCKET}/scores-${DATE}.json
 
 echo test s3 file exists
-aws s3 ls s3://${S3_BUCKET}/scores-${DATE}.json
+aws s3 ls s3://${S3_BUCKET}
 
