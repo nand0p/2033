@@ -1,6 +1,7 @@
 #!/bin/bash -x
 
 
+sleep 3
 TEST=$(curl http://localhost/test)
 
 if [ -z ${TEST} ]; then
