@@ -9,7 +9,7 @@ CONTAINER=$(docker ps --latest --format {{.ID}})
 DATE=$(date +%Y-%m-%d)
 S3_BUCKET=2030.hex7.com
 FILE=scores-${DATE}.json
-SAVE_PATH=/github/workspace
+SAVE_PATH=tmp
 
 echo ensure variables
 echo ${CONTAINER} ${S3_BUCKET} ${DATE} ${FILE} ${SAVE_PATH}
@@ -23,4 +23,4 @@ docker cp "${CONTAINER}:/data/${FILE}" "${SAVE_PATH}"
 echo ensure data copy out success
 cat ${SAVE_PATH}/${FILE}
 
-echo "FILE=./tmp/data/${FILE}" >> $GITHUB_OUTPUT
+echo "FILE=${SAVE_PATH}/${FILE}" >> $GITHUB_OUTPUT
