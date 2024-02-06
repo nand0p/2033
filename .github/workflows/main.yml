@@ -67,7 +67,7 @@ jobs:
         run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
 
       - name: sed index
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" localhost/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" localhost/index.html
 
       - name: release website to s3
         uses: jakejarvis/s3-sync-action@master
@@ -85,15 +85,15 @@ jobs:
         run: bash -ex ci/download_html.sh
 
       - name: sed index 1
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" 1/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 1/index.html
       - name: sed index 2
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" 2/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 2/index.html
       - name: sed index 3
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" 3/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 3/index.html
       - name: sed index 4
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" 4/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 4/index.html
       - name: sed index 5
-        run: sed -i "s/SEDME/${{ github.sha }}-$(date)/" 5/index.html
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 5/index.html
 
       - name: release sub-site-1 to s3
         uses: jakejarvis/s3-sync-action@master

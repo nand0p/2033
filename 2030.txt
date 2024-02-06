@@ -15,6 +15,7 @@ hcp:2
 gtlb:2
 dt:2
 anet:2
+csco:2
 net:2
 chkp:2
 jnpr:2
@@ -61,6 +62,7 @@ botz:3
 robt:3
 idrv:3
 irbo:3
+kweb:3
 
 idna:4
 gnom:4
