@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for BASE in 1 2 3 4 5 6; do
+for BASE in 1 2 3 4 5; do
   pwd
   echo execute ${BASE}
   mkdir -pv ${BASE}
@@ -16,5 +16,3 @@ for BASE in 1 2 3 4 5 6; do
   cd ..
   sleep 1
 done
-       #k--adjust-extension \
-       #--output-document index.html \
