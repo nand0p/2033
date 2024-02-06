@@ -44,7 +44,9 @@ else
                 -v data:/data \
                 --env "STOCKS=${STOCKS}" \
                 ${TAG})
-    echo "==>container ${CONTAINER}"
+
+    echo "====> container ${CONTAINER} <===="
+    echo "====> docker logs -f ${CONTAINER} <===="
 
   else
     CONTAINER=$(docker run --interactive \
@@ -55,5 +57,3 @@ else
                 ${TAG})
   fi
 fi
-
-echo docker logs -f ${CONTAINER}

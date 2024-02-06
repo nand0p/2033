@@ -79,6 +79,77 @@ jobs:
           SOURCE_DIR: 'localhost'
 
 
+      - name: download sub sites
+        run: bash -ex ci/download_html.sh
+
+
+      - name: release sub-site-1 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '1'
+
+      - name: release sub-site2 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '2'
+
+      - name: release sub-site-3 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '3'
+
+      - name: release sub-site-4 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '4'
+
+      - name: release sub-site-5 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '5'
+
+      - name: release sub-site-6 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '6'
+
+
       - name: prepare scores for upload
         id: scores
         run: bash -ex ./ci/upload_scores.sh
