@@ -44,20 +44,8 @@ else
                 -v data:/data \
                 --env "STOCKS=${STOCKS}" \
                 ${TAG})
-    echo container ${CONTAINER}
-    sleep 3
+    echo "==>container ${CONTAINER}"
 
-    echo hit endpoint
-    curl -s -o /dev/null localhost
-    sleep 3
-
-    echo get container scores
-    docker cp ${CONTAINER}:/data/ data
-    rm data/data/stocks -rf
-
-    echo docker containers
-    docker ps
-    docker logs ${CONTAINER}
   else
     CONTAINER=$(docker run --interactive \
                 --tty \
@@ -68,3 +56,4 @@ else
   fi
 fi
 
+echo docker logs -f ${CONTAINER}

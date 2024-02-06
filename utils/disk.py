@@ -9,20 +9,14 @@ date = datetime.datetime.now().isoformat().split('T')[0]
 scores_key = 'scores-' + date + '.json'
 
 
-def get_stocks(stocks, cat):
-  stocks = sorted(set(stocks.strip('\"').upper().split()))
-  r = {}
+def save_scores(stocks, data_dir, debug=False):
 
-  for stock in stocks:
-    s, v = stock.split(':')
-    if v == cat or cat == '0':
-      r[s] = {}
-      r[s]['category'] = v
+  scores = {}
+  for stock in stocks.keys():
+    scores[stock] = stocks[stock]['score']
+    if debug:
+      print('scores', stock, scores[stock])
 
-  return r
-
-
-def save_scores(scores, data_dir):
   with open(data_dir + scores_key, 'w') as out:
     json.dump(scores, out, ensure_ascii=True, indent=4)
 

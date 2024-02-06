@@ -5,7 +5,7 @@ on:
     branches: [ master ]
     workflow_dispatch:
   schedule:
-    - cron: '0 22 * * 1-5'
+    - cron: '5 6-20 * * 1-5'
 
 jobs:
   build:
@@ -59,7 +59,7 @@ jobs:
           SOURCE_DIR: 'localhost'
 
       - name: upload scores
-        run: bash ./upload_scores.sh
+        run: bash ./ci/upload_scores.sh
 
       - name: score data to s3
         uses: jakejarvis/s3-sync-action@master

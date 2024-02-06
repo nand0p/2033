@@ -5,10 +5,15 @@
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3SZL2VYX8Q"></script>
   <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date()); gtag("config", "G-3SZL2VYX8Q");</script>
+  <link rel="shortcut icon" href="favicon.ico">
   <title>Stock Hunter 2030</title>
 </head>
 
 <body>
+  {% if debug %}
+    debug_mode: {{ debug }}
+    <br>{{ stocks }}
+  {% endif %}
   <h1>Stock Hunter 2030</h1>
   {% for stock, v in stocks.items() %}
     .{{ stock }}:{{ v.category }}.

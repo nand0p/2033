@@ -1,10 +1,11 @@
 from flask_classful import FlaskView, route, request
-from utils import helpers, yf, disk
-from flask import Flask, render_template
+from utils import helpers, yf, disk, stocks
+from flask import Flask, render_template, send_from_directory
 import json
 import os
 
 
+debug = False
 app = Flask(__name__)
 
 
@@ -22,8 +23,12 @@ class X2030(FlaskView):
 
   @route('/', methods = ['GET'])
   def index(self):
-    self.stocks = disk.get_stocks(os.environ.get('STOCKS'),
-                                  request.args.get('cat', '0'))
+    cat = request.args.get('cat', '0')
+
+    if cat == '7':
+      self.stocks = {'AAPL': {'category': '7'}}
+    else:
+      self.stocks = stocks.get_stocks(os.environ.get('STOCKS'), cat)
 
     for stock in self.stocks:
       self.df[stock] = yf.load_or_get_data(stock, self.period, self.interval)
@@ -59,8 +64,8 @@ class X2030(FlaskView):
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             self.stocks[stock]['score'])
 
-    #disk.save_scores(self.scores, self.data_dir)
-    return render_template('index.html', stocks=self.stocks)
+    disk.save_scores(self.stocks, self.data_dir, debug)
+    return render_template('index.html', stocks=self.stocks, debug=debug)
 
 
   @route('/test')
@@ -82,6 +87,11 @@ class X2030(FlaskView):
   def df(self):
     return self.df
 
+
+  @route('/favicon.ico')
+  def favicon(self):
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/x-icon')
 
 X2030.register(app, route_base = '/')
 
