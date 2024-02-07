@@ -67,6 +67,13 @@ btec:4
 arkg:4
 crsp:4
 rwlk:4
+bbp:4
+bbc:4
+sbio:4
+fbt:4
+bbh:4
+pbe:4
+cncr:4
 
 lit:5
 tan:5
