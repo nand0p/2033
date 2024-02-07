@@ -57,11 +57,6 @@ thnq:3
 aiq:3
 wtai:3
 lrnz:3
-robo:3
-botz:3
-robt:3
-idrv:3
-irbo:3
 kweb:3
 
 idna:4
@@ -73,7 +68,6 @@ crsp:4
 rwlk:4
 
 lit:5
-driv:5
 tan:5
 icln:5
 aces:5
@@ -88,3 +82,9 @@ qcln:5
 cnrg:5
 batt:5
 kars:5
+robo:5
+botz:5
+robt:5
+idrv:5
+irbo:5
+driv:5
