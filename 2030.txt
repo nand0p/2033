@@ -7,6 +7,7 @@ tsla:1
 ibm:1
 btc-usd:1
 eth-usd:1
+eurusd=x:1
 
 now:2
 rxt:2
