@@ -75,6 +75,8 @@ fbt:4
 bbh:4
 pbe:4
 cncr:4
+dna:4
+rxrx:4
 
 lit:5
 tan:5
