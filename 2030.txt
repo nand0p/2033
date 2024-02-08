@@ -35,6 +35,7 @@ snps:2
 crwd:2
 team:2
 okta:2
+arm:2
 
 ihak:3
 hack:3
