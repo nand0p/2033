@@ -80,6 +80,18 @@ pbe:4
 cncr:4
 dna:4
 rxrx:4
+ntla:4
+edit:4
+crbu:4
+prme:4
+kymr:4
+grph:4
+avro:4
+achl:4
+verv:4
+pacb:4
+beam:4
+blue:4
 
 lit:5
 tan:5
