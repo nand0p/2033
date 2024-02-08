@@ -60,6 +60,8 @@ aiq:3
 wtai:3
 lrnz:3
 kweb:3
+cqqq:3
+emqq:3
 
 idna:4
 gnom:4
