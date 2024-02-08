@@ -32,27 +32,36 @@ def _current_compare(current, test):
 
 def calculate_high_low(current, high, avg_periods, score):
   s = _current_compare(current, high)
-  if s > 0:
+  if s == 2:
     s = s * len(avg_periods)
+  elif s == 1:
+    s = s * int(len(avg_periods) / 2)
   else:
-    s = s * -(len(avg_periods))
+    s = -(len(avg_periods))
 
   score = score + s
   return score
 
 
-def generate_price_chart(stock, df):
-  ax = df.plot.line()
+def generate_price_chart(stock, df, debug=False):
   df['sma90'] = df.Close.rolling(window=90).mean()
   df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
   ax.figure.savefig('static/' + stock + '.png')
   matplotlib.pyplot.close()
 
-  if int(df['sma90'][-1]) < int(df['sma365'][-1]):
-    return 20
+  if debug:
+    print('====>', stock, '<====')
+    print('------>', df['sma90'], '<------')
+    print('------>', df['sma365'], '<------')
+
+  if len(df['sma90']) > 1 and len(df['sma365']) > 1:
+    if df['sma90'][-1] < df['sma365'][-1]:
+      return 20
+    else:
+      return -10
   else:
-    return -10
+    return 0
 
 
 def calculate_averages(df, current, score, avg_periods):

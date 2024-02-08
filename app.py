@@ -5,7 +5,6 @@ import json
 import os
 
 
-debug = False
 app = Flask(__name__)
 
 
@@ -13,12 +12,13 @@ class X2030(FlaskView):
   def __init__(self):
     self.df = {}
     self.stocks = {}
-    self.avg_periods = [ 9, 21, 50, 75, 100, 200, 365, 500 ]
+    self.avg_periods = [ 9, 21, 50, 75, 100, 200, 365, 420, 500 ]
     self.period = '5y'
     self.interval = '1d'
     self.minimum_score = 25
     self.data_dir = './data/'
     self.tolerance = 0.075
+    self.debug = False
 
 
   @route('/', methods = ['GET'])
@@ -46,7 +46,8 @@ class X2030(FlaskView):
 
       self.stocks[stock]['score'] = helpers.generate_price_chart(
                                       stock=stock,
-                                      df=self.df[stock])
+                                      df=self.df[stock],
+                                      debug=self.debug)
 
       self.stocks[stock]['score'] = helpers.calculate_high_low(
                                       current=self.stocks[stock]['current_price'],
@@ -64,8 +65,8 @@ class X2030(FlaskView):
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             self.stocks[stock]['score'])
 
-    disk.save_scores(self.stocks, self.data_dir, debug)
-    return render_template('index.html', stocks=self.stocks, debug=debug)
+    disk.save_scores(self.stocks, self.data_dir, debug=self.debug)
+    return render_template('index.html', stocks=self.stocks, debug=self.debug)
 
 
   @route('/test')
