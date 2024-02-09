@@ -21,17 +21,26 @@ def _find_average(df, dim):
   return average
 
 
-def _current_compare(current, test):
-  if current/test <= 0.94:
-    return 2
-  elif current/test >= 0.99:
-    return 0
+def _current_compare(current, test, tolerance):
+  low = 0.94
+  high = 0.99
+  ratio = current / test
+  if ratio <= low:
+    if math.isclose(ratio, low, rel_tol=tolerance):
+      return 1
+    else:
+      return 2
+  elif ratio >= high:
+    if math.isclose(ratio, high, rel_tol=tolerance):
+      return 1
+    else:
+      return 0
   else:
     return 1
 
 
-def calculate_high_low(current, high, avg_periods, score):
-  s = _current_compare(current, high)
+def calculate_high_low(current, high, avg_periods, score, tolerance):
+  s = _current_compare(current, high, tolerance)
   if s == 2:
     s = s * len(avg_periods)
   elif s == 1:
@@ -43,7 +52,7 @@ def calculate_high_low(current, high, avg_periods, score):
   return score
 
 
-def generate_price_chart(stock, df, debug=False):
+def generate_price_chart(stock, df, tolerance, debug=False):
   df['sma90'] = df.Close.rolling(window=90).mean()
   df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
@@ -55,22 +64,22 @@ def generate_price_chart(stock, df, debug=False):
     print('------>', df['sma90'], '<------')
     print('------>', df['sma365'], '<------')
 
-  if len(df['sma90']) > 1 and len(df['sma365']) > 1:
-    if df['sma90'][-1] < df['sma365'][-1]:
-      return 20
+  if df['sma90'][-1] < df['sma365'][-1]:
+    if math.isclose(df['sma90'][-1], df['sma365'][-1], rel_tol=tolerance):
+      return 5
     else:
-      return -10
+      return 20
   else:
-    return 0
+    return -15
 
 
-def calculate_averages(df, current, score, avg_periods):
+def calculate_averages(df, current, score, avg_periods, tolerance):
   r = {}
   count = 1
   for period in sorted(avg_periods):
     r[period] = {}
     r[period]['price'] = _find_average(df, period)
-    s = _current_compare(current, r[period]['price'])
+    s = _current_compare(current, r[period]['price'], tolerance)
 
     # the longer the period, the greater the weight
     if s == 2:
@@ -80,6 +89,7 @@ def calculate_averages(df, current, score, avg_periods):
       s = s - count
       color = 'red'
     else:
+      s = s - int(count/2)
       color = 'orange'
 
     score = score + s

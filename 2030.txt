@@ -67,7 +67,6 @@ emqq:3
 idna:4
 gnom:4
 fbiox:4
-btec:4
 arkg:4
 crsp:4
 rwlk:4

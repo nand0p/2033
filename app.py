@@ -18,6 +18,7 @@ class X2030(FlaskView):
     self.minimum_score = 25
     self.data_dir = './data/'
     self.tolerance = 0.075
+    self.tolerance_averages = 0.01
     self.debug = False
 
 
@@ -38,21 +39,23 @@ class X2030(FlaskView):
       self.stocks[stock]['high'] = helpers.get_high_price(self.df[stock])
       self.stocks[stock]['current_price'] = helpers.get_current_price(self.df[stock])
       self.stocks[stock]['current_color'] = helpers.get_current_color(
-                                              self.stocks[stock]['current_price'],
-                                              self.stocks[stock]['high'],
-                                              self.tolerance)
+                                              current=self.stocks[stock]['current_price'],
+                                              high=self.stocks[stock]['high'],
+                                              tolerance=self.tolerance)
 
       self.stocks[stock]['info'] = helpers.stock_info(stock)
 
       self.stocks[stock]['score'] = helpers.generate_price_chart(
                                       stock=stock,
                                       df=self.df[stock],
+                                      tolerance=self.tolerance,
                                       debug=self.debug)
 
       self.stocks[stock]['score'] = helpers.calculate_high_low(
                                       current=self.stocks[stock]['current_price'],
                                       high=self.stocks[stock]['high'],
                                       avg_periods=self.avg_periods,
+                                      tolerance=self.tolerance,
                                       score=self.stocks[stock]['score'] )
 
       (self.stocks[stock]['averages'], \
@@ -60,6 +63,7 @@ class X2030(FlaskView):
                                         df=self.df[stock],
                                         score=self.stocks[stock]['score'],
                                         current=self.stocks[stock]['current_price'],
+                                        tolerance=self.tolerance_averages,
                                         avg_periods=self.avg_periods)
 
       self.stocks[stock]['score_color'] = helpers.get_score_color(
