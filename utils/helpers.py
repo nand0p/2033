@@ -70,7 +70,7 @@ def generate_price_chart(stock, df, tolerance, debug=False):
     else:
       return 20
   else:
-    return -15
+    return -10
 
 
 def calculate_averages(df, current, score, avg_periods, tolerance):
@@ -86,10 +86,10 @@ def calculate_averages(df, current, score, avg_periods, tolerance):
       s = s + count
       color = 'green'
     elif s == 0:
-      s = s - count
+      s = s - count - 2
       color = 'red'
     else:
-      s = s - int(count/2)
+      s = s - int(count/2) - 1
       color = 'orange'
 
     score = score + s
@@ -111,7 +111,7 @@ def stock_info(stock):
 
 
 def get_score_color(score):
-  if score > 10:
+  if score > 33:
     return 'green'
   elif score >= 0:
     return 'yellow'
