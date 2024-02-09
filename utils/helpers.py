@@ -107,7 +107,7 @@ def stock_info(stock):
     stock_info = {'longBusinessSummary':'None'}
 
   return textwrap.shorten(str(stock_info.get('longBusinessSummary')),
-                          width=250, placeholder="...")
+                          width=600, placeholder="...")
 
 
 def get_score_color(score):

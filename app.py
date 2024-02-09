@@ -69,8 +69,13 @@ class X2030(FlaskView):
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             self.stocks[stock]['score'])
 
-    disk.save_scores(self.stocks, self.data_dir, debug=self.debug)
-    return render_template('index.html', stocks=self.stocks, debug=self.debug)
+    disk.save_scores(self.stocks,
+                     self.data_dir,
+                     debug=self.debug)
+
+    return render_template('index.html',
+                           stocks=self.stocks,
+                           debug=self.debug)
 
 
   @route('/test')
@@ -104,7 +109,9 @@ class X2030(FlaskView):
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/x-icon')
 
+
 X2030.register(app, route_base = '/')
+
 
 if __name__ == "__main__":
   app.run(debug=True, passthrough_errors=True)
