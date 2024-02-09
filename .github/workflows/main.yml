@@ -94,6 +94,8 @@ jobs:
         run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 4/index.html
       - name: sed index 5
         run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 5/index.html
+      - name: sed index 6
+        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 6/index.html
 
       - name: release sub-site-1 to s3
         uses: jakejarvis/s3-sync-action@master
@@ -143,6 +145,7 @@ jobs:
           SOURCE_DIR: '4'
           DEST_DIR: '4'
 
+
       - name: release sub-site-5 to s3
         uses: jakejarvis/s3-sync-action@master
         with:
@@ -154,6 +157,19 @@ jobs:
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: '5'
           DEST_DIR: '5'
+
+
+      - name: release sub-site-5 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '6'
+          DEST_DIR: '6'
 
 
       - name: prepare scores for upload
