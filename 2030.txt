@@ -5,6 +5,10 @@ nvda:1
 googl:1
 tsla:1
 ibm:1
+^irx:1
+^tnx:1
+^tyx:1
+eurusd=x:1
 
 now:2
 rxt:2
@@ -111,7 +115,6 @@ idrv:5
 irbo:5
 driv:5
 
-eurusd=x:6
 btc-usd:6
 eth-usd:6
 sol-usd:6

@@ -13,7 +13,7 @@ class X2030(FlaskView):
     self.df = {}
     self.stocks = {}
     self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
-    self.period = '5y'
+    self.period = '10y'
     self.interval = '1d'
     self.minimum_score = 25
     self.data_dir = './data/'
