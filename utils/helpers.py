@@ -113,7 +113,7 @@ def stock_info(stock):
 def get_score_color(score):
   if score > 33:
     return 'green'
-  elif score >= 0:
+  elif abs(score) <= 33:
     return 'yellow'
   else:
     return 'red'
