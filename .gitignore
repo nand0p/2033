@@ -1,3 +1,4 @@
 *.pyc
 tmp/*
 .terraform/
+.DS_Store

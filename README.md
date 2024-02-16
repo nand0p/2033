@@ -1,3 +1,4 @@
 # 2030.hex7.com
 
-![alt text](https://github.com/nand0p/2030/blob/master/static/favicon.ico?raw=true)
+<img src="./static/favicon.ico" width="225" />
+<img src="./static/hex7.gif" width="225" />
