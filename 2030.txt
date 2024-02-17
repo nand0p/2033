@@ -38,6 +38,7 @@ team:2
 okta:2
 arm:2
 smci:2
+mu:2
 
 ihak:3
 hack:3
@@ -93,6 +94,8 @@ verv:4
 pacb:4
 beam:4
 blue:4
+rgen:4
+imvt:4
 
 lit:5
 tan:5
