@@ -6,8 +6,7 @@ import os
 
 
 def get_low_price(df):
-  low_price = round(df.min(axis=0).values[0], 4)
-  return low_price
+  return round(df.min(axis=0).values[0], 4)
 
 
 def get_high_price(df):
@@ -15,9 +14,6 @@ def get_high_price(df):
 
 
 def _find_average(df, dim):
-  if len(df.index) < dim:
-    dim = len(df.index)
-
   return round(df['Close'].rolling(dim).mean().tail(1).values[0], 4)
 
 
@@ -42,14 +38,11 @@ def _current_compare(current, test, tolerance):
 def calculate_high_low(current, high, avg_periods, score, tolerance):
   s = _current_compare(current, high, tolerance)
   if s == 2:
-    s = s * len(avg_periods)
+    return score + s * len(avg_periods)
   elif s == 1:
-    s = s * int(len(avg_periods) / 2)
+    return score + s * int(len(avg_periods) / 2)
   else:
-    s = -(len(avg_periods))
-
-  score = score + s
-  return score
+    return score - len(avg_periods)
 
 
 def generate_price_chart(stock, df, tolerance, debug=False):
@@ -89,7 +82,7 @@ def calculate_averages(df, current, score, avg_periods, tolerance):
       s = s - count - 2
       color = 'red'
     else:
-      s = s - int(count/2) - 1
+      s = s - int(count/2) + 2
       color = 'orange'
 
     score = score + s
@@ -120,8 +113,7 @@ def get_score_color(score):
 
 
 def get_current_price(df):
-  current_price = round(df['Close'].tail(1).values[0], 4)
-  return current_price
+  return round(df['Close'].tail(1).values[0], 4)
 
 
 def get_current_color(current, high, tolerance):

@@ -28,18 +28,15 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
 
-      - name: dump env
-        run: env
-
-
       - name: Setting export variables values
         run: |
           pwd
           ls -la
+          env
           TIMEZONE="EST5EDT"
           echo "TZ=${TIMEZONE}"
           echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
-          APP_VERSION=$(cat version.txt)
+          APP_VERSION=$(cat VERSION)
           echo "APP_VERSION=${APP_VERSION}"
           echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
 
@@ -64,22 +61,21 @@ jobs:
 
 
       - name: test container
-        run: bash -ex ./ci/test_container.sh
+        run: |
+          bash -ex ./ci/test_container.sh
+          bash -ex ./ci/test_single_stock.sh
+          bash -ex ./ci/test_full_site.sh
 
 
-      - name: test single stock
-        run: bash -ex ./ci/test_single_stock.sh
-
-
-      - name: test full site
-        run: bash -ex ./ci/test_full_site.sh
-
-
-      - name: download html
+      - name: download main site
         run: wget --recursive --level 2 --no-clobber --page-requisites --adjust-extension --convert-links localhost
 
-      - name: sed index
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" localhost/index.html
+
+      - name: sed main site
+        run: |
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" localhost/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" localhost/index.html
+
 
       - name: release website to s3
         uses: jakejarvis/s3-sync-action@master
@@ -96,18 +92,21 @@ jobs:
       - name: download sub sites
         run: bash -ex ci/download_html.sh
 
-      - name: sed index 1
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 1/index.html
-      - name: sed index 2
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 2/index.html
-      - name: sed index 3
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 3/index.html
-      - name: sed index 4
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 4/index.html
-      - name: sed index 5
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 5/index.html
-      - name: sed index 6
-        run: sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 6/index.html
+      - name: sed sub sites
+        run: |
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 1/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 1/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 2/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 2/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 3/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 3/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 4/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 4/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 5/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 5/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 6/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 6/index.html
+
 
       - name: release sub-site-1 to s3
         uses: jakejarvis/s3-sync-action@master
@@ -171,7 +170,7 @@ jobs:
           DEST_DIR: '5'
 
 
-      - name: release sub-site-5 to s3
+      - name: release sub-site-6 to s3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks
@@ -202,5 +201,12 @@ jobs:
          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
 
-      - name: test website
-        run: curl http://2030.hex7.com
+      - name: test live website
+        run: |
+          curl http://2030.hex7.com
+          curl http://2030.hex7.com/1
+          curl http://2030.hex7.com/2
+          curl http://2030.hex7.com/3
+          curl http://2030.hex7.com/4
+          curl http://2030.hex7.com/5
+          curl http://2030.hex7.com/6

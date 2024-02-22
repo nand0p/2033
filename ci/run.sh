@@ -14,7 +14,7 @@ DRY_RUN=0
 
 REPO=nand0p
 NAME=x2030
-VERSION=$(cat version.txt)
+VERSION=$(cat VERSION)
 STOCKS=$(cat 2030.txt)
 PORTS="80:5000"
 
@@ -45,8 +45,8 @@ else
                 --env "STOCKS=${STOCKS}" \
                 ${TAG})
 
-    echo "====> container ${CONTAINER} <===="
-    echo "====> docker logs -f ${CONTAINER} <===="
+    echo "=====> container ${CONTAINER}"
+    echo "=====> docker logs -f ${CONTAINER}"
 
   else
     CONTAINER=$(docker run --interactive \

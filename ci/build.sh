@@ -9,7 +9,7 @@ NAME=x2030
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7
-VERSION=$(cat version.txt)
+VERSION=$(cat VERSION)
 
 
 #TAG="${NAME}:${VERSION}"

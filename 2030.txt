@@ -91,7 +91,6 @@ crbu:4
 prme:4
 kymr:4
 grph:4
-avro:4
 achl:4
 verv:4
 pacb:4

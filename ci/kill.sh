@@ -2,7 +2,7 @@
 
 
 NAME=x2030
-VERSION=$(cat version.txt)
+VERSION=$(cat VERSION)
 
 KILL=$(docker container ls --filter label=repo=${NAME} --format {{.ID}})
 
