@@ -39,6 +39,7 @@ okta:2
 arm:2
 smci:2
 mu:2
+lrcx:2
 
 ihak:3
 hack:3
@@ -50,7 +51,6 @@ wcld:3
 arkw:3
 arkf:3
 finx:3
-arkq:3
 arkk:3
 soxx:3
 smh:3
@@ -65,6 +65,9 @@ wtai:3
 lrnz:3
 kweb:3
 cqqq:3
+baba:3
+bidu:3
+klip:3
 emqq:3
 
 idna:4
@@ -96,6 +99,8 @@ beam:4
 blue:4
 rgen:4
 imvt:4
+xbi:4
+isrg:4
 
 lit:5
 tan:5
@@ -118,7 +123,10 @@ robt:5
 idrv:5
 irbo:5
 driv:5
+arkq:5
 
+arkb:6
+bitb:6
 btc-usd:6
 eth-usd:6
 sol-usd:6

@@ -31,13 +31,18 @@ jobs:
       - name: dump env
         run: env
 
-      - name: Setting value
+
+      - name: Setting export variables values
         run: |
           pwd
           ls -la
+          TIMEZONE="EST5EDT"
+          echo "TZ=${TIMEZONE}"
+          echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
           APP_VERSION=$(cat version.txt)
           echo "APP_VERSION=${APP_VERSION}"
           echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+
 
       - name: build and push
         id: docker_build

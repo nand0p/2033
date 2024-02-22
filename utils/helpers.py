@@ -6,19 +6,19 @@ import os
 
 
 def get_low_price(df):
-  low_price = round(float(str(df.min(axis=0)).split()[1]), 4)
+  low_price = round(df.min(axis=0).values[0], 4)
   return low_price
 
 
 def get_high_price(df):
-  high_price = round(float(str(df.max(axis=0)).split()[1]), 4)
-  return high_price
+  return round(df.max(axis=0).values[0], 4)
 
 
 def _find_average(df, dim):
-  average = df['Close'].rolling(dim).mean()
-  average = round(float(str(average).split()[-7]),4)
-  return average
+  if len(df.index) < dim:
+    dim = len(df.index)
+
+  return round(df['Close'].rolling(dim).mean().tail(1).values[0], 4)
 
 
 def _current_compare(current, test, tolerance):
@@ -120,7 +120,7 @@ def get_score_color(score):
 
 
 def get_current_price(df):
-  current_price = round(float(str(df.get('Close').iat[-1])), 4)
+  current_price = round(df['Close'].tail(1).values[0], 4)
   return current_price
 
 
