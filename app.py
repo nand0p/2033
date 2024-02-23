@@ -21,6 +21,7 @@ class X2030(FlaskView):
     self.data_dir = './data/'
     self.tolerance = 0.075
     self.tolerance_averages = 0.01
+    self.money = 10000
     self.debug = False
 
 
@@ -78,7 +79,8 @@ class X2030(FlaskView):
                                    debug=self.debug)
 
     self.results = stocks.get_results(stocks=self.stocks,
-                                      debug=self.debug)
+                                      debug=self.debug,
+                                      total_money=self.money)
 
     return render_template('index.html',
                            debug=self.debug,
