@@ -52,6 +52,7 @@ def get_results(stocks, debug, total_money=1000):
 
   for stock, value in stocks.items():
     results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
-    results[stock]['shares'] = round(value['current_price'] / results[stock]['cash'], 4)
+    results[stock]['price'] = value['current_price']
+    results[stock]['shares'] = round(results[stock]['cash'] / results[stock]['price'], 4)
 
   return results
