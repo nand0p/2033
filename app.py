@@ -12,6 +12,7 @@ class X2030(FlaskView):
   def __init__(self):
     self.df = {}
     self.stocks = {}
+    self.scores = {}
     self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
     self.period = '10y'
     self.interval = '1d'
@@ -69,13 +70,14 @@ class X2030(FlaskView):
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             self.stocks[stock]['score'])
 
-    disk.save_scores(self.stocks,
-                     self.data_dir,
-                     debug=self.debug)
+    self.scores = disk.save_scores(self.stocks,
+                                   self.data_dir,
+                                   debug=self.debug)
 
     return render_template('index.html',
+                           debug=self.debug,
                            stocks=self.stocks,
-                           debug=self.debug)
+                           scores=self.scores)
 
 
   @route('/test')

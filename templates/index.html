@@ -12,7 +12,8 @@
 <body>
   {% if debug %}
     debug_mode: {{ debug }}
-    <br>{{ stocks }}
+    <p>{{ stocks }}</p>
+    <p>{{ scores|dictsort }}</p>
   {% endif %}
   <h1>Stock Hunter 2030</h1>
   {{ stocks | length }}
@@ -71,41 +72,62 @@
   <hr>
   <hr>
   <hr>
+  {% if debug %}
+    debug_mode: {{ debug }}
+    <p>{{ scores|dictsort }}</p>
+  {% endif %}
   <table border=3 width=100%>
-
-    {% for s, v in stocks.items()|sort(attribute='1.score') %}
+    {% for v, s in scores|dictsort %}
       <tr>
-        <td bgcolor={{ v.score_color }}>
+        <td bgcolor={{ stocks[s]['score_color'] }}>
           <center>
-            - -
-            {% for i in range(1+v.score//10) %}
-              -
-            {% endfor %}
-            {% for i in range(1+v.score//10) %}
+            -
+            {% if v|int > -33 %}
+              =
+            {% endif %}
+            {% if v|int > -22 %}
+              =
+            {% endif %}
+            {% if v|int > -11 %}
+              =
+            {% endif %}
+            {% if v|int > 0 %}
+              =
+            {% endif %}
+            {% for i in range(1 + v|int // 10) %}
               =
             {% endfor %}
-            = = >
+            = >
           </center>
         </td>
         <td>
-        {% if v.score_color == 'green' %}
-          <h1><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h1>
-        {% elif v.score_color == 'yellow' %}
-          <h3><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h3>
+        {% if stocks[s]['score_color'] == 'green' %}
+          <h1><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h1>
+        {% elif stocks[s]['score_color'] == 'yellow' %}
+          <h2><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h2>
         {% else %}
-          <h6><center>{{ s }}:{{ v.category }} --- {{ v.score }}</h6>
+          <h3><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h3>
         {% endif %}
         </td>
-        <td bgcolor={{ v.score_color }}>
+        <td bgcolor={{ stocks[s]['score_color'] }}>
           <center>
-            < = =
-            {% for i in range(1+v.score//10) %}
+            < =
+            {% for i in range(1 + v|int // 10) %}
               =
             {% endfor %}
-            {% for i in range(1+v.score//10) %}
-              -
-            {% endfor %}
-            - -
+            {% if v|int > -33 %}
+              =
+            {% endif %}
+            {% if v|int > -22 %}
+              =
+            {% endif %}
+            {% if v|int > -11 %}
+              =
+            {% endif %}
+            {% if v|int > 0 %}
+              =
+            {% endif %}
+            -
           </center>
         </td>
       </tr>

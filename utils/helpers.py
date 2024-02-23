@@ -5,16 +5,20 @@ import math
 import os
 
 
-def get_low_price(df):
-  return round(df.min(axis=0).values[0], 4)
+def get_current_price(df, precise=5):
+  return round(df.Close.tail(1).values[0], precise)
 
 
-def get_high_price(df):
-  return round(df.max(axis=0).values[0], 4)
+def get_low_price(df, precise=5):
+  return round(df.min(axis=0).values[0], precise)
 
 
-def _find_average(df, dim):
-  return round(df['Close'].rolling(dim).mean().tail(1).values[0], 4)
+def get_high_price(df, precise=5):
+  return round(df.max(axis=0).values[0], precise)
+
+
+def _find_average(df, dim, precise=5, debug=False):
+  return round(df.Close.rolling(dim).mean().tail(1).values[0], precise)
 
 
 def _current_compare(current, test, tolerance):
@@ -35,57 +39,73 @@ def _current_compare(current, test, tolerance):
     return 1
 
 
-def calculate_high_low(current, high, avg_periods, score, tolerance):
+def calculate_high_low(current, high, avg_periods, score, tolerance, precise=5):
   s = _current_compare(current, high, tolerance)
   if s == 2:
-    return score + s * len(avg_periods)
+    return round(score + len(avg_periods) * 2.678, precise)
   elif s == 1:
-    return score + s * int(len(avg_periods) / 2)
+    return round(score + len(avg_periods) / 2.456, precise)
   else:
-    return score - len(avg_periods)
+    return round(score - len(avg_periods) - 2.901, precise)
 
 
-def generate_price_chart(stock, df, tolerance, debug=False):
+def generate_price_chart(stock, df, tolerance, debug=False, precise=5):
   df['sma90'] = df.Close.rolling(window=90).mean()
   df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
   ax.figure.savefig('static/' + stock + '.png')
   matplotlib.pyplot.close()
 
+  sma90 = df['sma90'].tail(1).values[0]
+  sma365 = df['sma365'].tail(1).values[0]
   if debug:
     print('====>', stock, '<====')
-    print('------>', df['sma90'], '<------')
-    print('------>', df['sma365'], '<------')
+    print('------>', 'sma90', sma90, '<------')
+    print('------>', 'sma365', sma365, '<------')
 
-  if df['sma90'][-1] < df['sma365'][-1]:
-    if math.isclose(df['sma90'][-1], df['sma365'][-1], rel_tol=tolerance):
-      return 5
-    else:
-      return 20
+  if math.isnan(sma90) or math.isnan(sma365):
+    return 3
   else:
-    return -10
+    ratio = sma90 / sma365
+    if sma90 < sma365:
+      if math.isclose(sma90, sma365, rel_tol=tolerance):
+        return round(5.123 * ratio, precise)
+      else:
+        return round(10.456 * ratio, precise)
+    else:
+      return round(-5.789 * ratio, precise)
 
 
 def calculate_averages(df, current, score, avg_periods, tolerance):
+  s = 0
+  t = 0
   r = {}
   count = 1
   for period in sorted(avg_periods):
     r[period] = {}
     r[period]['price'] = _find_average(df, period)
-    s = _current_compare(current, r[period]['price'], tolerance)
 
-    # the longer the period, the greater the weight
+    if math.isnan(r[period]['price']):
+      s = -1
+    else:
+      s = _current_compare(current, r[period]['price'], tolerance)
+
+    # the longer the period (count), the greater the weight (t)
     if s == 2:
-      s = s + count
+      t = count + 2.507
       color = 'green'
     elif s == 0:
-      s = s - count - 2
+      t = count * -2.109
       color = 'red'
+    elif s == -1:
+      # newer stocks get preference (NaN values)
+      t = count / 3 + 3.789
+      color = 'blue'
     else:
-      s = s - int(count/2) + 2
+      t = count / 1.5 + 2.012
       color = 'orange'
 
-    score = score + s
+    score = round(score + t, 4)
     count = count + 1
     r[period]['color'] = color
 
@@ -110,10 +130,6 @@ def get_score_color(score):
     return 'yellow'
   else:
     return 'red'
-
-
-def get_current_price(df):
-  return round(df['Close'].tail(1).values[0], 4)
 
 
 def get_current_color(current, high, tolerance):
