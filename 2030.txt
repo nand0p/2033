@@ -99,7 +99,6 @@ aces:5
 fan:5
 lcid:5
 rivn:5
-pbw:5
 pbd:5
 qcln:5
 cnrg:5
@@ -122,8 +121,6 @@ eth-usd:6
 sol-usd:6
 link-usd:6
 ada-usd:6
-xrp-usd:6
 dot-usd:6
-xmr-usd:6
 algo-usd:6
 atom-usd:6
