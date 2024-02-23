@@ -13,6 +13,7 @@ class X2030(FlaskView):
     self.df = {}
     self.stocks = {}
     self.scores = {}
+    self.results = {}
     self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
     self.period = '10y'
     self.interval = '1d'
@@ -33,18 +34,20 @@ class X2030(FlaskView):
       self.stocks = stocks.get_stocks(os.environ.get('STOCKS'), cat)
 
     for stock in self.stocks:
-      self.df[stock] = yf.load_or_get_data(stock, self.period, self.interval)
+      self.df[stock] = yf.load_or_get_data(stock=stock,
+                                           period=self.period,
+                                           interval=self.interval)
       self.stocks[stock]['score'] = 0
       self.stocks[stock]['averages'] = {}
-      self.stocks[stock]['low'] = helpers.get_low_price(self.df[stock])
-      self.stocks[stock]['high'] = helpers.get_high_price(self.df[stock])
+      self.stocks[stock]['low'] = helpers.get_low_price(df=self.df[stock])
+      self.stocks[stock]['high'] = helpers.get_high_price(df=self.df[stock])
       self.stocks[stock]['current_price'] = helpers.get_current_price(self.df[stock])
       self.stocks[stock]['current_color'] = helpers.get_current_color(
                                               current=self.stocks[stock]['current_price'],
                                               high=self.stocks[stock]['high'],
                                               tolerance=self.tolerance)
 
-      self.stocks[stock]['info'] = helpers.stock_info(stock)
+      self.stocks[stock]['info'] = helpers.stock_info(stock=stock)
 
       self.stocks[stock]['score'] = helpers.generate_price_chart(
                                       stock=stock,
@@ -68,16 +71,20 @@ class X2030(FlaskView):
                                         avg_periods=self.avg_periods)
 
       self.stocks[stock]['score_color'] = helpers.get_score_color(
-                                            self.stocks[stock]['score'])
+                                            score=self.stocks[stock]['score'])
 
-    self.scores = disk.save_scores(self.stocks,
-                                   self.data_dir,
+    self.scores = disk.save_scores(stocks=self.stocks,
+                                   data_dir=self.data_dir,
                                    debug=self.debug)
+
+    self.results = stocks.get_results(stocks=self.stocks,
+                                      debug=self.debug)
 
     return render_template('index.html',
                            debug=self.debug,
-                           stocks=self.stocks,
-                           scores=self.scores)
+                           results=self.results,
+                           scores=self.scores,
+                           stocks=self.stocks)
 
 
   @route('/test')
@@ -98,6 +105,11 @@ class X2030(FlaskView):
   @route('/df')
   def df(self):
     return self.df
+
+
+  @route('/results')
+  def results(self):
+    return self.results
 
 
   @route('/robots.txt')
