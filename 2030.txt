@@ -34,8 +34,6 @@ adbe:2
 cdns:2
 snps:2
 crwd:2
-team:2
-okta:2
 arm:2
 smci:2
 mu:2
@@ -57,7 +55,6 @@ smh:3
 hero:3
 gamr:3
 espo:3
-betz:3
 nerd:3
 thnq:3
 aiq:3
@@ -67,7 +64,6 @@ kweb:3
 cqqq:3
 baba:3
 bidu:3
-klip:3
 emqq:3
 
 idna:4
@@ -75,7 +71,6 @@ gnom:4
 fbiox:4
 arkg:4
 crsp:4
-rwlk:4
 bbp:4
 bbc:4
 sbio:4
@@ -108,8 +103,6 @@ aces:5
 fan:5
 lcid:5
 rivn:5
-sli:5
-pll:5
 pbw:5
 pbd:5
 qcln:5
@@ -124,19 +117,13 @@ irbo:5
 driv:5
 arkq:5
 
-arkb:6
-bitb:6
 btc-usd:6
 eth-usd:6
 sol-usd:6
 link-usd:6
 ada-usd:6
 xrp-usd:6
-ltc-usd:6
 dot-usd:6
 xmr-usd:6
-doge-usd:6
-trx-usd:6
 algo-usd:6
-eos-usd:6
 atom-usd:6
