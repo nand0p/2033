@@ -38,11 +38,11 @@ def get_results(stocks, debug, total_money=1000):
       results[stock]['parts'] = 1
       stock_parts = stock_parts + 1
     elif value['score_color'] == 'yellow':
-      results[stock]['parts'] = 2
-      stock_parts = stock_parts + 2
+      results[stock]['parts'] = 3
+      stock_parts = stock_parts + 3
     elif value['score_color'] == 'green':
-      results[stock]['parts'] = 4
-      stock_parts = stock_parts + 4
+      results[stock]['parts'] = 7
+      stock_parts = stock_parts + 7
     total_parts = total_parts + stock_parts
 
   money_per_part = total_money / total_parts
