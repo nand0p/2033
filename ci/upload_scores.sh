@@ -33,6 +33,10 @@ echo "FILE_NAME=${FILE}" >> $GITHUB_OUTPUT
 echo "FILE_PATH=${SAVE_PATH}" >> $GITHUB_OUTPUT
 
 
+echo ensure idempotent run
+aws s3 rm s3://${S3_BUCKET}/${S3_PREFIX}/${FILE} || true
+
+
 echo uploading scores file
 aws s3 cp ${SAVE_PATH}/${FILE} s3://${S3_BUCKET}/${S3_PREFIX}/${FILE}
 
