@@ -42,6 +42,9 @@ jobs:
           S3_PUBLIC_BUCKET=2030.hex7.com
           echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}"
           echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
+          S3_SCORES_PREFIX=scores
+          echo "S3_SCORES_PREFIX=${S3_SCORES_PREFIX}"
+          echo "S3_SCORES_PREFIX=${S3_SCORES_PREFIX}" >> $GITHUB_ENV
 
 
       - name: build and push
@@ -210,10 +213,10 @@ jobs:
           AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'tmp/'
-          DEST_DIR: 'scores/'
+          AWS_REGION: "us-east-1"
+          SOURCE_DIR: "tmp/"
+          DEST_DIR: "${{ env.S3_SCORES_PREFIX }}/"
 
 
       - name: test scores
-        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ steps.scores.outputs.S3_PREFIX }}/${{ steps.scores.outputs.FILE_NAME }}
+        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_NAME }}
