@@ -188,13 +188,13 @@ jobs:
 
       - name: test live website
         run: |
-          curl http://${{ env.S3_PUBLIC_BUCKET }}
           curl http://${{ env.S3_PUBLIC_BUCKET }}/1
           curl http://${{ env.S3_PUBLIC_BUCKET }}/2
           curl http://${{ env.S3_PUBLIC_BUCKET }}/3
           curl http://${{ env.S3_PUBLIC_BUCKET }}/4
           curl http://${{ env.S3_PUBLIC_BUCKET }}/5
           curl http://${{ env.S3_PUBLIC_BUCKET }}/6
+          curl http://${{ env.S3_PUBLIC_BUCKET }}
 
 
       - name: upload scores

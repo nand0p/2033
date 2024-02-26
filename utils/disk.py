@@ -15,6 +15,12 @@ scores_key = 'scores-' + date + '.json'
 def save_scores(stocks, data_dir, debug=False):
   scores_out = {}
   for stock in stocks.keys():
+    if stocks[stock]['score'] > 100:
+      stocks[stock]['score'] = 99.999
+    elif stocks[stock]['score'] < -100:
+      stocks[stock]['score'] = -99.999
+    stocks[stock]['score'] = round(stocks[stock]['score'], 3)
+
     scores_out[stock] = {}
     scores_out[stock]['score'] = stocks[stock]['score']
     scores_out[stock]['current_price'] = stocks[stock]['current_price']
@@ -34,11 +40,6 @@ def save_scores(stocks, data_dir, debug=False):
 
   scores_sort = {}
   for stock in stocks.keys():
-    score = round(stocks[stock]['score'], 3)
-    if score > 100:
-      score = 99.999
-    elif score < -100:
-      score = -99.999
     scores_sort.update({score: stock})
 
   if debug:
