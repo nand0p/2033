@@ -1,16 +1,7 @@
 #!/bin/bash -e
 
 
-# 0 or 1
-if [ -z "$1" ]; then
-  DAEMONIZE=0
-else
-  DAEMONIZE=1
-fi
-
-
 DRY_RUN=0
-
 
 REPO=nand0p
 NAME=x2030
@@ -37,23 +28,16 @@ if [ "${DRY_RUN}" == "1" ]; then
   echo "           ${TAG}"
   echo 
   exit 1
+
 else
-  if [ "${DAEMONIZE}" == "1" ]; then
-    CONTAINER=$(docker run --detach \
-                --publish ${PORTS} \
-                -v data:/data \
-                --env "STOCKS=${STOCKS}" \
-                ${TAG})
+  CONTAINER=$(docker run --detach \
+              --publish ${PORTS} \
+              -v data:/data \
+              --env "STOCKS=${STOCKS}" \
+              ${TAG})
 
-    echo "=====> container ${CONTAINER}"
-    echo "=====> docker logs -f ${CONTAINER}"
+  echo "=====> container ${CONTAINER}"
+  echo "=====> docker logs -f ${CONTAINER}"
+  docker logs -f ${CONTAINER}
 
-  else
-    CONTAINER=$(docker run --interactive \
-                --tty \
-                --publish ${PORTS} \
-                -v data:/data \
-                --env "STOCKS=${STOCKS}" \
-                ${TAG})
-  fi
 fi
