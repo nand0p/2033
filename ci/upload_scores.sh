@@ -31,22 +31,3 @@ echo ensure data copy out success
 cat ${SAVE_PATH}/${FILE}
 echo "FILE_NAME=${FILE}" >> $GITHUB_OUTPUT
 echo "FILE_PATH=${SAVE_PATH}" >> $GITHUB_OUTPUT
-
-
-echo ensure idempotent run
-aws s3 rm s3://${S3_BUCKET}/${S3_PREFIX}/${FILE} || true
-
-
-echo uploading scores file
-aws s3 cp ${SAVE_PATH}/${FILE} s3://${S3_BUCKET}/${S3_PREFIX}/${FILE}
-
-
-echo test upload success
-aws s3 ls s3://${S3_BUCKET}/${S3_PREFIX}/${FILE}
-
-
-echo put scores file acl
-aws s3api put-object-acl --bucket ${S3_BUCKET} \
-                         --key ${S3_PREFIX}/${FILE} \
-                         --acl public-read \
-                         --output text
