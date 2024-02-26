@@ -33,12 +33,15 @@ jobs:
           pwd
           ls -la
           env
-          TIMEZONE="EST5EDT"
+          TIMEZONE=EST5EDT
           echo "TZ=${TIMEZONE}"
           echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
           APP_VERSION=$(cat VERSION)
           echo "APP_VERSION=${APP_VERSION}"
           echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+          S3_PUBLIC_BUCKET=2030.hex7.com
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}"
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
 
 
       - name: build and push
@@ -82,7 +85,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -113,7 +116,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -125,7 +128,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -137,7 +140,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -149,7 +152,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -162,7 +165,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -175,7 +178,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks
         env:
-          AWS_S3_BUCKET: 2030.hex7.com
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
           AWS_REGION: 'us-east-1'
@@ -183,30 +186,21 @@ jobs:
           DEST_DIR: '6'
 
 
-      - name: prepare scores for upload
+      - name: test live website
+        run: |
+          curl http://${{ env.S3_PUBLIC_BUCKET }}
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/1
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/2
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/3
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/4
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/5
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/6
+
+
+      - name: upload scores
         id: scores
         run: bash -ex ./ci/upload_scores.sh
 
 
-      - name: upload scores to s3
-        uses: zdurham/s3-upload-github-action@master
-        with:
-          args: --acl public-read
-        env:
-         FILE: "${{ steps.scores.outputs.FILE_PATH }}/${{ steps.scores.outputs.FILE_NAME }}"
-         AWS_REGION: 'us-east-1'
-         S3_BUCKET: '2030.hex7.com'
-         S3_KEY: ${{ steps.scores.outputs.FILE_NAME }}
-         AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
-         AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-
-
-      - name: test live website
-        run: |
-          curl http://2030.hex7.com
-          curl http://2030.hex7.com/1
-          curl http://2030.hex7.com/2
-          curl http://2030.hex7.com/3
-          curl http://2030.hex7.com/4
-          curl http://2030.hex7.com/5
-          curl http://2030.hex7.com/6
+      - name: test scores
+        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ steps.scores.outputs.S3_PREFIX }}/${{ steps.scores.outputs.FILE_NAME }}

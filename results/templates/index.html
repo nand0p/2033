@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Stock Hunter 2030 Results</title>
+</head>
+
+<body>
+  <h2>Stock Hunter 2030 Results</h2>
+  <p>{{ datemade }}</p>
+  {% if debug %}
+    <p>results: {{ results }}</p>
+    <p>ordered: {{ ordered }}</p>
+  {% endif %}
+  <br>
+  <center>
+  <table border=2>
+    <tr><td colspan=6>total money: {{ results.total_money }}</td></tr>
+    <tr><td colspan=6>total parts: {{ results.total_parts }}</td></tr>
+    <tr><td colspan=6>money per part: {{ results.money_per_part }}</td></tr>
+    <tr><td colspan=6>.</td></tr>
+    {% for v in ordered %}
+      <tr>
+        <td>{{ v.stock }}</td>
+        <td>score: {{ v.score }}</td>
+        <td>parts: {{ v.parts }}</td>
+        <td>cash: {{ v.cash }}</td>
+        <td>shares: {{ v.shares }}</td>
+        <td>price: {{ v.price }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <p>
+  <br>
+  <p>
+  <a href=https://github.com/nand0p/2030>
+    https://github.com/nand0p/2030
+  </a>
+  <br>
+  {{ datemade }}
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+flask_classful
+matplotlib
+yfinance
+flask
+boto3

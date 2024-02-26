@@ -21,7 +21,6 @@ class X2030(FlaskView):
     self.data_dir = './data/'
     self.tolerance = 0.075
     self.tolerance_averages = 0.01
-    self.money = 10000
     self.debug = False
 
 
@@ -74,20 +73,16 @@ class X2030(FlaskView):
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             score=self.stocks[stock]['score'])
 
+
     self.scores = disk.save_scores(stocks=self.stocks,
                                    data_dir=self.data_dir,
                                    debug=self.debug)
 
-    self.results = stocks.get_results(stocks=self.stocks,
-                                      debug=self.debug,
-                                      total_money=self.money)
 
     return render_template('index.html',
                            debug=self.debug,
-                           results=self.results,
                            scores=self.scores,
                            stocks=self.stocks)
-
 
   @route('/test')
   def test(self):

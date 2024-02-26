@@ -15,9 +15,15 @@ scores_key = 'scores-' + date + '.json'
 def save_scores(stocks, data_dir, debug=False):
   scores_out = {}
   for stock in stocks.keys():
-    scores_out[stock] = stocks[stock]['score']
+    scores_out[stock] = {}
+    scores_out[stock]['score'] = stocks[stock]['score']
+    scores_out[stock]['current_price'] = stocks[stock]['current_price']
+    scores_out[stock]['category'] = stocks[stock]['category']
+
     if debug:
-      print('scores', stock, scores_out[stock])
+      print('stock', stock)
+      print('score', scores_out[stock]['score'])
+      print('current_price', scores_out[stock]['current_price'])
 
   with open(data_dir + scores_key, 'w') as out:
     json.dump(scores_out, out, ensure_ascii=True, indent=4)

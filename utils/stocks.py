@@ -25,34 +25,3 @@ def get_stocks(stocks, cat):
         r[s]['catname'] = 'None'
 
   return r
-
-
-def get_results(stocks, debug, total_money=1000):
-  results = {}
-  total_parts = 0
-
-  for stock, value in stocks.items():
-    stock_parts = 0
-    results[stock] = {}
-    if value['score_color'] == 'red':
-      results[stock]['parts'] = 1
-      stock_parts = stock_parts + 1
-    elif value['score_color'] == 'yellow':
-      results[stock]['parts'] = 3
-      stock_parts = stock_parts + 3
-    elif value['score_color'] == 'green':
-      results[stock]['parts'] = 7
-      stock_parts = stock_parts + 7
-    total_parts = total_parts + stock_parts
-
-  money_per_part = total_money / total_parts
-  results['total_money'] = total_money
-  results['total_parts'] = total_parts
-  results['money_per_part'] = round(money_per_part, 2)
-
-  for stock, value in stocks.items():
-    results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
-    results[stock]['price'] = value['current_price']
-    results[stock]['shares'] = round(results[stock]['cash'] / results[stock]['price'], 4)
-
-  return results

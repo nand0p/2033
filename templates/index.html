@@ -134,33 +134,10 @@
     {% endfor %}
   
   </table>
-  <br>
-  {% if debug %}
-    {{ results }}
-  {% endif %}
   <p>
   <br>
+  <p>
   <center>
-  <table border=2>
-    <tr><td colspan=5>total money: {{ results.total_money }}</td></tr>
-    <tr><td colspan=5>total parts: {{ results.total_parts }}</td></tr>
-    <tr><td colspan=5>money per part: {{ results.money_per_part }}</td></tr>
-    <tr><td colspan=5>.</td></tr>
-    {% for stock, val in results|dictsort %}
-      {% if val.parts %}
-        <tr>
-          <td>{{ stock }}</td>
-          <td>price: {{ val.price }}</td>
-          <td>parts: {{ val.parts }}</td>
-          <td>cash: {{ val.cash }}</td>
-          <td>shares: {{ val.shares }}</td>
-        </tr>
-      {% endif %}
-    {% endfor %}
-  </table>
-  <p>
-  <br>
-  <p>
   <a href=https://github.com/nand0p/2030>
     https://github.com/nand0p/2030
   </a>
