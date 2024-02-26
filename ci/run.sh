@@ -38,6 +38,5 @@ else
 
   echo "=====> container ${CONTAINER}"
   echo "=====> docker logs -f ${CONTAINER}"
-  docker logs -f ${CONTAINER}
 
 fi
