@@ -40,7 +40,7 @@ def save_scores(stocks, data_dir, debug=False):
 
   scores_sort = {}
   for stock in stocks.keys():
-    scores_sort.update({score: stock})
+    scores_sort.update({stocks[stock]['score']: stock})
 
   if debug:
     print('SCORES', scores_sort)
