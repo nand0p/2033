@@ -1,5 +1,3 @@
-from operator import itemgetter
-
 def get_results(stocks, debug=False, category=0, total_money=1000):
   results = {}
   total_parts = 0
@@ -7,7 +5,7 @@ def get_results(stocks, debug=False, category=0, total_money=1000):
   for stock, v in stocks.items():
     stock_parts = 0
     results[stock] = {}
-    if v['category'] == category or category == '0':
+    if v['category'] == category or category == '0' and v['category'] != '6':
       if v['score'] < -33:
         results[stock]['parts'] = 1
         stock_parts = stock_parts + 1
@@ -35,7 +33,7 @@ def get_results(stocks, debug=False, category=0, total_money=1000):
 
   ordered = []
   for stock, v in stocks.items():
-    if v['category'] == category or category == '0':
+    if v['category'] == category or category == '0' and v['category'] != '6':
       results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
       results[stock]['shares'] = round(results[stock]['cash'] / v['current_price'], 4)
       results[stock]['price'] = round(v['current_price'], 2)

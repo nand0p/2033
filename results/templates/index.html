@@ -31,12 +31,33 @@
       <tr>
         <td>{{ v.stock }}</td>
         <td>score: {{ v.score }}</td>
-        <td>parts: {{ v.parts }}</td>
-        <td>cash: {{ v.cash }}</td>
-        <td>shares: {{ v.shares }}</td>
         <td>price: {{ v.price }}</td>
+        <td>parts: {{ v.parts }}</td>
+        <td>shares: {{ v.shares }}</td>
+        <td>cash: {{ v.cash }}</td>
       </tr>
     {% endfor %}
+  </table>
+  <p>
+  <br>
+  <p>
+  <table>
+    <tr>
+      <td align=right>one share price:</td>
+      <td align=left>{{ share_one }}</td>
+    </tr>
+    <tr>
+      <td align=right>total money:</td>
+      <td align=left>{{ results.total_money }}</td>
+    </tr>
+    <tr>
+      <td align=right>total parts:</td>
+      <td align=left>{{ results.total_parts }}</td>
+    </tr>
+    <tr>
+      <td align=right>money per part:</td>
+      <td align=left>{{ results.money_per_part }}</td>
+    </tr>
   </table>
   <p>
   <br>

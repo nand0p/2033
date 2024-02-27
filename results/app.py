@@ -2,7 +2,7 @@ from flask import Flask, render_template, send_from_directory
 from flask_classful import FlaskView, route, request
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from utils import scores
+from utils import scores, shares
 import requests
 import json
 import os
@@ -18,11 +18,14 @@ class X2030(FlaskView):
     self.ordered = []
     self.api = 'http://2030.hex7.com/scores/'
     self.date = ''
+    self.r_dict = {}
+    self.share_one = 0
+    self.category = 0
     self.debug = False
 
   @route('/', methods = ['GET'])
   def index(self):
-    category = request.args.get('cat', '0')
+    self.category = request.args.get('cat', '0')
     self.total_money = int(request.args.get('cash', str(self.total_money)))
     self.date = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
     req = self.api + 'scores-' + self.date[0] + '.json'
@@ -30,7 +33,7 @@ class X2030(FlaskView):
     if r.status_code != 200:
       raise Exception("req: ", req, " status code: ", r.status_code)
 
-    r_dict = json.loads(r.text)
+    self.r_dict = json.loads(r.text)
 
     if self.debug:
       print('<p>api:<br>',
@@ -44,14 +47,20 @@ class X2030(FlaskView):
             '<p><br>p>')
 
     self.results, \
-    self.ordered = scores.get_results(stocks=json.loads(r.text),
-                                      category=category,
+    self.ordered = scores.get_results(stocks=self.r_dict,
+                                      category=self.category,
                                       total_money=self.total_money,
                                       debug=self.debug)
+
+    self.share_one = shares.get_min_shares(stocks=self.r_dict,
+                                           category=self.category,
+                                           total_money=self.total_money,
+                                           debug=self.debug)
 
     return render_template('index.html',
                            debug=self.debug,
                            datemade=' '.join(self.date),
+                           share_one=self.share_one,
                            ordered=self.ordered,
                            results=self.results)
 
