@@ -112,11 +112,11 @@
         </td>
         <td>
         {% if stocks[s]['score_color'] == 'green' %}
-          <h1><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h1>
+          <h1><center>{{ stocks[s]['category'] }}:{{ s }}:{{ stocks[s]['current_price'] }} --- {{ v }}</h1>
         {% elif stocks[s]['score_color'] == 'yellow' %}
-          <h2><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h2>
+          <h2><center>{{ stocks[s]['category'] }}:{{ s }}:{{ stocks[s]['current_price'] }} --- {{ v }}</h2>
         {% else %}
-          <h3><center>{{ s }}:{{ stocks[s]['category'] }} --- {{ v }}</h3>
+          <h3><center>{{ stocks[s]['category'] }}:{{ s }}:{{ stocks[s]['current_price'] }} --- {{ v }}</h3>
         {% endif %}
         </td>
         <td bgcolor={{ stocks[s]['score_color'] }}>
