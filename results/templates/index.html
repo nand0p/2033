@@ -23,13 +23,16 @@
   <br>
   <center>
   <table border=2>
-    <tr><td colspan=6>total money: {{ results.total_money }}</td></tr>
-    <tr><td colspan=6>total parts: {{ results.total_parts }}</td></tr>
-    <tr><td colspan=6>money per part: {{ results.money_per_part }}</td></tr>
-    <tr><td colspan=6>.</td></tr>
+    <tr><td colspan=7>total money: {{ results.total_money }}</td></tr>
+    <tr><td colspan=7>total parts: {{ results.total_parts }}</td></tr>
+    <tr><td colspan=7>money per part: {{ results.money_per_part }}</td></tr>
+    <tr><td colspan=7>.</td></tr>
     {% for v in ordered %}
       <tr>
-        <td>{{ v.stock }}</td>
+        <td>{{ loop.revindex }}</td>
+        <td>
+          <a target=_blank href=https://finance.yahoo.com/quote/{{ v.stock }}>{{ v.stock }}</a>
+        </td>
         <td>score: {{ v.score }}</td>
         <td>price: {{ v.price }}</td>
         <td>parts: {{ v.parts }}</td>
@@ -42,6 +45,10 @@
   <br>
   <p>
   <table>
+    <tr>
+      <td align=right>num_stocks:</td>
+      <td align=left>{{ ordered | length }}</td>
+    </tr>
     <tr>
       <td align=right>one share price:</td>
       <td align=left>{{ share_one }}</td>
