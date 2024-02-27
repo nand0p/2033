@@ -41,6 +41,7 @@ if [ "${DRY_RUN}" == "1" ]; then
 else
   CONTAINER=$(docker run --detach \
               --publish ${PORTS} \
+              -v ~/.aws:/root/.aws:ro \
               ${TAG})
 
   echo "=====> container ${CONTAINER}"

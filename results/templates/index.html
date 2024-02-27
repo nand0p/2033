@@ -15,7 +15,7 @@
   <a href=?cat=5>5</a>
   <a href=?cat=6>6</a>
   </h2>
-  <p>{{ datemade }}</p>
+  <p>{{ datemade }}<br>{{ req }}</p>
   {% if debug %}
     <p>results: {{ results }}</p>
     <p>ordered: {{ ordered }}</p>
@@ -66,6 +66,10 @@
       <td align=left>{{ results.money_per_part }}</td>
     </tr>
   </table>
+  <p>
+  {% for stock, v in matrix.items() %}
+    <img src=static/{{ stock }}-scores.png><br>
+  {% endfor %}
   <p>
   <br>
   <p>

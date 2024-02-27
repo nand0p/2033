@@ -1,8 +1,9 @@
 from flask import Flask, render_template, send_from_directory
 from flask_classful import FlaskView, route, request
+from utils import scores, shares
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from utils import scores, shares
+
 import requests
 import json
 import os
@@ -16,34 +17,39 @@ class X2030(FlaskView):
     self.total_money = 1000
     self.results = {}
     self.ordered = []
-    self.api = 'http://2030.hex7.com/scores/'
+    self.s_list = []
+    self.savepath = 'static/'
+    self.prefix = 'scores/'
+    self.bucket = '2030.hex7.com'
+    self.api = 'http://' + self.bucket + '/' + self.prefix
     self.date = ''
+    self.req = ''
     self.r_dict = {}
+    self.matrix = {}
     self.share_one = 0
     self.category = 0
     self.debug = False
 
   @route('/', methods = ['GET'])
   def index(self):
+    self.matrix = {}
     self.category = request.args.get('cat', '0')
+    self.debug = request.args.get('debug', False)
     self.total_money = int(request.args.get('cash', str(self.total_money)))
     self.date = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
-    req = self.api + 'scores-' + self.date[0] + '.json'
-    r = requests.get(req)
+    self.req = self.api + 'scores-' + self.date[0] + '.json'
+    r = requests.get(self.req)
     if r.status_code != 200:
-      raise Exception("req: ", req, " status code: ", r.status_code)
+      raise Exception("req: ", self.req, " status code: ", r.status_code)
 
     self.r_dict = json.loads(r.text)
 
     if self.debug:
-      print('<p>api:<br>',
-            self.api,
-            '<p>date:<br>',
-            self.date,
-            '<p>stocks:<br>',
-            str(r.content),
-            '<p>response:<br>',
-            str(r_dict),
+      print('<p>req:<br>', self.req,
+            '<p>api:<br>', self.api,
+            '<p>date:<br>', self.date,
+            '<p>stocks:<br>', str(r.content),
+            '<p>response:<br>', str(self.r_dict),
             '<p><br>p>')
 
     self.results, \
@@ -57,22 +63,46 @@ class X2030(FlaskView):
                                            total_money=self.total_money,
                                            debug=self.debug)
 
+    self.s_list = scores.get_scores_list(bucket=self.bucket,
+                                         prefix=self.prefix,
+                                         debug=self.debug)
+
+    for key in self.s_list:
+      req = 'http://' + self.bucket + '/' + key
+
+      r = requests.get(req)
+      r_dict = json.loads(r.text)
+      if self.debug:
+        print('key', key)
+        print('req', req)
+        print('r_dict', r_dict)
+
+      for k, v in r_dict.items():
+        if self.results[k]['category'] == self.category or \
+           self.category == '0' and \
+           self.results[k]['category'] != '6':
+
+          if k not in self.matrix:
+            self.matrix[k] = []
+          self.matrix[k].append(round(v['score'], 2))
+
+    scores.make_charts(matrix=self.matrix,
+                       debug=self.debug,
+                       savepath=self.savepath)
+
     return render_template('index.html',
+                           req=self.req,
                            debug=self.debug,
                            datemade=' '.join(self.date),
                            share_one=self.share_one,
                            ordered=self.ordered,
-                           results=self.results)
+                           results=self.results,
+                           matrix=self.matrix)
 
 
   @route('/test')
   def test(self):
-    return 'success'
-
-
-  @route('/api')
-  def results(self):
-    return self.api
+    return '200 success'
 
 
   @route('/robots.txt')
