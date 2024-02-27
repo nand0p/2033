@@ -10,7 +10,6 @@ which aws
 CONTAINER=$(docker ps --latest --format {{.ID}})
 DATE=$(date +%Y-%m-%d)
 S3_BUCKET=2030.hex7.com
-S3_PREFIX=scores
 FILE=scores-${DATE}.json
 SAVE_PATH=tmp
 
