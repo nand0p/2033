@@ -113,6 +113,7 @@ def make_charts(matrix, savepath='static/', debug=False):
       print('stock: ', stock)
       print('scores: ', s)
 
+    plt.ticklabel_format(useOffset=False, style='plain')
     plt.title(stock + ' scores')
     plt.xlabel('time')
     plt.ylabel('scores')
