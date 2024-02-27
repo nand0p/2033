@@ -1,7 +1,8 @@
 from flask import Flask, render_template, send_from_directory
 from flask_classful import FlaskView, route, request
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from utils import scores
-import datetime
 import requests
 import json
 import os
@@ -23,9 +24,12 @@ class X2030(FlaskView):
   def index(self):
     category = request.args.get('cat', '0')
     self.total_money = int(request.args.get('cash', str(self.total_money)))
-    self.date = datetime.datetime.now().isoformat().split('T')[0]
-    req = self.api + 'scores-' + self.date + '.json'
+    self.date = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
+    req = self.api + 'scores-' + self.date[0] + '.json'
     r = requests.get(req)
+    if r.status_code != 200:
+      raise Exception("req: ", req, " status code: ", r.status_code)
+
     r_dict = json.loads(r.text)
 
     if self.debug:
@@ -47,7 +51,7 @@ class X2030(FlaskView):
 
     return render_template('index.html',
                            debug=self.debug,
-                           datemade=self.date,
+                           datemade=' '.join(self.date),
                            ordered=self.ordered,
                            results=self.results)
 
