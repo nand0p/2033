@@ -56,14 +56,6 @@ thnq:3
 aiq:3
 wtai:3
 lrnz:3
-kweb:3
-cqqq:3
-baba:3
-bidu:3
-emqq:3
-keji:3
-kgro:3
-kemq:3
 
 idna:4
 gnom:4
@@ -114,8 +106,6 @@ idrv:5
 irbo:5
 driv:5
 arkq:5
-kgrn:5
-kmet:5
 
 ^irx:6
 ^tnx:6
@@ -129,3 +119,14 @@ ada-usd:6
 dot-usd:6
 algo-usd:6
 atom-usd:6
+
+kgrn:7
+kmet:7
+kweb:7
+cqqq:7
+baba:7
+bidu:7
+emqq:7
+keji:7
+kgro:7
+kemq:7

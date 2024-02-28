@@ -21,6 +21,8 @@ def get_stocks(stocks, cat):
         r[s]['catname'] = 'Sustainable Future'
       elif v == '6':
         r[s]['catname'] = 'Crypto'
+      elif v == '7':
+        r[s]['catname'] = 'Asia Emerging'
       else:
         r[s]['catname'] = 'None'
 

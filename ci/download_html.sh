@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for BASE in 1 2 3 4 5 6; do
+for BASE in 1 2 3 4 5 6 7; do
   pwd
   echo execute ${BASE}
   mkdir -pv ${BASE}
