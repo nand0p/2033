@@ -12,21 +12,30 @@ def get_results(stocks, debug=False, category=0, total_money=1000):
     results[stock] = {}
     results[stock]['category'] = v['category']
     if v['category'] == category or category == '0' and v['category'] != '6':
-      if v['score'] < -33:
+      if v['score'] < -75:
+        results[stock]['parts'] = 0
+        stock_parts = stock_parts + 0
+      elif v['score'] < -50:
         results[stock]['parts'] = 1
         stock_parts = stock_parts + 1
-      elif v['score'] < 0:
+      elif v['score'] < -25:
         results[stock]['parts'] = 2
         stock_parts = stock_parts + 2
-      elif v['score'] < 33:
+      elif v['score'] < 0:
         results[stock]['parts'] = 3
         stock_parts = stock_parts + 3
-      elif v['score'] < 66:
+      elif v['score'] < 25:
+        results[stock]['parts'] = 4
+        stock_parts = stock_parts + 4
+      elif v['score'] < 50:
         results[stock]['parts'] = 5
         stock_parts = stock_parts + 5
-      elif v['score'] >= 66:
-        results[stock]['parts'] = 8
-        stock_parts = stock_parts + 8
+      elif v['score'] < 75:
+        results[stock]['parts'] = 6
+        stock_parts = stock_parts + 6
+      elif v['score'] >= 75:
+        results[stock]['parts'] = 7
+        stock_parts = stock_parts + 7
       else:
         raise Exception("Invalid Stock Score: " + str(stock) + ' - ' + str(v['score']))
 

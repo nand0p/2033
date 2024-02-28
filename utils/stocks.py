@@ -12,7 +12,7 @@ def get_stocks(stocks, cat):
       if v == '1':
         r[s]['catname'] = 'Cloud XL'
       elif v == '2':
-        r[s]['catname'] = 'Cloud Stock'
+        r[s]['catname'] = 'Cloud Stocks'
       elif v == '3':
         r[s]['catname'] = 'ETF'
       elif v == '4':
@@ -23,6 +23,8 @@ def get_stocks(stocks, cat):
         r[s]['catname'] = 'Crypto'
       elif v == '7':
         r[s]['catname'] = 'Asia Emerging'
+      elif v == '8':
+        r[s]['catname'] = 'Cloud Growth'
       else:
         r[s]['catname'] = 'None'
 

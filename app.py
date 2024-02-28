@@ -28,8 +28,8 @@ class X2030(FlaskView):
   def index(self):
     cat = request.args.get('cat', '0')
 
-    if cat == '8':
-      self.stocks = {'AAPL': {'category': '8'}}
+    if cat == '9':
+      self.stocks = {'AAPL': {'category': '9'}}
     else:
       self.stocks = stocks.get_stocks(os.environ.get('STOCKS'), cat)
 

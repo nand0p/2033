@@ -136,6 +136,8 @@ jobs:
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 6/index.html
           sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 7/index.html
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 7/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" 8/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" 8/index.html
 
 
       - name: release sub-site-1 to s3
@@ -222,6 +224,18 @@ jobs:
           SOURCE_DIR: '7'
           DEST_DIR: '7'
 
+      - name: release sub-site-8 to s3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: 'us-east-1'
+          SOURCE_DIR: '8'
+          DEST_DIR: '8'
+
 
       - name: test live website
         run: |
@@ -232,4 +246,5 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/5
           curl http://${{ env.S3_PUBLIC_BUCKET }}/6
           curl http://${{ env.S3_PUBLIC_BUCKET }}/7
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/8
           curl http://${{ env.S3_PUBLIC_BUCKET }}

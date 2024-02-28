@@ -7,10 +7,8 @@ tsla:1
 ibm:1
 
 now:2
-rxt:2
 docn:2
 docu:2
-hcp:2
 gtlb:2
 dt:2
 anet:2
@@ -134,3 +132,6 @@ bidu:7
 emqq:7
 kgro:7
 kemq:7
+
+rxt:8
+hcp:8
