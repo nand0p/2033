@@ -34,6 +34,11 @@ arm:2
 smci:2
 mu:2
 lrcx:2
+okta:2
+asml:2
+splk:2
+avgo:2
+amd:2
 
 ihak:3
 hack:3
