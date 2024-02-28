@@ -61,6 +61,9 @@ cqqq:3
 baba:3
 bidu:3
 emqq:3
+keji:3
+kgro:3
+kemq:3
 
 idna:4
 gnom:4
@@ -111,6 +114,8 @@ idrv:5
 irbo:5
 driv:5
 arkq:5
+kgrn:5
+kmet:5
 
 ^irx:6
 ^tnx:6
