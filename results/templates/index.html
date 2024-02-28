@@ -19,6 +19,8 @@
   {% if debug %}
     <p>results: {{ results }}</p>
     <p>ordered: {{ ordered }}</p>
+    <p>matrix: {{ matrix }}</p>
+    <p>share_one: {{ share_one }}</p>
   {% endif %}
   <br>
   <center>
@@ -66,10 +68,24 @@
       <td align=left>{{ results.money_per_part }}</td>
     </tr>
   </table>
-  <p>
-  {% for stock, v in matrix.items() %}
-    <img src=static/{{ stock }}-scores.png><br>
+  <br>
+
+  <table>
+  {% for v in ordered | reverse %}
+    <tr>
+      <td>
+        <img src=static/{{ v.stock }}-scores.png width=400>
+      </td>
+      <td>
+        {{ v.stock }}<br>{{ v.price }}<br>{{ v.score }}
+      </td>
+      <td>
+        <img src=http://2030.hex7.com/static/{{ v.stock }}.png width=400>
+      </td>
+    </tr>
   {% endfor %}
+  </table>
+
   <p>
   <br>
   <p>
