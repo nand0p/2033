@@ -3,13 +3,13 @@ name: x2030
 on:
   push:
     branches: [ master ]
-    workflow_dispatch:
   schedule:
+    - cron: '0 0 * * *'
     - cron: '35 0-3,12-23 * * 1-5'
-    - cron: '0 0 * * 0,6'
+  workflow_dispatch:
 
 jobs:
-  build:
+  deploy_2030:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,16 +35,16 @@ jobs:
           ls -la
           env
           TIMEZONE=EST5EDT
-          echo "TZ=${TIMEZONE}"
-          echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
           APP_VERSION=$(cat VERSION)
-          echo "APP_VERSION=${APP_VERSION}"
-          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
           S3_PUBLIC_BUCKET=2030.hex7.com
-          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}"
-          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
           S3_SCORES_PREFIX=scores
+          echo "TZ=${TIMEZONE}"
+          echo "APP_VERSION=${APP_VERSION}"
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}"
           echo "S3_SCORES_PREFIX=${S3_SCORES_PREFIX}"
+          echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
           echo "S3_SCORES_PREFIX=${S3_SCORES_PREFIX}" >> $GITHUB_ENV
 
 
@@ -248,3 +248,6 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/7
           curl http://${{ env.S3_PUBLIC_BUCKET }}/8
           curl http://${{ env.S3_PUBLIC_BUCKET }}
+
+      - name: test latest scores
+        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/scores-$(date +%Y-%m-%d).json
