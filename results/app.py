@@ -20,6 +20,7 @@ class X2030(FlaskView):
     self.s_list = []
     self.savepath = 'static/'
     self.prefix = 'scores/'
+    self.scores_key = 'scores_matrix.json'
     self.bucket = '2030.hex7.com'
     self.api = 'http://' + self.bucket + '/' + self.prefix
     self.date = ''
@@ -88,6 +89,12 @@ class X2030(FlaskView):
 
     scores.make_charts(matrix=self.matrix,
                        debug=self.debug,
+                       savepath=self.savepath)
+
+    scores.save_scores(self.matrix,
+                       self.results,
+                       debug=self.debug,
+                       scores_key=self.scores_key,
                        savepath=self.savepath)
 
     return render_template('index.html',

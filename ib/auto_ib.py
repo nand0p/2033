@@ -1,39 +1,37 @@
 from argparse import ArgumentParser
 from pprint import pprint
 from ib_insync import *
+import requests
+import json
 
 
 ib = IB()
 
 parser = ArgumentParser()
-parser.add_argument('--port', type=int, default=4001)
-parser.add_argument('--host', type=str, default='localhost')
-parser.add_argument('--client', type=int, default=1)
-parser.add_argument('--ticker', type=str, default='AAPL')
-parser.add_argument('--account-summary', action='store_true')
-parser.add_argument('--account-values', action='store_true')
-parser.add_argument('--open', action='store_true')
-parser.add_argument('--closed', action='store_true')
-parser.add_argument('--debug', action='store_true')
-parser.add_argument('--pnl', action='store_true')
-parser.add_argument('--buy-shares', type=float, default=0.0)
-parser.add_argument('--positions', action='store_true')
-parser.add_argument('--trade', action='store_true')
+parser.add_argument('-p', '--port', type=int, default=4001, help='ib proxy port')
+parser.add_argument('-z', '--host', type=str, default='localhost', help='ib proxy hostname')
+parser.add_argument('-t', '--ticker', type=str, default='AAPL', help='ticker to execute')
+parser.add_argument('-as', '--account-summary', action='store_true', help='show account summary')
+parser.add_argument('-av', '--account-values', action='store_true', help='show account values')
+parser.add_argument('-o', '--open', action='store_true', help='show open orders')
+parser.add_argument('-c', '--closed', action='store_true', help='show closed orders')
+parser.add_argument('-d', '--debug', action='store_true', help='debug')
+parser.add_argument('-pl', '--pnl', action='store_true', help='profit and loss')
+parser.add_argument('-bm', '--buy-market', type=float, default=0.0001)
+parser.add_argument('-pos', '--positions', action='store_true', help='list positions')
+parser.add_argument('--confirm', action='store_true', help='flag required to execute trade')
 args = parser.parse_args()
 
 
-print('connect')
-conn = ib.connect(host=args.host,
-                  port=args.port,
-                  clientId=args.client,
-                  timeout=5)
+print('Connect')
+conn = ib.connect(host=args.host, port=args.port, clientId=1, timeout=5)
 pprint(conn)
 
-print('stock: ', args.ticker)
+print('Stock: ', args.ticker)
 stock = Stock(symbol=args.ticker,
               exchange='SMART',
-              currency='USD',
-              primaryExchange='SMART')
+              primaryExchange='SMART',
+              currency='USD')
 
 stock_obj = ib.qualifyContracts(stock)
 conId = stock_obj[0].conId
@@ -50,77 +48,91 @@ contract = Contract(conId=conId,
                     exchange='SMART',
                     primaryExchange='SMART')
 
-print('current time')
+print('Current Time')
 current_time = ib.reqCurrentTime()
 pprint(current_time.isoformat())
-
-print('account: ')
+print('Account: ')
 managed_accounts = ib.managedAccounts()
 pprint(managed_accounts)
 
+
+r = requests.get('http://2030.hex7.com/results.json')
+results = json.loads(r.text)
+
+for k, v in results.items():
+  if isinstance(v, dict):
+    if len(v) > 1:
+      print(k, v)
+
 if args.account_values:
   print()
-  print('account values')
+  print('Account Values')
   print()
   account_values = ib.accountValues()
-  pprint(account_values)
+  for v in account_values:
+    if args.debug:
+      pprint(v)
+    print(v[0], v[1], v[2], v[3])
 
 if args.account_summary:
   print()
-  print('account summary')
+  print('Account Summary')
   print()
   account_summary = ib.accountSummary()
-  pprint(account_summary)
+  for v in account_summary:
+    if args.debug:
+      pprint(v)
+    print(v[0], v[1], v[2], v[3])
 
 if args.open:
-  print('open trades')
+  print('Open Trades')
   open_trades = ib.openTrades()
   pprint(open_trades)
-  print('orders')
+  print('Orders')
   orders = ib.orders()
   pprint(orders)
-  print('open orders')
+  print('Open Orders')
   open_orders = ib.openOrders()
   pprint(open_orders)
 
 if args.closed:
-  print('trades')
+  print('Trades')
   trades = ib.trades()
   pprint(trades)
-  print('fills')
+  print('Fills')
   fills = ib.fills()
   pprint(fills)
-  print('exections')
+  print('Exections')
   executions = ib.executions()
   pprint(executions)
 
 if args.pnl:
-  print('pnl')
+  print('PnL')
   pnl = ib.pnl()
   pprint(pnl)
-  print('pnl single')
+  print('PnL Single')
   pnl_single = ib.pnlSingle()
   pprint(pnl_single)
 
-if args.trade:
+if args.confirm:
   print('stock: ', args.ticker)
   print('conId: ', conId)
-  print('buy_shares: ', args.buy_shares)
-  order = MarketOrder('BUY', args.buy_shares)
+  print('buy_market: ', args.buy_market)
+  order = MarketOrder('BUY', args.buy_market)
   trade = ib.placeOrder(contract, order)
-  print('wait for trade')
+  print('Wait for Trade')
   while not trade.isDone():
     print(ib.waitOnUpdate())
-  print('trade log')
+  print('Trade Log')
   trade.log
 
 if args.positions:
-  print('portfolio')
+  print('Portfolio')
   portfolio = ib.portfolio()
   pprint(portfolio)
-  print('positions')
+  print('Positions')
   positions = ib.positions()
   pprint(positions)
 
-print('exiting session')
+print('\n..::Exiting Session::..\n')
 ib.disconnect()

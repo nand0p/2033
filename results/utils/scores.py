@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import requests
 import boto3
 import json
+import os
 
 def get_results(stocks, debug=False, category=0, total_money=1000):
   results = {}
@@ -129,3 +130,20 @@ def make_charts(matrix, savepath='static/', debug=False):
     plt.plot(s, color="green")
     plt.savefig(savepath + stock + '-scores.png')
     plt.close()
+
+
+def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', debug=False):
+  s3 = boto3.resource('s3')
+  s3matrix = s3.Object(bucket, scores_key)
+  s3matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
+               ACL='public-read')
+  s3results = s3.Object(bucket, 'results.json')
+  s3results.put(Body=(bytes(json.dumps(results).encode('UTF-8'))),
+                ACL='public-read')
+
+  if not os.path.exists(savepath):
+    print('Making savepath: ' + savepath)
+    os.makedirs(savepath)
+
+  with open(savepath + scores_key, 'w') as out:
+    json.dump(matrix, out, ensure_ascii=True, indent=4)

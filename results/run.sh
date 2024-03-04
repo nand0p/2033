@@ -42,6 +42,7 @@ else
   CONTAINER=$(docker run --detach \
               --publish ${PORTS} \
               -v ~/.aws:/root/.aws:ro \
+              -v scores:/scores:rw \
               ${TAG})
 
   echo "=====> container ${CONTAINER}"
