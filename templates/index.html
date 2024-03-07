@@ -15,7 +15,7 @@
   <br>
   <h2>
   <table width=100%>
-    <tr>
+    <tr width=100%>
       <td align=center><a href=http://2030.hex7.com/>All</a></td>
       <td align=center><a href=http://2030.hex7.com/1>XL</a></td>
       <td align=center><a href=http://2030.hex7.com/2>Cloud</a></td>
@@ -25,6 +25,16 @@
       <td align=center><a href=http://2030.hex7.com/6>Crypto</a></td>
       <td align=center><a href=http://2030.hex7.com/7>Asia</a></td>
       <td align=center><a href=http://2030.hex7.com/8>Growth</a></td>
+    </tr>
+    <tr width=100%>
+      {% if speed == "fast" %}
+        <td bgcolor=green width=100% align=center colspan=9>
+          <a href=?speed=slow>rolling fast</a>
+      {% elif speed == "slow" %}
+        <td bgcolor=red width=100% align=center colspan=9>
+          <a href=?speed=fast>rolling slow</a>
+      {% endif %}
+      </td>
     </tr>
   </table>
   </h2>

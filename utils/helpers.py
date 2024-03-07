@@ -76,7 +76,7 @@ def generate_price_chart(stock, df, tolerance, debug=False, precise=5):
       return round(-5.789 * ratio, precise)
 
 
-def calculate_averages(df, current, score, avg_periods, tolerance):
+def calculate_averages(df, current, score, avg_periods, tolerance, speed):
   s = 0
   t = 0
   r = {}
@@ -90,20 +90,34 @@ def calculate_averages(df, current, score, avg_periods, tolerance):
     else:
       s = _current_compare(current, r[period]['price'], tolerance)
 
-    # the longer the period (count), the greater the weight (t)
-    if s == 2:
-      t = count + 2.507
-      color = 'green'
-    elif s == 0:
-      t = count * -2.109
-      color = 'red'
-    elif s == -1:
-      # newer stocks get preference (NaN values)
-      t = count / 3 + 3.789
-      color = 'blue'
-    else:
-      t = count / 1.5 + 2.012
-      color = 'orange'
+    if speed == 'slow':
+      # the longer the period (count), the greater the weight (t)
+      if s == 2:
+        t = count + 2.507
+        color = 'green'
+      elif s == 0:
+        t = count * -2.109
+        color = 'red'
+      elif s == -1:
+        t = count / 3 + 3.789
+        color = 'blue'
+      else:
+        t = count / 1.5 + 2.012
+        color = 'orange'
+    elif speed == 'fast':
+      # the shorter the period (count), the greater the weight (t)
+      if s == 2:
+        t = len(avg_periods) - count + 2.507
+        color = 'green'
+      elif s == 0:
+        t = (len(avg_periods) - count) * -2.109
+        color = 'red'
+      elif s == -1:
+        t = (len(avg_periods) - count) / 3 + 3.789
+        color = 'blue'
+      else:
+        t = (len(avg_periods) - count) / 1.5 + 2.012
+        color = 'orange'
 
     score = round(score + t, 4)
     count = count + 1

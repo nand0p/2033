@@ -21,17 +21,21 @@ class X2030(FlaskView):
     self.data_dir = './data/'
     self.tolerance = 0.075
     self.tolerance_averages = 0.01
+    self.category = 0
+    self.speed = ''
     self.debug = False
 
 
   @route('/', methods = ['GET'])
   def index(self):
-    cat = request.args.get('cat', '0')
+    self.speed = request.args.get('speed', 'slow')
+    self.category = request.args.get('cat', '0')
 
-    if cat == '9':
+    if self.category == '9':
       self.stocks = {'AAPL': {'category': '9'}}
     else:
-      self.stocks = stocks.get_stocks(os.environ.get('STOCKS'), cat)
+      self.stocks = stocks.get_stocks(os.environ.get('STOCKS'),
+                                      self.category)
 
     for stock in self.stocks:
       self.df[stock] = yf.load_or_get_data(stock=stock,
@@ -68,7 +72,8 @@ class X2030(FlaskView):
                                         score=self.stocks[stock]['score'],
                                         current=self.stocks[stock]['current_price'],
                                         tolerance=self.tolerance_averages,
-                                        avg_periods=self.avg_periods)
+                                        avg_periods=self.avg_periods,
+                                        speed=self.speed)
 
       self.stocks[stock]['score_color'] = helpers.get_score_color(
                                             score=self.stocks[stock]['score'])
@@ -82,7 +87,9 @@ class X2030(FlaskView):
     return render_template('index.html',
                            debug=self.debug,
                            scores=self.scores,
-                           stocks=self.stocks)
+                           stocks=self.stocks,
+                           speed=self.speed)
+
 
   @route('/test')
   def test(self):
@@ -107,6 +114,11 @@ class X2030(FlaskView):
   @route('/results')
   def results(self):
     return self.results
+
+
+  @route('/speed')
+  def results(self):
+    return self.speed
 
 
   @route('/robots.txt')
