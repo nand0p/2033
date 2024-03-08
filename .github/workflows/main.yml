@@ -67,7 +67,9 @@ jobs:
           bash -ex ./ci/test_speed.sh
 
       - name: deploy top level index
-        run: aws s3 cp static/index.html s3://${{ env.S3_PUBLIC_BUCKET }}/index.html
+        run: |
+          aws s3 cp static/index.html s3://${{ env.S3_PUBLIC_BUCKET }}/index.html
+          aws s3api put-object-acl --bucket 2030.hex7.com --key index.html --acl public-read
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
@@ -170,6 +172,7 @@ jobs:
 
       - name: test live websites
         run: |
+          curl http://${{ env.S3_PUBLIC_BUCKET }}
           curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/1
           curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/2
           curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/3

@@ -7,8 +7,7 @@ for BASE in 1 2 3 4 5 6 7 8; do
   pwd
   echo execute ${SPEED} ${BASE}
   mkdir -pv ${SPEED}/${BASE}
-  wget --recursive \
-       --no-directories \
+  wget --no-directories \
        --no-host-directories \
        --adjust-extension \
        --no-cache \

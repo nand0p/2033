@@ -6,8 +6,7 @@ echo download top level html
 for SPEED in 'fast' 'slow'; do
   pwd
   echo execute ${SPEED}
-  wget --recursive \
-       --no-directories \
+  wget --no-directories \
        --no-host-directories \
        --adjust-extension \
        --no-cache \
