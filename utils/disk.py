@@ -1,19 +1,15 @@
+from datetime import datetime
 import matplotlib
-import datetime
 import operator
 import boto3    
 import json
 
 
-save_to_s3 = False
-s3 = boto3.resource('s3')
-bucket = '2030.hex7.com'
-date = datetime.datetime.now().isoformat().split('T')[0]
-scores_key = 'scores-' + date + '.json'
-
-
-def save_scores(stocks, data_dir, debug=False):
+def save_scores(stocks, speed, bucket, data_dir, save_to_s3=False, debug=False):
   scores_out = {}
+  date = datetime.now().isoformat().split('T')[0]
+  scores_key = speed + '-' + date + '.json'
+
   for stock in stocks.keys():
     if stocks[stock]['score'] > 100:
       stocks[stock]['score'] = 99.999
@@ -35,6 +31,7 @@ def save_scores(stocks, data_dir, debug=False):
     json.dump(scores_out, out, ensure_ascii=True, indent=4)
 
   if save_to_s3:
+    s3 = boto3.resource('s3')
     s3object = s3.Object(bucket, scores_key)
     s3object.put(Body=(bytes(json.dumps(scores).encode('UTF-8'))))
 

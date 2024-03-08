@@ -19,6 +19,7 @@ class X2030(FlaskView):
     self.interval = '1d'
     self.minimum_score = 25
     self.data_dir = './data/'
+    self.s3_bucket = '2030.hex7.com'
     self.tolerance = 0.075
     self.tolerance_averages = 0.01
     self.category = 0
@@ -81,6 +82,8 @@ class X2030(FlaskView):
 
     self.scores = disk.save_scores(stocks=self.stocks,
                                    data_dir=self.data_dir,
+                                   bucket=self.s3_bucket,
+                                   speed=self.speed,
                                    debug=self.debug)
 
 
