@@ -173,24 +173,24 @@ jobs:
       - name: test live websites
         run: |
           curl http://${{ env.S3_PUBLIC_BUCKET }}
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/1
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/2
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/3
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/4
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/5
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/6
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/7
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/8
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/1
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/2
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/3
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/4
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/5
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/6
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/7
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/8
-          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/1/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/2/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/3/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/4/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/5/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/6/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/7/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/8/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/fast/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/1/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/2/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/3/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/4/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/5/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/6/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/7/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/8/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/
 
       - name: test latest scores
         run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/scores-$(date +%Y-%m-%d).json
