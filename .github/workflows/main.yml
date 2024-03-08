@@ -75,25 +75,25 @@ jobs:
       - name: download toplevel site SLOW
         run: >-
           wget --recursive
-            --no-directories
-            --no-host-directories
-            --adjust-extension
-            --no-cache
-            --no-cookies
-            --directory-prefix=slow
-            --default-page=index.html
-            localhost?speed=slow
+               --no-directories
+               --no-host-directories
+               --adjust-extension
+               --no-cache
+               --no-cookies
+               --directory-prefix=slow
+               --default-page=index.html
+               "http://localhost?speed=slow"
       - name: download toplevel site FAST
-        run: >
+        run: >-
           wget --recursive
-            --no-directories
-            --no-host-directories
-            --adjust-extension
-            --no-cache
-            --no-cookies
-            --directory-prefix=fast
-            --default-page=index.html
-            localhost?speed=fast
+               --no-directories
+               --no-host-directories
+               --adjust-extension
+               --no-cache
+               --no-cookies
+               --directory-prefix=fast
+               --default-page=index.html
+               "http://localhost?speed=fast"
 
       - name: sed top level sites
         run: |
