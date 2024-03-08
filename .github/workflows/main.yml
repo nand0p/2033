@@ -203,5 +203,6 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/
 
       - name: test scores
-        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_FAST }}
-        run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_SLOW }}
+        run: |
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_FAST }}
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_SLOW }}
