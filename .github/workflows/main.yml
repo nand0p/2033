@@ -58,14 +58,11 @@ jobs:
           tags: nand0p/x2030:${{ env.APP_VERSION }}
           build-args: DATE=$(date),REVISION=${{ github.sha }}
 
-
       - name: echo digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-
       - name: run container
         run: bash -ex ./ci/run.sh daemonize
-
 
       - name: test container
         run: |
@@ -73,17 +70,6 @@ jobs:
           bash -ex ./ci/test_single_stock.sh
           bash -ex ./ci/test_speed.sh
           bash -ex ./ci/test_full_site.sh
-
-
-      - name: ensure s3 paths
-        run: |
-          aws s3 mb ${{ env.S3_PUBLIC_BUCKET }}/slow
-          aws s3 mb ${{ env.S3_PUBLIC_BUCKET }}/fast
-          aws s3api put-object-acl --bucket ${{ env.S3_PUBLIC_BUCKET }} --key slow --acl public-read
-          aws s3api put-object-acl --bucket ${{ env.S3_PUBLIC_BUCKET }} --key fast --acl public-read
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
 
       - name: download toplevel site SLOW
