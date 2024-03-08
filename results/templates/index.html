@@ -84,13 +84,13 @@
   {% for v in ordered | reverse %}
     <tr>
       <td>
-        <img src=static/{{ v.stock }}-scores.png width=400>
+        <img src=/static/{{ v.stock }}-scores.png width=400>
       </td>
       <td>
         {{ v.stock }}<br>{{ v.price }}<br>{{ v.score }}
       </td>
       <td>
-        <img src=http://2030.hex7.com/static/{{ v.stock }}.png width=400>
+        <img src=http://2030.hex7.com/slow/{{ v.stock }}.png width=400>
       </td>
     </tr>
   {% endfor %}

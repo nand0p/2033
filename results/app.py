@@ -29,6 +29,7 @@ class X2030(FlaskView):
     self.matrix = {}
     self.share_one = 0
     self.category = 0
+    self.source_file = '2030.txt'
     self.debug = False
 
   @route('/', methods = ['GET'])
@@ -57,6 +58,7 @@ class X2030(FlaskView):
     self.ordered = scores.get_results(stocks=self.r_dict,
                                       category=self.category,
                                       total_money=self.total_money,
+                                      source_file=self.source_file,
                                       debug=self.debug)
 
     self.share_one = shares.get_min_shares(stocks=self.r_dict,
@@ -68,24 +70,12 @@ class X2030(FlaskView):
                                          prefix=self.prefix,
                                          debug=self.debug)
 
-    for key in self.s_list:
-      req = 'http://' + self.bucket + '/' + key
-
-      r = requests.get(req)
-      r_dict = json.loads(r.text)
-      if self.debug:
-        print('key', key)
-        print('req', req)
-        print('r_dict', r_dict)
-
-      for k, v in r_dict.items():
-        if self.results[k]['category'] == self.category or \
-           self.category == '0' and \
-           self.results[k]['category'] != '6':
-
-          if k not in self.matrix:
-            self.matrix[k] = []
-          self.matrix[k].append(round(v['score'], 2))
+    self.matrix = scores.get_matrix(results=self.results,
+                                    s_list=self.s_list,
+                                    source_file=self.source_file,
+                                    bucket=self.bucket,
+                                    category=self.category,
+                                    debug=self.debug)
 
     scores.make_charts(matrix=self.matrix,
                        debug=self.debug,

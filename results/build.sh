@@ -15,6 +15,8 @@ VERSION=$(cat VERSION)
 TAG="${NAME}:${VERSION}"
 #TAG="${REPO}/${NAME}:${VERSION}"
 
+cp -v ../2030.txt .
+
 if [ -n ${VERSION} ]; then
   echo "building docker image ${NAME}:${VERSION}"
   docker build --tag ${TAG} \
@@ -27,6 +29,8 @@ else
   echo "version incorrect. aborting."
   exit 1
 fi
+
+rm -fv 2030.txt
 
 docker images --no-trunc --all
 docker images
