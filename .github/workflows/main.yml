@@ -66,6 +66,11 @@ jobs:
           bash -ex ./ci/test_single_stock.sh
           bash -ex ./ci/test_speed.sh
 
+      - name: sed top level index
+        run: |
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" static/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" static/index.html
+
       - name: deploy top level index
         run: |
           aws s3 cp static/index.html s3://${{ env.S3_PUBLIC_BUCKET }}/index.html
