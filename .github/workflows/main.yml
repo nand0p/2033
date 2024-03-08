@@ -69,56 +69,9 @@ jobs:
           bash -ex ./ci/test_container.sh
           bash -ex ./ci/test_single_stock.sh
           bash -ex ./ci/test_speed.sh
-          bash -ex ./ci/test_full_site.sh
 
-
-      - name: download toplevel site SLOW
-        uses: wei/wget@v1
-        with:
-          args: >-
-                  --recursive
-                  --no-directories
-                  --no-host-directories
-                  --adjust-extension
-                  --no-cache
-                  --no-cookies
-                  --directory-prefix=slow
-                  --default-page=index.html
-                  "http://localhost?speed=slow"
-      - name: download toplevel site FAST
-        uses: wei/wget@v1
-        with:
-          args: >-
-                  --recursive
-                  --no-directories
-                  --no-host-directories
-                  --adjust-extension
-                  --no-cache
-                  --no-cookies
-                  --directory-prefix=fast
-                  --default-page=index.html
-                  "http://localhost?speed=fast"
-      #  run: >-
-      #    wget --recursive
-      #         --no-directories
-      #         --no-host-directories
-      #         --adjust-extension
-      #         --no-cache
-      #         --no-cookies
-      #         --directory-prefix=slow
-      #         --default-page=index.html
-      #         "http://localhost?speed=slow"
-      #- name: download toplevel site FAST
-      #  run: >-
-      #    wget --recursive
-      #         --no-directories
-      #         --no-host-directories
-      #         --adjust-extension
-      #         --no-cache
-      #         --no-cookies
-      #         --directory-prefix=fast
-      #         --default-page=index.html
-      #         "http://localhost?speed=fast"
+      - name: download html
+        run: bash -ex ci/download_html.sh
 
       - name: sed top level sites
         run: |
@@ -126,6 +79,41 @@ jobs:
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/index.html
           sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/index.html
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/index.html
+
+      - name: sed sub sites
+        run: |
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/1/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/1/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/2/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/2/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/3/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/3/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/4/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/4/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/5/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/5/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/6/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/6/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/7/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/7/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/8/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/8/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/1/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/1/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/2/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/2/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/3/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/3/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/4/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/4/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/5/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/5/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/6/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/6/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/7/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/7/index.html
+          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/8/index.html
+          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/8/index.html
 
 
       - name: release website SLOW to s3
@@ -172,44 +160,6 @@ jobs:
 
       - name: test scores
         run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_NAME }}
-
-      - name: download sub sites
-        run: bash -ex ci/download_html.sh
-
-      - name: sed sub sites
-        run: |
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/1/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/1/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/2/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/2/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/3/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/3/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/4/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/4/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/5/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/5/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/6/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/6/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/7/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" slow/7/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" slow/8/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/8/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/1/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/1/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/2/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/2/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/3/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/3/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/4/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/4/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/5/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/5/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/6/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/6/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/7/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/7/index.html
-          sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" fast/8/index.html
-          sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" fast/8/index.html
 
 
       - name: release sub-site-1 SLOW to s3
