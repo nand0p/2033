@@ -72,7 +72,7 @@ jobs:
 
 
       - name: download html top level
-        run: bash -ex ci/download_html_level.sh
+        run: bash -ex ci/download_html_top_level.sh
 
       - name: sed top level sites
         run: |
