@@ -65,6 +65,7 @@ jobs:
           bash -ex ./ci/test_container.sh
           bash -ex ./ci/test_single_stock.sh
           bash -ex ./ci/test_speed.sh
+          bash -ex ./ci/test_full_site.sh
 
       - name: sed top level index
         run: |
@@ -158,23 +159,6 @@ jobs:
           DEST_DIR: 'fast'
 
 
-      - name: pre-upload scores
-        id: scores
-        run: bash -ex ./ci/upload_scores.sh
-
-      - name: upload scores
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks
-        env:
-          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-          AWS_REGION: "us-east-1"
-          SOURCE_DIR: "tmp/"
-          DEST_DIR: "${{ env.S3_SCORES_PREFIX }}/"
-
-
       - name: test live websites
         run: |
           curl http://${{ env.S3_PUBLIC_BUCKET }}
@@ -196,6 +180,24 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/7/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/8/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/slow/
+
+
+      - name: pre-upload scores
+        id: scores
+        run: bash -ex ./ci/upload_scores.sh
+
+      - name: upload scores
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: ${{ env.S3_PUBLIC_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+          AWS_REGION: "us-east-1"
+          SOURCE_DIR: "tmp/"
+          DEST_DIR: "${{ env.S3_SCORES_PREFIX }}/"
+
 
       - name: test latest scores
         run: curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/scores-$(date +%Y-%m-%d).json
