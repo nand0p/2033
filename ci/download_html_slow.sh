@@ -7,7 +7,6 @@ for BASE in 1 2 3 4 5 6 7 8; do
   pwd
   echo execute ${SPEED} ${BASE}
   mkdir -pv ${SPEED}/${BASE}
-  cd ${SPEED}/${BASE}
   wget --recursive \
        --no-directories \
        --no-host-directories \
@@ -18,7 +17,6 @@ for BASE in 1 2 3 4 5 6 7 8; do
        --default-page=index.html \
        "localhost?cat=${BASE}&speed=${SPEED}"
 
-  mv -v "index.html?cat=${BASE}&speed=${SPEED}.html" index.html
-  cd ../..
+  mv -v "${SPEED}/${BASE}/index.html?cat=${BASE}&speed=${SPEED}.html" ${SPEED}/${BASE}/index.html
   sleep 1
 done

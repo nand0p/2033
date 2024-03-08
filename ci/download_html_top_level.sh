@@ -6,8 +6,6 @@ echo download top level html
 for SPEED in 'fast' 'slow'; do
   pwd
   echo execute ${SPEED}
-  mkdir -pv ${SPEED}
-  cd ${SPEED}
   wget --recursive \
        --no-directories \
        --no-host-directories \
@@ -17,7 +15,6 @@ for SPEED in 'fast' 'slow'; do
        --directory-prefix=${SPEED} \
        --default-page=index.html \
        "localhost?speed=${SPEED}"
-  mv -v "index.html?speed=fast.html" index.html
-  cd ..
+  mv -v "${SPEED}/index.html?speed=${SPEED}.html" ${SPEED}/index.html
   sleep 1
 done
