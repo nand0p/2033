@@ -17,6 +17,8 @@ for BASE in 1 2 3 4 5 6 7 8; do
        --directory-prefix=${SPEED}/${BASE} \
        --default-page=index.html \
        "localhost?cat=${BASE}&speed=${SPEED}"
+
+  mv -v "index.html?cat=${BASE}&speed=${SPEED}.html" index.html
   cd ../..
   sleep 1
 done

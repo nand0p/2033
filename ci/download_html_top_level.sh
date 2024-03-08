@@ -17,6 +17,7 @@ for SPEED in 'fast' 'slow'; do
        --directory-prefix=${SPEED} \
        --default-page=index.html \
        "localhost?speed=${SPEED}"
+  mv -v "index.html?speed=fast.html" index.html
   cd ..
   sleep 1
 done
