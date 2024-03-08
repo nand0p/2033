@@ -73,7 +73,7 @@ jobs:
 
 
       - name: download toplevel site SLOW
-        run: >
+        run: >-
           wget --recursive
             --no-directories
             --no-host-directories
