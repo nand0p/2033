@@ -17,10 +17,10 @@
       <td align=center><a href=?cat=2>Cloud</a></td>
       <td align=center><a href=?cat=3>ETFs</a></td>
       <td align=center><a href=?cat=4>BioTech</a></td>
-      <td align=center><a href=?cat=5>Future</a></td>
+      <td align=center><a href=?cat=5>Sustainable</a></td>
       <td align=center><a href=?cat=6>Crypto</a></td>
       <td align=center><a href=?cat=7>Asia</a></td>
-      <td align=center><a href=?cat=8>Growth</a></td>
+      <td align=center><a href=?cat=8>Indicies</a></td>
     </tr>
   </table>
   </h2>
@@ -38,7 +38,7 @@
   <br>
   <center>
   <table border=2>
-    <tr><td colspan=7 align=center>SLOW</td></td>
+    <tr><td colspan=7 align=center><b>SLOW</b></td></td>
     <tr><td colspan=7>.</td></tr>
     {% for v in slow_ordered %}
       <tr>
@@ -58,7 +58,7 @@
   <br>
   <p>
   <table border=2>
-    <tr><td colspan=7 align=center>FAST</td></td>
+    <tr><td colspan=7 align=center><b>FAST</b></td></td>
     <tr><td colspan=7>.</td></tr>
     {% for v in fast_ordered %}
       <tr>
@@ -87,11 +87,11 @@
       <td align=left>{{ share_one }}</td>
     </tr>
     <tr>
-      <td colspan=2>.</td>
+      <td align=right>total money:</td>
+      <td align=left>{{ slow_results.total_money }}</td>
     </tr>
     <tr>
-      <td align=right>SLOW total money:</td>
-      <td align=left>{{ slow_results.total_money }}</td>
+      <td colspan=2>.</td>
     </tr>
     <tr>
       <td align=right>SLOW total parts:</td>
@@ -101,11 +101,9 @@
       <td align=right>SLOW money per part:</td>
       <td align=left>{{ slow_results.money_per_part }}</td>
     </tr>
-    <tr><td colspan=2>.</td></tr>
     <tr>
-      <td align=right>FAST total money:</td>
-      <td align=left>{{ fast_results.total_money }}</td>
-    </tr>
+      <td colspan=2>.</td>
+   </tr>
     <tr>
       <td align=right>FAST total parts:</td>
       <td align=left>{{ fast_results.total_parts }}</td>

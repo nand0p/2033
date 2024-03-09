@@ -258,18 +258,22 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: run container
-        run: bash -ex ./results/run.sh
+        run: bash -ex ./run.sh
+        working-directory: ./results
 
       - name: test container
-        run: bash -ex ./results/test.sh
+        run: bash -ex ./test.sh
+        working-directory: ./results
 
       - name: download html top level
-        run: bash -ex ./results/download_html.sh
+        run: bash -ex ./download_html.sh
+        working-directory: ./results
 
       - name: sed top level sites
         run: |
           sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" tmp/index.html
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" tmp/index.html
+        working-directory: ./results
 
       - name: sed sub sites
         run: |
@@ -289,6 +293,7 @@ jobs:
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" tmp/7/index.html
           sed -i "s/SEDME/${{ github.sha }}<br>$(date)/" tmp/8/index.html
           sed -i "s/DATEHERE/$(date '+%Y-%m-%d %T %Z')/" tmp/8/index.html
+        working-directory: ./results
 
       - name: upload results
         uses: jakejarvis/s3-sync-action@master
