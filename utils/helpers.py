@@ -50,12 +50,17 @@ def calculate_high_low(current, high, avg_periods, score, tolerance, precise=5):
 
 
 def generate_price_chart(stock, df, tolerance, debug=False, precise=5):
+  if not os.path.exists('/static/fast'):
+    os.makedirs('/static/fast')
+  if not os.path.exists('/static/slow'):
+    os.makedirs('/static/slow')
   df['sma90'] = df.Close.rolling(window=90).mean()
   df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
   label = stock + ' prices'
   ax.set_title(label=label)
-  ax.figure.savefig('static/' + stock + '.png')
+  ax.figure.savefig('/static/fast/' + stock + '.png')
+  ax.figure.savefig('/static/slow/' + stock + '.png')
   matplotlib.pyplot.close()
 
   sma90 = df['sma90'].tail(1).values[0]
