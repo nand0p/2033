@@ -12,15 +12,37 @@
   <h2>
   <table width=100%>
     <tr>
-      <td align=center><a href=?cat=0>All</a></td>
-      <td align=center><a href=?cat=1>XL</a></td>
-      <td align=center><a href=?cat=2>Cloud</a></td>
-      <td align=center><a href=?cat=3>ETFs</a></td>
-      <td align=center><a href=?cat=4>BioTech</a></td>
-      <td align=center><a href=?cat=5>Sustainable</a></td>
-      <td align=center><a href=?cat=6>Crypto</a></td>
-      <td align=center><a href=?cat=7>Asia</a></td>
-      <td align=center><a href=?cat=8>Indicies</a></td>
+      <td align=center><a href=/results/>All</a></td>
+      <td align=center><a href=/results/1/>XL</a></td>
+      <td align=center><a href=/results/2/>Cloud</a></td>
+      <td align=center><a href=/results/3/>ETFs</a></td>
+      <td align=center><a href=/results/4/>BioTech</a></td>
+      <td align=center><a href=/results/5/>Sustainable</a></td>
+      <td align=center><a href=/results/6/>Crypto</a></td>
+      <td align=center><a href=/results/7/>Asia</a></td>
+      <td align=center><a href=/results/8/>Indicies</a></td>
+    </tr>
+    <tr>
+      <td align=center bgcolor=green><a href=/fast/>All</a></td>
+      <td align=center bgcolor=green><a href=/fast/1/>XL</a></td>
+      <td align=center bgcolor=green><a href=/fast/2/>Cloud</a></td>
+      <td align=center bgcolor=green><a href=/fast/3/>ETFs</a></td>
+      <td align=center bgcolor=green><a href=/fast/4/>BioTech</a></td>
+      <td align=center bgcolor=green><a href=/fast/5/>Sustainable</a></td>
+      <td align=center bgcolor=green><a href=/fast/6/>Crypto</a></td>
+      <td align=center bgcolor=green><a href=/fast/7/>Asia</a></td>
+      <td align=center bgcolor=green><a href=/fast/8/>Indicies</a></td>
+    </tr>
+    <tr>
+      <td align=center bgcolor=red><a href=/slow/>All</a></td>
+      <td align=center bgcolor=red><a href=/slow/1/>XL</a></td>
+      <td align=center bgcolor=red><a href=/slow/2/>Cloud</a></td>
+      <td align=center bgcolor=red><a href=/slow/3/>ETFs</a></td>
+      <td align=center bgcolor=red><a href=/slow/4/>BioTech</a></td>
+      <td align=center bgcolor=red><a href=/slow/5/>Sustainable</a></td>
+      <td align=center bgcolor=red><a href=/slow/6/>Crypto</a></td>
+      <td align=center bgcolor=red><a href=/slow/7/>Asia</a></td>
+      <td align=center bgcolor=red><a href=/slow/8/>Indicies</a></td>
     </tr>
   </table>
   </h2>
@@ -120,7 +142,7 @@
     {% for v in slow_ordered | reverse %}
       <tr>
         <td align=center>
-          <img src=http://2030.hex7.com/results/{{ v.stock }}-scores.png width=350>
+          <img src=/static/{{ v.stock }}-scores.png width=350>
         </td>
         <td align=center>
           {{ v.stock }}<br>PRICE: {{ v.price }}<br>SLOW: {{ v.score }}
@@ -144,8 +166,6 @@
   </a>
   <br>
   SEDME
-  <br>
-  DATEMADE
   <br>
   {{ datemade }}
 

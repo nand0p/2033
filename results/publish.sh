@@ -2,6 +2,8 @@
 
 
 echo download top level html
+
+SHA=$(git rev-parse HEAD)
 OUT=results
 rm -rf results
 mkdir -pv ${OUT}
@@ -9,6 +11,7 @@ mkdir -pv ${OUT}
 wget --no-directories \
      --no-host-directories \
      --adjust-extension \
+     --span-hosts \
      --page-requisites \
      --no-cache \
      --no-cookies \
@@ -16,6 +19,9 @@ wget --no-directories \
      --default-page=index.html \
        "localhost?cat=0"
 mv -v "${OUT}/index.html?cat=0.html" ${OUT}/index.html
+sed -i.b1 's/\/static/http:\/\/2030.hex7.com\/results/g' ${OUT}/index.html
+sed -i.b2 's/SEDME/${SHA}/g' ${OUT}/index.html
+rm -vf ${OUT}/index.html.b1 ${OUT}/index.html.b2
 sleep 1
 
 
@@ -35,6 +41,9 @@ for BASE in 1 2 3 4 5 6 7 8; do
        "localhost?cat=${BASE}"
 
   mv -v "${OUT}/${BASE}/index.html?cat=${BASE}.html" ${OUT}/${BASE}/index.html
+  sed -i.b1 's/\/static/http:\/\/2030.hex7.com\/results/g' ${OUT}/${BASE}/index.html
+  sed -i.b2 's/SEDME/${SHA}/g' ${OUT}/${BASE}/index.html
+  rm -vf ${OUT}/index.html.b1 ${OUT}/${BASE}/index.html.b2
   sleep 1
 done
 
