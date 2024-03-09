@@ -8,6 +8,7 @@ for SPEED in 'fast' 'slow'; do
   echo execute ${SPEED}
   wget --no-directories \
        --no-host-directories \
+       --page-requisites \
        --adjust-extension \
        --no-cache \
        --no-cookies \

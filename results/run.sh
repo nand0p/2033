@@ -24,7 +24,7 @@ TAG="${NAME}:${VERSION}"
 #TAG="${REPO}/${NAME}:${VERSION}"
 
 echo
-echo "running ${NAME}:${VERSION}"
+echo "running ${TAG}"
 echo
 
 
@@ -42,7 +42,6 @@ else
   CONTAINER=$(docker run --detach \
               --publish ${PORTS} \
               -v ~/.aws:/root/.aws:ro \
-              -v scores:/scores:rw \
               ${TAG})
 
   echo "=====> container ${CONTAINER}"

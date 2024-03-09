@@ -2,17 +2,20 @@
 
 
 echo download top level html
-PATH=rez
+OUT=results
+rm -rf results
+mkdir -pv ${OUT}
 
 wget --no-directories \
      --no-host-directories \
      --adjust-extension \
+     --page-requisites \
      --no-cache \
      --no-cookies \
-     --directory-prefix=${PATH} \
+     --directory-prefix=${OUT} \
      --default-page=index.html \
        "localhost?cat=0"
-mv -v "${PATH}/index.html?cat=0.html" ${PATH}/index.html
+mv -v "${OUT}/index.html?cat=0.html" ${OUT}/index.html
 sleep 1
 
 
@@ -21,16 +24,18 @@ echo download sub-site html
 for BASE in 1 2 3 4 5 6 7 8; do
   pwd
   echo execute ${BASE}
-  mkdir -pv ${PATH}/${BASE}
+  mkdir -pv ${OUT}/${BASE}
   wget --no-directories \
        --no-host-directories \
        --adjust-extension \
        --no-cache \
        --no-cookies \
-       --directory-prefix=${PATH}/${BASE} \
+       --directory-prefix=${OUT}/${BASE} \
        --default-page=index.html \
        "localhost?cat=${BASE}"
 
-  mv -v "${PATH}/${BASE}/index.html?cat=${BASE}.html" ${PATH}/${BASE}/index.html
+  mv -v "${OUT}/${BASE}/index.html?cat=${BASE}.html" ${OUT}/${BASE}/index.html
   sleep 1
 done
+
+aws s3 sync --acl public-read ${OUT} s3://2030.hex7.com/${OUT}
