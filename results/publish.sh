@@ -1,8 +1,10 @@
 #!/bin/bash -ex
 
 
-echo download top level html
+echo run container
+bash run.sh daemonize
 
+echo download top level html
 SHA=$(git rev-parse HEAD)
 OUT=results
 rm -rf results
@@ -18,15 +20,15 @@ wget --no-directories \
      --directory-prefix=${OUT} \
      --default-page=index.html \
        "localhost?cat=0"
+
 mv -v "${OUT}/index.html?cat=0.html" ${OUT}/index.html
-sed -i.b1 's/\/static/http:\/\/2030.hex7.com\/results/g' ${OUT}/index.html
-sed -i.b2 's/SEDME/${SHA}/g' ${OUT}/index.html
+sed -i.b1 "s/\/static/http:\/\/2030.hex7.com\/results/g" ${OUT}/index.html
+sed -i.b2 "s/SEDME/${SHA}/g" ${OUT}/index.html
 rm -vf ${OUT}/index.html.b1 ${OUT}/index.html.b2
 sleep 1
 
 
 echo download sub-site html
-
 for BASE in 1 2 3 4 5 6 7 8; do
   pwd
   echo execute ${BASE}
@@ -47,4 +49,5 @@ for BASE in 1 2 3 4 5 6 7 8; do
   sleep 1
 done
 
+echo publish to s3
 aws s3 sync --acl public-read ${OUT} s3://2030.hex7.com/${OUT}

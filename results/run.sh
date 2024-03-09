@@ -4,13 +4,6 @@
 bash kill.sh
 bash build.sh
 
-# 0 or 1
-if [ -z "$1" ]; then
-  DAEMONIZE=0
-else
-  DAEMONIZE=1
-fi
-
 
 DRY_RUN=0
 
@@ -46,5 +39,8 @@ else
 
   echo "=====> container ${CONTAINER}"
   echo "=====> docker logs -f ${CONTAINER}"
+fi
+
+if [ -z "$1" ]; then
   docker logs -f ${CONTAINER}
 fi
