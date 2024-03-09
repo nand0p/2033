@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import requests
+import unittest
 import boto3
 import json
 import os
 
-def get_results(stocks, source_file, debug=False, category=0, total_money=1000):
+def get_results(stocks, source_file, debug=False, category='0', total_money=1000):
   results = {}
   total_parts = 0
 
@@ -85,54 +86,37 @@ def get_scores_list(api='http://2030.hex7.com/scores/',
     for key in response['Contents']:
         s_list.append(key['Key'])
 
-  if debug:
-    print('s_list: ', s_list)
-
   return s_list
 
 
-def get_matrix(scores, debug=False, bucket='2030.hex7.com'):
-  matrix = {}
-  if debug:
-    print('scores', scores)
-
-  for key in scores:
-    req = 'http://' + bucket + '/' + key
-
-    r = requests.get(req)
-    #if r.status_code != 200:
-    #  raise Exception("req: ", req, "status code: ", r.status_code)
-
-    r_dict = json.loads(r.text)
-    if debug:
-      print('key', key)
-      print('req', req)
-      print('r_dict', r_dict)
-
-    for k, v in r_dict.items():
-      if k in matrix:
-        matrix[k].append(round(v['score'], 2))
-      else:
-        matrix[k] = []
-        matrix[k].append(round(v['score'], 2))
-
-    if debug:
-      print('matrix', matrix)
-
-    return matrix
-
-
 def make_charts(matrix, savepath='static/', debug=False):
-  for stock, s in matrix.items():
-    if debug:
-      print('stock: ', stock)
-      print('scores: ', s)
 
+  slow = {}
+  fast = {}
+
+  for speed, v in matrix.items():
+    for stock, s in v.items():
+      if speed == 'slow':
+        slow[stock] = s
+      elif speed == 'fast':
+        fast[stock] = s
+
+  for slow_stock, slow_scores in slow.items():
+    for fast_stock, fast_scores in fast.items():
+      if slow_stock == fast_stock:
+        buf = len(slow_scores) - len(fast_scores)
+        last = fast_scores[0]
+        for count in range(0,buf):
+          fast_scores.insert(0, last)
+        assert len(slow_scores) == len(fast_scores)
+
+  for stock in slow.keys():
     plt.ticklabel_format(useOffset=False, style='plain')
-    plt.title(stock + ' scores')
     plt.xlabel('time')
     plt.ylabel('scores')
-    plt.plot(s, color="green")
+    plt.title(stock + ' scores')
+    plt.plot(slow[stock], color='red')
+    plt.plot(fast[stock], color='green')
     plt.savefig(savepath + stock + '-scores.png')
     plt.close()
 
@@ -154,8 +138,10 @@ def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', d
     json.dump(matrix, out, ensure_ascii=True, indent=4)
 
 
-def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', category=0, debug=False):
+def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', category='0', debug=False):
   matrix = {}
+  matrix['slow'] = {}
+  matrix['fast'] = {}
 
   with open(source_file, 'r') as file:
     source = file.read().replace('\n', '').upper()
@@ -164,10 +150,6 @@ def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', 
     req = 'http://' + bucket + '/' + key
     r = requests.get(req)
     r_dict = json.loads(r.text)
-    if debug:
-      print('key', key)
-      print('req', req)
-      print('r_dict', r_dict)
 
     for k, v in r_dict.items():
       if k in source:
@@ -175,9 +157,22 @@ def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', 
            category == '0' and \
            results[k]['category'] != '6':
 
-          if k not in matrix:
-            matrix[k] = []
-
-          matrix[k].append(round(v['score'], 2)
+          if 'fast' in key:
+            if k not in matrix['fast']:
+              matrix['fast'][k] = []
+            matrix['fast'][k].append(round(v['score'], 2))
+          else:
+            if k not in matrix['slow']:
+              matrix['slow'][k] = []
+            matrix['slow'][k].append(round(v['score'], 2))
 
   return matrix
+
+
+def get_url(url, debug=False):
+  r = requests.get(url)
+
+  if r.status_code != 200:
+    raise Exception("req: ", url, " status code: ", r.status_code)
+
+  return json.loads(r.text)

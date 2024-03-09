@@ -15,8 +15,6 @@ app = Flask(__name__)
 class X2030(FlaskView):
   def __init__(self):
     self.total_money = 1000
-    self.results = {}
-    self.ordered = []
     self.s_list = []
     self.savepath = 'static/'
     self.prefix = 'scores/'
@@ -24,44 +22,47 @@ class X2030(FlaskView):
     self.bucket = '2030.hex7.com'
     self.api = 'http://' + self.bucket + '/' + self.prefix
     self.date = ''
-    self.req = ''
-    self.r_dict = {}
+    self.slow_dict = {}
+    self.fast_dict = {}
+    self.slow_results = {}
+    self.slow_ordered = []
+    self.fast_results = {}
+    self.fast_ordered = []
     self.matrix = {}
     self.share_one = 0
     self.category = 0
     self.source_file = '2030.txt'
-    self.debug = False
+    self.debug = True
 
   @route('/', methods = ['GET'])
   def index(self):
     self.matrix = {}
     self.category = request.args.get('cat', '0')
+    if int(self.category) < 0 or int(self.category) > 8:
+      self.category = '0'
     self.debug = request.args.get('debug', False)
     self.total_money = int(request.args.get('cash', str(self.total_money)))
     self.date = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
-    self.req = self.api + 'scores-' + self.date[0] + '.json'
-    r = requests.get(self.req)
-    if r.status_code != 200:
-      raise Exception("req: ", self.req, " status code: ", r.status_code)
 
-    self.r_dict = json.loads(r.text)
+    self.slow_dict = scores.get_url(self.api + 'slow-' + self.date[0] + '.json',
+                                    debug=self.debug)
+    self.fast_dict = scores.get_url(self.api + 'fast-' + self.date[0] + '.json',
+                                    debug=self.debug)
 
-    if self.debug:
-      print('<p>req:<br>', self.req,
-            '<p>api:<br>', self.api,
-            '<p>date:<br>', self.date,
-            '<p>stocks:<br>', str(r.content),
-            '<p>response:<br>', str(self.r_dict),
-            '<p><br>p>')
+    self.slow_results, \
+    self.slow_ordered = scores.get_results(stocks=self.slow_dict,
+                                           category=self.category,
+                                           total_money=self.total_money,
+                                           source_file=self.source_file,
+                                           debug=self.debug)
+    self.fast_results, \
+    self.fast_ordered = scores.get_results(stocks=self.fast_dict,
+                                           category=self.category,
+                                           total_money=self.total_money,
+                                           source_file=self.source_file,
+                                           debug=self.debug)
 
-    self.results, \
-    self.ordered = scores.get_results(stocks=self.r_dict,
-                                      category=self.category,
-                                      total_money=self.total_money,
-                                      source_file=self.source_file,
-                                      debug=self.debug)
-
-    self.share_one = shares.get_min_shares(stocks=self.r_dict,
+    self.share_one = shares.get_min_shares(stocks=self.slow_dict,
                                            category=self.category,
                                            total_money=self.total_money,
                                            debug=self.debug)
@@ -70,30 +71,33 @@ class X2030(FlaskView):
                                          prefix=self.prefix,
                                          debug=self.debug)
 
-    self.matrix = scores.get_matrix(results=self.results,
-                                    s_list=self.s_list,
-                                    source_file=self.source_file,
+    self.matrix = scores.get_matrix(s_list=self.s_list,
+                                    results=self.slow_results,
+                                    source_file='2030.txt',
                                     bucket=self.bucket,
-                                    category=self.category,
+                                    category='0',
                                     debug=self.debug)
 
     scores.make_charts(matrix=self.matrix,
                        debug=self.debug,
                        savepath=self.savepath)
 
-    scores.save_scores(self.matrix,
-                       self.results,
-                       debug=self.debug,
+    scores.save_scores(matrix=self.matrix,
+                       results=self.slow_results,
                        scores_key=self.scores_key,
-                       savepath=self.savepath)
+                       savepath=self.savepath,
+                       debug=self.debug)
 
     return render_template('index.html',
-                           req=self.req,
+                           req=self.api,
                            debug=self.debug,
-                           datemade=' '.join(self.date),
+                           s_list=self.s_list,
                            share_one=self.share_one,
-                           ordered=self.ordered,
-                           results=self.results,
+                           datemade=' '.join(self.date),
+                           slow_results=self.slow_results,
+                           fast_results=self.fast_results,
+                           slow_ordered=self.slow_ordered,
+                           fast_ordered=self.fast_ordered,
                            matrix=self.matrix)
 
 

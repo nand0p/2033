@@ -27,19 +27,20 @@
   <br>
   <p>{{ datemade }}<br>{{ req }}</p>
   {% if debug %}
-    <p>results: {{ results }}</p>
-    <p>ordered: {{ ordered }}</p>
+    <p>slow results: {{ slow_results }}</p>
+    <p>fast results: {{ fast_results }}</p>
+    <p>slow ordered: {{ slow_ordered }}</p>
+    <p>fast ordered: {{ fast_ordered }}</p>
+    <p>s_list: {{ s_list }}</p>
     <p>matrix: {{ matrix }}</p>
     <p>share_one: {{ share_one }}</p>
   {% endif %}
   <br>
   <center>
   <table border=2>
-    <tr><td colspan=7>total money: {{ results.total_money }}</td></tr>
-    <tr><td colspan=7>total parts: {{ results.total_parts }}</td></tr>
-    <tr><td colspan=7>money per part: {{ results.money_per_part }}</td></tr>
+    <tr><td colspan=7 align=center>SLOW</td></td>
     <tr><td colspan=7>.</td></tr>
-    {% for v in ordered %}
+    {% for v in slow_ordered %}
       <tr>
         <td>{{ loop.revindex }}</td>
         <td>
@@ -56,52 +57,97 @@
   <p>
   <br>
   <p>
-  <table>
+  <table border=2>
+    <tr><td colspan=7 align=center>FAST</td></td>
+    <tr><td colspan=7>.</td></tr>
+    {% for v in fast_ordered %}
+      <tr>
+        <td>{{ loop.revindex }}</td>
+        <td>
+          <a target=_blank href=https://finance.yahoo.com/quote/{{ v.stock }}>{{ v.stock }}</a>
+        </td>
+        <td>score: {{ v.score }}</td>
+        <td>price: {{ v.price }}</td>
+        <td>parts: {{ v.parts }}</td>
+        <td>shares: {{ v.shares }}</td>
+        <td>cash: {{ v.cash }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <p>
+  <br>
+  <p>
+  <table border=2>
     <tr>
       <td align=right>num_stocks:</td>
-      <td align=left>{{ ordered | length }}</td>
+      <td align=left>{{ slow_ordered | length }}</td>
     </tr>
     <tr>
       <td align=right>one share price:</td>
       <td align=left>{{ share_one }}</td>
     </tr>
     <tr>
-      <td align=right>total money:</td>
-      <td align=left>{{ results.total_money }}</td>
+      <td colspan=2>.</td>
     </tr>
     <tr>
-      <td align=right>total parts:</td>
-      <td align=left>{{ results.total_parts }}</td>
+      <td align=right>SLOW total money:</td>
+      <td align=left>{{ slow_results.total_money }}</td>
     </tr>
     <tr>
-      <td align=right>money per part:</td>
-      <td align=left>{{ results.money_per_part }}</td>
+      <td align=right>SLOW total parts:</td>
+      <td align=left>{{ slow_results.total_parts }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW money per part:</td>
+      <td align=left>{{ slow_results.money_per_part }}</td>
+    </tr>
+    <tr><td colspan=2>.</td></tr>
+    <tr>
+      <td align=right>FAST total money:</td>
+      <td align=left>{{ fast_results.total_money }}</td>
+    </tr>
+    <tr>
+      <td align=right>FAST total parts:</td>
+      <td align=left>{{ fast_results.total_parts }}</td>
+    </tr>
+    <tr>
+      <td align=right>FAST money per part:</td>
+      <td align=left>{{ fast_results.money_per_part }}</td>
     </tr>
   </table>
+  <p>
   <br>
-
-  <table>
-  {% for v in ordered | reverse %}
-    <tr>
-      <td>
-        <img src=/static/{{ v.stock }}-scores.png width=400>
-      </td>
-      <td>
-        {{ v.stock }}<br>{{ v.price }}<br>{{ v.score }}
-      </td>
-      <td>
-        <img src=http://2030.hex7.com/slow/{{ v.stock }}.png width=400>
-      </td>
-    </tr>
-  {% endfor %}
+  <p>
+  <table border=2>
+    {% for v in slow_ordered | reverse %}
+      <tr>
+        <td align=center>
+          <img src=/static/{{ v.stock }}-scores.png width=350>
+        </td>
+        <td align=center>
+          {{ v.stock }}<br>PRICE: {{ v.price }}<br>SLOW: {{ v.score }}
+          {% for f in fast_ordered %}
+            {% if f.stock == v.stock %}
+              <br>FAST: {{ f.score }}
+            {% endif %}
+          {% endfor %}
+        </td>
+        <td align=center>
+          <img src=http://2030.hex7.com/slow/{{ v.stock }}.png width=350>
+        </td>
+      </tr>
+    {% endfor %}
   </table>
-
   <p>
   <br>
   <p>
   <a href=https://github.com/nand0p/2030>
     https://github.com/nand0p/2030
   </a>
+  <br>
+  SEDME
+  <br>
+  DATEMADE
   <br>
   {{ datemade }}
 

@@ -53,6 +53,8 @@ def generate_price_chart(stock, df, tolerance, debug=False, precise=5):
   df['sma90'] = df.Close.rolling(window=90).mean()
   df['sma365'] = df.Close.rolling(window=365).mean()
   ax = df.plot.line()
+  label = stock + ' prices'
+  ax.set_title(label=label)
   ax.figure.savefig('static/' + stock + '.png')
   matplotlib.pyplot.close()
 

@@ -36,6 +36,8 @@ okta:2
 asml:2
 splk:2
 amd:2
+rxt:2
+hcp:2
 
 ihak:3
 hack:3
@@ -109,10 +111,6 @@ irbo:5
 driv:5
 arkq:5
 
-^irx:6
-^tnx:6
-^tyx:6
-eurusd=x:6
 btc-usd:6
 eth-usd:6
 sol-usd:6
@@ -132,5 +130,7 @@ emqq:7
 kgro:7
 kemq:7
 
-rxt:8
-hcp:8
+eurusd=x:8
+^irx:8
+^tnx:8
+^tyx:8
