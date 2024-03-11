@@ -223,6 +223,8 @@ jobs:
         run: |
           curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_FAST }}
           curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_SLOW }}
+      - name: kill container
+        run: bash -ex ./ci/kill.sh
 
   deploy_2030_results:
     runs-on: ubuntu-latest
