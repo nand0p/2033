@@ -29,6 +29,7 @@ if [ "${DRY_RUN}" == "1" ]; then
 
 else
   CONTAINER=$(docker run --detach \
+              --platform linux/x86_64 \
               --publish ${PORTS} \
               ${TAG})
 

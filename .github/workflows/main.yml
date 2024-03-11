@@ -239,10 +239,6 @@ jobs:
           username: nand0p
           password: ${{ secrets.DOCKERHUB }}
 
-      - name: docker buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-
       - name: Setting export variables values
         run: |
           pwd
@@ -262,19 +258,6 @@ jobs:
           echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
           echo "AWS_REGION=${AWS_REGION}" >> $GITHUB_ENV
 
-      - name: build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./results/
-          file: ./results/Dockerfile
-          push: true
-          tags: nand0p/x2030-results:${{ env.APP_VERSION }}
-          build-args: DATE=$(date),REVISION=${{ github.sha }}
-
-      - name: echo digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
       - name: process scores
         run: |
           pip install -r requirements.txt
@@ -282,6 +265,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
+      - name: build container
+        working-directory: ./results/
+        run: ./build.sh
 
       - name: run container
         working-directory: ./results/
@@ -301,7 +288,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
-      - name: publish results
+      - name: publish matrix
         run: bash -ex ./ci/upload_matrix.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
