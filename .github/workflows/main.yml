@@ -227,7 +227,7 @@ jobs:
 
   deploy_2030_results:
     runs-on: ubuntu-latest
-    #needs: deploy_2030
+    needs: deploy_2030
 
     steps:
       - name: check out repo
