@@ -284,15 +284,15 @@ jobs:
 
       - name: run container
         working-directory: ./results/
-        run: bash -ex ./run.sh daemonize
+        run: bash -ex ./results/run.sh daemonize
 
       - name: test container
         working-directory: ./results/
-        run: bash -ex ./test_container.sh
+        run: bash -ex ./ci/test_container.sh
 
       - name: publish results
         working-directory: ./results/
-        run: bash -ex ./publish.sh
+        run: bash -ex ./results/publish.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
