@@ -1,9 +1,6 @@
 #!/bin/bash -ex
 
 
-echo run container
-bash run.sh daemonize
-
 echo download top level html
 SHA=$(git rev-parse HEAD)
 OUT=results

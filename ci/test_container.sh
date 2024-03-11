@@ -1,17 +1,21 @@
-#!/bin/bash -x
+#!/bin/bash -ex
 
 
 sleep 3
-TEST=$(curl http://localhost/test)
+API=http://localhost/test
+TEST=$(curl ${API})
+echo
+echo RESPONSE ${API}:
+echo ${TEST}
+echo
 
-if [ -z ${TEST} ]; then
+if echo ${TEST} | grep -q "success"; then
+  echo
+  echo success
+  echo
+else
   echo
   echo "service not available"
   echo
   exit 1
-elif [[ "success" == *${TEST}* ]]; then
-  echo
-  echo success
-  echo
 fi
-
