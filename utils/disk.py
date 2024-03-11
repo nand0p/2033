@@ -3,12 +3,16 @@ import matplotlib
 import operator
 import boto3    
 import json
+import os
 
 
 def save_scores(stocks, speed, bucket, data_dir, save_to_s3=False, debug=False):
   scores_out = {}
   date = datetime.now().isoformat().split('T')[0]
   scores_key = speed + '-' + date + '.json'
+
+  if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
 
   for stock in stocks.keys():
     if stocks[stock]['score'] > 100:
