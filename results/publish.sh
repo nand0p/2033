@@ -4,7 +4,6 @@
 echo download top level html
 SHA=$(git rev-parse HEAD)
 OUT=results
-rm -rf results
 mkdir -pv ${OUT}
 
 wget --no-directories \
