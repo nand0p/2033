@@ -275,7 +275,9 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: process scores
-        run: python ./ci/process_scores.py
+        run: |
+          pip install -r requirements.txt
+          python ./ci/process_scores.py
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
@@ -286,8 +288,7 @@ jobs:
 
       - name: test container
         working-directory: ./results/
-        run: |
-          bash -ex ./test_container.sh
+        run: bash -ex ./test_container.sh
 
       - name: publish results
         working-directory: ./results/
