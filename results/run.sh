@@ -39,3 +39,6 @@ fi
 if [ -z "$1" ]; then
   docker logs -f ${CONTAINER}
 fi
+
+sleep 3
+docker logs ${CONTAINER}
