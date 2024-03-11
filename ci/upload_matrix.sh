@@ -31,4 +31,8 @@ docker cp "${CONTAINER}:/static/${SAVE_FILE}" "${SAVE_PATH}"
 echo ensure data copy out success
 cat ${SAVE_PATH}/${SAVE_FILE}
 
+echo upload to s3
 aws s3 cp ${SAVE_PATH}/${SAVE_FILE} s3://${S3_BUCKET}/${SAVE_FILE}
+
+echo set acl
+aws s3api put-object-acl --bucket 2030.hex7.com --key ${SAVE_FILE} --acl public-read
