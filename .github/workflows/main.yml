@@ -268,12 +268,13 @@ jobs:
 
       - name: build container
         working-directory: ./results/
-        run: ./build.sh
+        run: |
+          bash -ex ./build.sh
+          docker images
 
       - name: run container
         working-directory: ./results/
         run: |
-          docker ps
           bash -ex ./run.sh daemonize
           sleep 1
           docker ps
@@ -296,7 +297,7 @@ jobs:
 
       - name: test results websites
         run: |
-          curl http://${{ env.S3_PUBLIC_BUCKET }}results/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/1/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/2/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/3/
@@ -306,3 +307,6 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/7/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/8/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/upload_matrix.json
+
+       - name: publish docker
+         run: docker push nand0p/x2030:${{ env.APP_VERSION }}

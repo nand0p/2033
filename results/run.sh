@@ -23,13 +23,13 @@ if [ "${DRY_RUN}" == "1" ]; then
   echo "DRY_RUN = 1"
   echo
   echo "docker run --publish ${PORTS}"
+  echo "           --platform linux/x86_64"
   echo "           ${TAG}"
   echo 
   exit 1
 
 else
   CONTAINER=$(docker run --detach \
-              --platform linux/x86_64 \
               --publish ${PORTS} \
               ${TAG})
 
