@@ -308,5 +308,5 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/results/8/
           curl http://${{ env.S3_PUBLIC_BUCKET }}/upload_matrix.json
 
-       - name: publish docker
-         run: docker push nand0p/x2030:${{ env.APP_VERSION }}
+      - name: publish docker
+        run: docker push nand0p/x2030:${{ env.APP_VERSION }}
