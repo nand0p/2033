@@ -12,8 +12,8 @@ OWNER=hex7
 VERSION=$(cat VERSION)
 
 
-TAG="${NAME}:${VERSION}"
-#TAG="${REPO}/${NAME}:${VERSION}"
+#TAG="${NAME}:${VERSION}"
+TAG="${REPO}/${NAME}:${VERSION}"
 
 cp -v ../2030.txt .
 

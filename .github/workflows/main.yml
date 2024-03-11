@@ -223,3 +223,94 @@ jobs:
         run: |
           curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_FAST }}
           curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_SLOW }}
+
+  deploy_2030_results:
+    runs-on: ubuntu-latest
+    needs: deploy_2030
+
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v2
+
+      - name: login dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: nand0p
+          password: ${{ secrets.DOCKERHUB }}
+
+      - name: docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Setting export variables values
+        run: |
+          pwd
+          ls -la
+          env
+          TIMEZONE=EST5EDT
+          APP_VERSION=$(cat ./results/VERSION)
+          S3_PUBLIC_BUCKET=2030.hex7.com
+          S3_SCORES_PREFIX=scores
+          AWS_REGION=us-east-1
+          echo "TZ=${TIMEZONE}"
+          echo "APP_VERSION=${APP_VERSION}"
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}"
+          echo "AWS_REGION=${AWS_REGION}"
+          echo "TZ=${TIMEZONE}" >> $GITHUB_ENV
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+          echo "S3_PUBLIC_BUCKET=${S3_PUBLIC_BUCKET}" >> $GITHUB_ENV
+          echo "AWS_REGION=${AWS_REGION}" >> $GITHUB_ENV
+
+      - name: build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./results/
+          file: ./results/Dockerfile
+          push: true
+          tags: nand0p/x2030-results:${{ env.APP_VERSION }}
+          build-args: DATE=$(date),REVISION=${{ github.sha }}
+
+      - name: echo digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: process scores
+        run: python ./ci/process_scores.py
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
+      - name: run container
+        working-directory: ./results/
+        run: bash -ex ./run.sh daemonize
+
+      - name: test container
+        working-directory: ./results/
+        run: |
+          bash -ex ./test_container.sh
+
+      - name: publish results
+        working-directory: ./results/
+        run: bash -ex ./publish.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
+      - name: publish results
+        run: bash -ex ./ci/upload_matrix.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
+      - name: test results websites
+        run: |
+          curl http://${{ env.S3_PUBLIC_BUCKET }}results/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/1/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/2/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/3/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/4/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/5/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/6/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/7/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/results/8/
+          curl http://${{ env.S3_PUBLIC_BUCKET }}/upload_matrix.json

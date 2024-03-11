@@ -19,8 +19,10 @@ class X2030(FlaskView):
     self.savepath = 'static/'
     self.prefix = 'scores/'
     self.scores_key = 'scores_matrix.json'
+    self.scores_file = 'scores_list.json'
     self.bucket = '2030.hex7.com'
-    self.api = 'http://' + self.bucket + '/' + self.prefix
+    self.api = 'http://' + self.bucket + '/'
+    self.api_scores = self.api + self.prefix
     self.date = ''
     self.slow_dict = {}
     self.fast_dict = {}
@@ -44,9 +46,9 @@ class X2030(FlaskView):
     self.total_money = int(request.args.get('cash', str(self.total_money)))
     self.date = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
 
-    self.slow_dict = scores.get_url(self.api + 'slow-' + self.date[0] + '.json',
+    self.slow_dict = scores.get_url(self.api_scores + 'slow-' + self.date[0] + '.json',
                                     debug=self.debug)
-    self.fast_dict = scores.get_url(self.api + 'fast-' + self.date[0] + '.json',
+    self.fast_dict = scores.get_url(self.api_scores + 'fast-' + self.date[0] + '.json',
                                     debug=self.debug)
 
     self.slow_results, \
@@ -67,8 +69,8 @@ class X2030(FlaskView):
                                            total_money=self.total_money,
                                            debug=self.debug)
 
-    self.s_list = scores.get_scores_list(bucket=self.bucket,
-                                         prefix=self.prefix,
+    self.s_list = scores.get_scores_list(api=self.api,
+                                         scores_file=self.scores_file,
                                          debug=self.debug)
 
     self.matrix = scores.get_matrix(s_list=self.s_list,
@@ -90,6 +92,7 @@ class X2030(FlaskView):
 
     return render_template('index.html',
                            req=self.api,
+                           req_scores=self.api_scores,
                            debug=self.debug,
                            s_list=self.s_list,
                            share_one=self.share_one,

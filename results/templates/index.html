@@ -44,10 +44,17 @@
       <td align=center><a href=/results/7/>Asia</a></td>
       <td align=center><a href=/results/8/>Indicies</a></td>
     </tr>
+    <tr width=100%>
+      <td bgcolor=green width=100% align=center colspan=9>results</td>
+    </tr>
   </table>
   </h2>
   <br>
-  <p>{{ datemade }}<br>{{ req }}</p>
+  <p>
+  {{ datemade }}
+  <br>API: {{ req }}
+  <br>API Scores: {{ req_scores }}
+  <p>
   {% if debug %}
     <p>slow results: {{ slow_results }}</p>
     <p>fast results: {{ fast_results }}</p>

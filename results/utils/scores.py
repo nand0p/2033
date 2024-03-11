@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import requests
 import unittest
-import boto3
 import json
 import os
 
@@ -69,24 +68,18 @@ def get_results(stocks, source_file, debug=False, category='0', total_money=1000
   return results, sorted(ordered, key=lambda d: d['score'])
 
 
-def get_scores_list(api='http://2030.hex7.com/scores/',
-                    bucket='2030.hex7.com',
-                    prefix='scores',
+def get_scores_list(api='http://2030.hex7.com/',
+                    scores_file='scores_list.json',
                     debug=False):
-  s_list = []
-  client = boto3.client("s3", region_name='us-east-1')
-  response = client.list_objects_v2(Bucket=bucket,
-                                    Prefix=prefix,
-                                    Delimiter='/')
 
-  if 'Contents' not in response:
-        raise Exception('response', response)
+  url = api + scores_file
+  r = requests.get(url)
+  scores_list = json.loads(r.text)
 
-  else:
-    for key in response['Contents']:
-        s_list.append(key['Key'])
+  if debug:
+    print(scores_list)
 
-  return s_list
+  return scores_list
 
 
 def make_charts(matrix, savepath='static/', debug=False):
@@ -121,14 +114,15 @@ def make_charts(matrix, savepath='static/', debug=False):
     plt.close()
 
 
-def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', debug=False):
-  s3 = boto3.resource('s3')
-  s3matrix = s3.Object(bucket, scores_key)
-  s3matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
-               ACL='public-read')
-  s3results = s3.Object(bucket, 'results.json')
-  s3results.put(Body=(bytes(json.dumps(results).encode('UTF-8'))),
-                ACL='public-read')
+def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', save_to_s3=False, debug=False):
+  if save_to_s3:
+    s3 = boto3.resource('s3')
+    s3matrix = s3.Object(bucket, scores_key)
+    s3matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
+                 ACL='public-read')
+    s3results = s3.Object(bucket, 'results.json')
+    s3results.put(Body=(bytes(json.dumps(results).encode('UTF-8'))),
+                  ACL='public-read')
 
   if not os.path.exists(savepath):
     print('Making savepath: ' + savepath)

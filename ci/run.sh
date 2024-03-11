@@ -24,7 +24,6 @@ if [ "${DRY_RUN}" == "1" ]; then
   echo
   echo "docker run --publish ${PORTS}"
   echo "           --env STOCKS=${STOCKS}"
-  echo "           -v data:/data" 
   echo "           ${TAG}"
   echo 
   exit 1
@@ -32,7 +31,6 @@ if [ "${DRY_RUN}" == "1" ]; then
 else
   CONTAINER=$(docker run --detach \
               --publish ${PORTS} \
-              -v data:/data \
               --env "STOCKS=${STOCKS}" \
               ${TAG})
 

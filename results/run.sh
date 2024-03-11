@@ -1,10 +1,6 @@
 #!/bin/bash -e
 
 
-bash kill.sh
-bash build.sh
-
-
 DRY_RUN=0
 
 
@@ -13,8 +9,8 @@ NAME=x2030-results
 VERSION=$(cat VERSION)
 PORTS="80:5000"
 
-TAG="${NAME}:${VERSION}"
-#TAG="${REPO}/${NAME}:${VERSION}"
+#TAG="${NAME}:${VERSION}"
+TAG="${REPO}/${NAME}:${VERSION}"
 
 echo
 echo "running ${TAG}"
@@ -34,7 +30,6 @@ if [ "${DRY_RUN}" == "1" ]; then
 else
   CONTAINER=$(docker run --detach \
               --publish ${PORTS} \
-              -v ~/.aws:/root/.aws:ro \
               ${TAG})
 
   echo "=====> container ${CONTAINER}"

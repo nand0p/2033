@@ -43,8 +43,8 @@ for BASE in 1 2 3 4 5 6 7 8; do
        "localhost?cat=${BASE}"
 
   mv -v "${OUT}/${BASE}/index.html?cat=${BASE}.html" ${OUT}/${BASE}/index.html
-  sed -i.b1 's/\/static/http:\/\/2030.hex7.com\/results/g' ${OUT}/${BASE}/index.html
-  sed -i.b2 's/SEDME/${SHA}/g' ${OUT}/${BASE}/index.html
+  sed -i.b1 "s/\/static/http:\/\/2030.hex7.com\/results/g" ${OUT}/${BASE}/index.html
+  sed -i.b2 "s/SEDME/${SHA}/g" ${OUT}/${BASE}/index.html
   rm -vf ${OUT}/index.html.b1 ${OUT}/${BASE}/index.html.b2
   sleep 1
 done
