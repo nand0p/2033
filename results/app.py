@@ -74,7 +74,8 @@ class X2030(FlaskView):
                                          debug=self.debug)
 
     self.matrix = scores.get_matrix(s_list=self.s_list,
-                                    results=self.slow_results,
+                                    slow_results=self.slow_results,
+                                    fast_results=self.fast_results,
                                     source_file='2030.txt',
                                     bucket=self.bucket,
                                     category='0',

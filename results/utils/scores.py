@@ -90,18 +90,17 @@ def make_charts(matrix, savepath='static/', debug=False):
   for speed, v in matrix.items():
     for stock, s in v.items():
       if speed == 'slow':
-        slow[stock] = s
+        if isinstance(s, dict):
+          slow[stock] = s['scores']
       elif speed == 'fast':
-        fast[stock] = s
+        if isinstance(s, dict):
+          fast[stock] = s['scores']
 
   for slow_stock, slow_scores in slow.items():
     for fast_stock, fast_scores in fast.items():
       if slow_stock == fast_stock:
-        buf = len(slow_scores) - len(fast_scores)
-        last = fast_scores[0]
-        for count in range(0,buf):
-          fast_scores.insert(0, last)
-        assert len(slow_scores) == len(fast_scores)
+        while len(slow_scores) != len(fast_scores):
+          fast_scores.insert(0, fast_scores[0])
 
   for stock in slow.keys():
     plt.ticklabel_format(useOffset=False, style='plain')
@@ -132,7 +131,14 @@ def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', s
     json.dump(matrix, out, ensure_ascii=True, indent=4)
 
 
-def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', category='0', debug=False):
+def get_matrix(s_list,
+               slow_results,
+               fast_results,
+               source_file='2030.txt',
+               bucket='2030.hex7.com',
+               category='0',
+               debug=False):
+
   matrix = {}
   matrix['slow'] = {}
   matrix['fast'] = {}
@@ -147,18 +153,47 @@ def get_matrix(s_list, results, source_file='2030.txt', bucket='2030.hex7.com', 
 
     for k, v in r_dict.items():
       if k in source:
-        if results[k]['category'] == category or \
+        if k not in matrix['fast']:
+          matrix['fast'][k] = {}
+          matrix['fast'][k]['scores'] = []
+        elif k not in matrix['slow']:
+          matrix['slow'][k] = {}
+          matrix['slow'][k]['scores'] = []
+
+        if slow_results[k]['category'] == category or \
            category == '0' and \
-           results[k]['category'] != '6':
+           slow_results[k]['category'] != '6':
 
           if 'fast' in key:
-            if k not in matrix['fast']:
-              matrix['fast'][k] = []
-            matrix['fast'][k].append(round(v['score'], 2))
+            matrix['fast'][k]['scores'].append(round(v['score'], 2))
+
           else:
-            if k not in matrix['slow']:
-              matrix['slow'][k] = []
-            matrix['slow'][k].append(round(v['score'], 2))
+            matrix['slow'][k]['scores'].append(round(v['score'], 2))
+
+  for stock in matrix['slow'].keys():
+    if 'parts' not in matrix['fast']:
+      matrix['fast']['parts'] = 0
+      matrix['fast']['total_parts'] = 0
+
+    if stock != 'parts' and stock != 'total_parts':
+      if fast_results[stock].get('parts', 0) > 0:
+        matrix['fast']['parts'] += fast_results[stock].get('price', 0)
+        matrix['fast']['total_parts'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+
+  for stock in matrix['fast'].keys():
+    if 'parts' not in matrix['slow']:
+      matrix['slow']['parts'] = 0
+      matrix['slow']['total_parts'] = 0
+
+    if stock != 'parts' and stock != 'total_parts':
+      if slow_results[stock].get('parts', 0) > 0:
+        matrix['slow']['parts'] += slow_results[stock].get('price', 0)
+        matrix['slow']['total_parts'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+
+  matrix['slow']['parts'] = round(matrix['slow']['parts'], 2)
+  matrix['slow']['total_parts'] = round(matrix['slow']['total_parts'], 2)
+  matrix['fast']['parts'] = round(matrix['fast']['parts'], 2)
+  matrix['fast']['total_parts'] = round(matrix['fast']['total_parts'], 2)
 
   return matrix
 
