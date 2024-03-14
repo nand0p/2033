@@ -86,7 +86,8 @@ class X2030(FlaskView):
                        savepath=self.savepath)
 
     scores.save_scores(matrix=self.matrix,
-                       results=self.slow_results,
+                       slow_results=self.slow_results,
+                       fast_results=self.fast_results,
                        scores_key=self.scores_key,
                        savepath=self.savepath,
                        debug=self.debug)

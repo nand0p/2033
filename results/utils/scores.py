@@ -4,7 +4,12 @@ import unittest
 import json
 import os
 
-def get_results(stocks, source_file, debug=False, category='0', total_money=1000):
+def get_results(stocks,
+                source_file,
+                debug=False,
+                category='0',
+                total_money=1000):
+
   results = {}
   total_parts = 0
 
@@ -16,7 +21,11 @@ def get_results(stocks, source_file, debug=False, category='0', total_money=1000
       stock_parts = 0
       results[stock] = {}
       results[stock]['category'] = v['category']
-      if v['category'] == category or category == '0' and v['category'] != '6':
+
+      if v['category'] == category or \
+         v['category'] != '6' and \
+         category == '0':
+
         if v['score'] < -75:
           results[stock]['parts'] = 0
           stock_parts = stock_parts + 0
@@ -54,7 +63,10 @@ def get_results(stocks, source_file, debug=False, category='0', total_money=1000
   ordered = []
   for stock, v in stocks.items():
     if stock in source:
-      if v['category'] == category or category == '0' and v['category'] != '6':
+      if v['category'] == category or \
+         v['category'] != '6' and \
+         category == '0':
+
         results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
         results[stock]['shares'] = round(results[stock]['cash'] / v['current_price'], 4)
         results[stock]['price'] = round(v['current_price'], 2)
@@ -82,7 +94,9 @@ def get_scores_list(api='http://2030.hex7.com/',
   return scores_list
 
 
-def make_charts(matrix, savepath='static/', debug=False):
+def make_charts(matrix,
+                savepath='static/',
+                debug=False):
 
   slow = {}
   fast = {}
@@ -107,21 +121,35 @@ def make_charts(matrix, savepath='static/', debug=False):
     plt.xlabel('time')
     plt.ylabel('scores')
     plt.title(stock + ' scores')
+    plt.ylim(-100, 100)
     plt.plot(slow[stock], color='red')
     plt.plot(fast[stock], color='green')
     plt.savefig(savepath + stock + '-scores.png')
     plt.close()
 
 
-def save_scores(matrix, results, savepath, scores_key, bucket='2030.hex7.com', save_to_s3=False, debug=False):
+def save_scores(matrix,
+                slow_results,
+                fast_results,
+                savepath,
+                scores_key,
+                bucket='2030.hex7.com',
+                save_to_s3=False,
+                debug=False):
+
   if save_to_s3:
     s3 = boto3.resource('s3')
-    s3matrix = s3.Object(bucket, scores_key)
-    s3matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
-                 ACL='public-read')
-    s3results = s3.Object(bucket, 'results.json')
-    s3results.put(Body=(bytes(json.dumps(results).encode('UTF-8'))),
+    s3_matrix = s3.Object(bucket, scores_key)
+    s3_matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
                   ACL='public-read')
+
+    s3_slow_results = s3.Object(bucket, 'results_slow.json')
+    s3_slow_results.put(Body=(bytes(json.dumps(slow_results).encode('UTF-8'))),
+                        ACL='public-read')
+
+    s3_fast_results = s3.Object(bucket, 'results_fast.json')
+    s3_fast_results.put(Body=(bytes(json.dumps(fast_results).encode('UTF-8'))),
+                        ACL='public-read')
 
   if not os.path.exists(savepath):
     print('Making savepath: ' + savepath)
@@ -156,13 +184,14 @@ def get_matrix(s_list,
         if k not in matrix['fast']:
           matrix['fast'][k] = {}
           matrix['fast'][k]['scores'] = []
+
         elif k not in matrix['slow']:
           matrix['slow'][k] = {}
           matrix['slow'][k]['scores'] = []
 
         if slow_results[k]['category'] == category or \
-           category == '0' and \
-           slow_results[k]['category'] != '6':
+           slow_results[k]['category'] != '6' and \
+           category == '0':
 
           if 'fast' in key:
             matrix['fast'][k]['scores'].append(round(v['score'], 2))
@@ -170,28 +199,76 @@ def get_matrix(s_list,
           else:
             matrix['slow'][k]['scores'].append(round(v['score'], 2))
 
+  fast_count = 0
   for stock in matrix['slow'].keys():
     if 'parts' not in matrix['fast']:
       matrix['fast']['parts'] = 0
       matrix['fast']['total_parts'] = 0
+      matrix['fast']['parts1'] = 0
+      matrix['fast']['parts2'] = 0
+      matrix['fast']['parts3'] = 0
+      matrix['fast']['parts4'] = 0
+      matrix['fast']['parts5'] = 0
+      matrix['fast']['parts6'] = 0
+      matrix['fast']['parts7'] = 0
 
-    if stock != 'parts' and stock != 'total_parts':
+    if 'parts' not in stock:
       if fast_results[stock].get('parts', 0) > 0:
+        fast_count = fast_count + 1
         matrix['fast']['parts'] += fast_results[stock].get('price', 0)
         matrix['fast']['total_parts'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+        if fast_results[stock].get('parts', 0) > 1:
+          matrix['fast']['parts1'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 2:
+          matrix['fast']['parts2'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 3:
+          matrix['fast']['parts3'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 4:
+          matrix['fast']['parts4'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 5:
+          matrix['fast']['parts5'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 6:
+          matrix['fast']['parts6'] += fast_results[stock].get('price', 0)
+        if fast_results[stock].get('parts', 0) > 7:
+          matrix['fast']['parts7'] += fast_results[stock].get('price', 0)
 
+  slow_count = 0
   for stock in matrix['fast'].keys():
     if 'parts' not in matrix['slow']:
       matrix['slow']['parts'] = 0
       matrix['slow']['total_parts'] = 0
+      matrix['slow']['parts1'] = 0
+      matrix['slow']['parts2'] = 0
+      matrix['slow']['parts3'] = 0
+      matrix['slow']['parts4'] = 0
+      matrix['slow']['parts5'] = 0
+      matrix['slow']['parts6'] = 0
+      matrix['slow']['parts7'] = 0
 
-    if stock != 'parts' and stock != 'total_parts':
+    if 'parts' not in stock:
       if slow_results[stock].get('parts', 0) > 0:
+        slow_count = slow_count + 1
         matrix['slow']['parts'] += slow_results[stock].get('price', 0)
         matrix['slow']['total_parts'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+        if slow_results[stock].get('parts', 0) > 1:
+          matrix['slow']['parts1'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 2:
+          matrix['slow']['parts2'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 3:
+          matrix['slow']['parts3'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 4:
+          matrix['slow']['parts4'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 5:
+          matrix['slow']['parts5'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 6:
+          matrix['slow']['parts6'] += slow_results[stock].get('price', 0)
+        if slow_results[stock].get('parts', 0) > 7:
+          matrix['slow']['parts7'] += slow_results[stock].get('price', 0)
 
+  matrix['slow']['count'] = slow_count
   matrix['slow']['parts'] = round(matrix['slow']['parts'], 2)
   matrix['slow']['total_parts'] = round(matrix['slow']['total_parts'], 2)
+  matrix['fast']['count'] = fast_count
   matrix['fast']['parts'] = round(matrix['fast']['parts'], 2)
   matrix['fast']['total_parts'] = round(matrix['fast']['total_parts'], 2)
 
