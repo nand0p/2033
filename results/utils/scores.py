@@ -22,9 +22,7 @@ def get_results(stocks,
       results[stock] = {}
       results[stock]['category'] = v['category']
 
-      if v['category'] == category or \
-         v['category'] != '6' and \
-         category == '0':
+      if v['category'] == category or category == '0':
 
         if v['score'] < -75:
           results[stock]['parts'] = 0
@@ -63,9 +61,7 @@ def get_results(stocks,
   ordered = []
   for stock, v in stocks.items():
     if stock in source:
-      if v['category'] == category or \
-         v['category'] != '6' and \
-         category == '0':
+      if v['category'] == category or category == '0':
 
         results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
         results[stock]['shares'] = round(results[stock]['cash'] / v['current_price'], 4)
@@ -189,9 +185,7 @@ def get_matrix(s_list,
           matrix['slow'][k] = {}
           matrix['slow'][k]['scores'] = []
 
-        if slow_results[k]['category'] == category or \
-           slow_results[k]['category'] != '6' and \
-           category == '0':
+        if slow_results[k]['category'] == category or category == '0':
 
           if 'fast' in key:
             matrix['fast'][k]['scores'].append(round(v['score'], 2))
