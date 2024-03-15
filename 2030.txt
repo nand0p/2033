@@ -24,7 +24,6 @@ amat:2
 qcom:2
 tsm:2
 adsk:2
-adbe:2
 cdns:2
 snps:2
 crwd:2
