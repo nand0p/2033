@@ -196,14 +196,22 @@ def get_matrix(s_list,
   fast_count = 0
   for stock in matrix['slow'].keys():
     if 'parts1' not in matrix['fast']:
-      matrix['fast']['total_parts1'] = 0
-      matrix['fast']['total_parts2'] = 0
-      matrix['fast']['total_parts3'] = 0
-      matrix['fast']['total_parts4'] = 0
-      matrix['fast']['total_parts5'] = 0
-      matrix['fast']['total_parts6'] = 0
-      matrix['fast']['total_parts7'] = 0
-      matrix['fast']['total_parts8'] = 0
+      matrix['fast']['parts1_total'] = 0
+      matrix['fast']['parts2_total'] = 0
+      matrix['fast']['parts3_total'] = 0
+      matrix['fast']['parts4_total'] = 0
+      matrix['fast']['parts5_total'] = 0
+      matrix['fast']['parts6_total'] = 0
+      matrix['fast']['parts7_total'] = 0
+      matrix['fast']['parts8_total'] = 0
+      matrix['fast']['parts1_count'] = 0
+      matrix['fast']['parts2_count'] = 0
+      matrix['fast']['parts3_count'] = 0
+      matrix['fast']['parts4_count'] = 0
+      matrix['fast']['parts5_count'] = 0
+      matrix['fast']['parts6_count'] = 0
+      matrix['fast']['parts7_count'] = 0
+      matrix['fast']['parts8_count'] = 0
       matrix['fast']['parts1'] = 0
       matrix['fast']['parts2'] = 0
       matrix['fast']['parts3'] = 0
@@ -216,41 +224,59 @@ def get_matrix(s_list,
     if 'parts' not in stock:
       if fast_results[stock].get('parts', 0) > 0:
         fast_count = fast_count + 1
-        matrix['fast']['parts1'] += fast_results[stock].get('price', 0)
-        matrix['fast']['total_parts1'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 1:
+
+        if fast_results[stock].get('parts', 0) < 2:
+          matrix['fast']['parts1'] += fast_results[stock].get('price', 0)
+          matrix['fast']['parts1_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts1_count'] = matrix['fast']['parts1_count'] + 1
+        if fast_results[stock].get('parts', 0) < 3:
           matrix['fast']['parts2'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts2'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 2:
+          matrix['fast']['parts2_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts2_count'] = matrix['fast']['parts2_count'] + 1
+        if fast_results[stock].get('parts', 0) < 4:
           matrix['fast']['parts3'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts3'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 3:
+          matrix['fast']['parts3_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts3_count'] = matrix['fast']['parts3_count'] + 1
+        if fast_results[stock].get('parts', 0) < 5:
           matrix['fast']['parts4'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts4'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 4:
+          matrix['fast']['parts4_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts4_count'] = matrix['fast']['parts4_count'] + 1
+        if fast_results[stock].get('parts', 0) < 6:
           matrix['fast']['parts5'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts5'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 5:
+          matrix['fast']['parts5_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts5_count'] = matrix['fast']['parts5_count'] + 1
+        if fast_results[stock].get('parts', 0) < 7:
           matrix['fast']['parts6'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts6'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 6:
+          matrix['fast']['parts6_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts6_count'] = matrix['fast']['parts6_count'] + 1
+        if fast_results[stock].get('parts', 0) < 8:
           matrix['fast']['parts7'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts7'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
-        if fast_results[stock].get('parts', 0) > 7:
+          matrix['fast']['parts7_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts7_count'] = matrix['fast']['parts7_count'] + 1
+        if fast_results[stock].get('parts', 0) < 9:
           matrix['fast']['parts8'] += fast_results[stock].get('price', 0)
-          matrix['fast']['total_parts8'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts8_total'] += fast_results[stock].get('price', 0) * fast_results[stock].get('parts', 0)
+          matrix['fast']['parts8_count'] = matrix['fast']['parts8_count'] + 1
 
   slow_count = 0
   for stock in matrix['fast'].keys():
     if 'parts1' not in matrix['slow']:
-      matrix['slow']['total_parts1'] = 0
-      matrix['slow']['total_parts2'] = 0
-      matrix['slow']['total_parts3'] = 0
-      matrix['slow']['total_parts4'] = 0
-      matrix['slow']['total_parts5'] = 0
-      matrix['slow']['total_parts6'] = 0
-      matrix['slow']['total_parts7'] = 0
-      matrix['slow']['total_parts8'] = 0
+      matrix['slow']['parts1_total'] = 0
+      matrix['slow']['parts2_total'] = 0
+      matrix['slow']['parts3_total'] = 0
+      matrix['slow']['parts4_total'] = 0
+      matrix['slow']['parts5_total'] = 0
+      matrix['slow']['parts6_total'] = 0
+      matrix['slow']['parts7_total'] = 0
+      matrix['slow']['parts8_total'] = 0
+      matrix['slow']['parts1_count'] = 0
+      matrix['slow']['parts2_count'] = 0
+      matrix['slow']['parts3_count'] = 0
+      matrix['slow']['parts4_count'] = 0
+      matrix['slow']['parts5_count'] = 0
+      matrix['slow']['parts6_count'] = 0
+      matrix['slow']['parts7_count'] = 0
+      matrix['slow']['parts8_count'] = 0
       matrix['slow']['parts1'] = 0
       matrix['slow']['parts2'] = 0
       matrix['slow']['parts3'] = 0
@@ -263,36 +289,46 @@ def get_matrix(s_list,
     if 'parts' not in stock:
       if slow_results[stock].get('parts', 0) > 0:
         slow_count = slow_count + 1
-        matrix['slow']['parts1'] += slow_results[stock].get('price', 0)
-        matrix['slow']['total_parts1'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 1:
+
+        if slow_results[stock].get('parts', 0) < 2:
+          matrix['slow']['parts1'] += slow_results[stock].get('price', 0)
+          matrix['slow']['parts1_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts1_count'] = matrix['slow']['parts1_count'] + 1
+        if slow_results[stock].get('parts', 0) < 3:
           matrix['slow']['parts2'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts2'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 2:
+          matrix['slow']['parts2_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts2_count'] = matrix['slow']['parts2_count'] + 1
+        if slow_results[stock].get('parts', 0) < 4:
           matrix['slow']['parts3'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts3'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 3:
+          matrix['slow']['parts3_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts3_count'] = matrix['slow']['parts3_count'] + 1
+        if slow_results[stock].get('parts', 0) < 5:
           matrix['slow']['parts4'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts4'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 4:
+          matrix['slow']['parts4_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts4_count'] = matrix['slow']['parts4_count'] + 1
+        if slow_results[stock].get('parts', 0) < 6:
           matrix['slow']['parts5'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts5'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 5:
+          matrix['slow']['parts5_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts5_count'] = matrix['slow']['parts5_count'] + 1
+        if slow_results[stock].get('parts', 0) < 7:
           matrix['slow']['parts6'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts6'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 6:
+          matrix['slow']['parts6_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts6_count'] = matrix['slow']['parts6_count'] + 1
+        if slow_results[stock].get('parts', 0) < 8:
           matrix['slow']['parts7'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts7'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
-        if slow_results[stock].get('parts', 0) > 7:
+          matrix['slow']['parts7_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts7_count'] = matrix['slow']['parts7_count'] + 1
+        if slow_results[stock].get('parts', 0) < 9:
           matrix['slow']['parts8'] += slow_results[stock].get('price', 0)
-          matrix['slow']['total_parts8'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts8_total'] += slow_results[stock].get('price', 0) * slow_results[stock].get('parts', 0)
+          matrix['slow']['parts8_count'] = matrix['slow']['parts8_count'] + 1
 
   matrix['slow']['count'] = slow_count
   matrix['slow']['parts1'] = round(matrix['slow']['parts1'], 2)
-  matrix['slow']['total_parts1'] = round(matrix['slow']['total_parts1'], 2)
+  matrix['slow']['parts1_total'] = round(matrix['slow']['parts1_total'], 2)
   matrix['fast']['count'] = fast_count
   matrix['fast']['parts1'] = round(matrix['fast']['parts1'], 2)
-  matrix['fast']['total_parts1'] = round(matrix['fast']['total_parts1'], 2)
+  matrix['fast']['parts1_total'] = round(matrix['fast']['parts1_total'], 2)
 
   return matrix
 

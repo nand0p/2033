@@ -67,8 +67,24 @@
   <br>
   <center>
   <table border=2>
+    <tr>
+      <td align=right>num_stocks:</td>
+      <td align=left>{{ slow_ordered | length }}</td>
+    </tr>
+    <tr>
+      <td align=right>one share price:</td>
+      <td align=left>{{ share_one | round(2) }}</td>
+    </tr>
+    <tr>
+      <td align=right>total money:</td>
+      <td align=left>{{ slow_results.total_money | round(2) }}</td>
+    </tr>
+  </table>
+  <p>
+  <br>
+  <p>
+  <table border=2>
     <tr><td colspan=7 align=center><b>SLOW</b></td></td>
-    <tr><td colspan=7>.</td></tr>
     {% for v in slow_ordered %}
       <tr>
         <td>{{ loop.revindex }}</td>
@@ -87,8 +103,114 @@
   <br>
   <p>
   <table border=2>
+    <tr>
+      <td align=right>SLOW 1+ count:</td>
+      <td align=left colspan=2>{{ matrix.slow.count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW total parts:</td>
+      <td align=left colspan=2>{{ slow_results.total_parts }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW money per part:</td>
+      <td align=left colspan=2>{{ slow_results.money_per_part | round(2) }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW money:</td>
+      <td align=left colspan=2>{{ (slow_results.money_per_part * slow_results.total_parts) | round(2) }}</td>
+    </tr>
+    <tr>
+      <td colspan=3 align=center>.</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 1part:</td>
+      <td align=left>{{ matrix.slow.parts1 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts1_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 2part:</td>
+      <td align=left>{{ matrix.slow.parts2 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts2_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 3part:</td>
+      <td align=left>{{ matrix.slow.parts3 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts3_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 4part:</td>
+      <td align=left>{{ matrix.slow.parts4 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts4_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 5part:</td>
+      <td align=left>{{ matrix.slow.parts5 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts5_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 6part:</td>
+      <td align=left>{{ matrix.slow.parts6 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts6_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 7part:</td>
+      <td align=left>{{ matrix.slow.parts7 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts7_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW one share 8part:</td>
+      <td align=left>{{ matrix.slow.parts8 | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts8_count }}</td>
+    </tr>
+    <tr>
+      <td colspan=3 align=center>.</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 1part:</td>
+      <td align=left>{{ matrix.slow.parts1_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts1_count }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 2part:</td>
+      <td align=left>{{ matrix.slow.parts2_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts2_count * 2 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 3part:</td>
+      <td align=left>{{ matrix.slow.parts3_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts3_count * 3 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 4part:</td>
+      <td align=left>{{ matrix.slow.parts4_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts4_count * 4 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 5part:</td>
+      <td align=left>{{ matrix.slow.parts5_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts5_count * 5 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 6part:</td>
+      <td align=left>{{ matrix.slow.parts6_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts6_count * 6 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 7part:</td>
+      <td align=left>{{ matrix.slow.parts7_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts7_count * 7 }}</td>
+    </tr>
+    <tr>
+      <td align=right>SLOW shares*parts 8part:</td>
+      <td align=left>{{ matrix.slow.parts8_total | round(2) }}</td>
+      <td align=right>{{ matrix.slow.parts8_count * 8 }}</td>
+    </tr>
+  </table>
+  <p>
+  <br>
+  <p>
+  <table border=2>
     <tr><td colspan=7 align=center><b>FAST</b></td></td>
-    <tr><td colspan=7>.</td></tr>
     {% for v in fast_ordered %}
       <tr>
         <td>{{ loop.revindex }}</td>
@@ -108,194 +230,106 @@
   <p>
   <table border=2>
     <tr>
-      <td align=right>num_stocks:</td>
-      <td align=left>{{ slow_ordered | length }}</td>
-    </tr>
-    <tr>
-      <td align=right>one share price:</td>
-      <td align=left>{{ share_one | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>total money:</td>
-      <td align=left>{{ slow_results.total_money | round(2) }}</td>
-    </tr>
-    <tr>
-      <td colspan=2 align=center>.</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW 1+ count:</td>
-      <td align=left>{{ matrix.slow.count }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW total parts:</td>
-      <td align=left>{{ slow_results.total_parts }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW money per part:</td>
-      <td align=left>{{ slow_results.money_per_part | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW money:</td>
-      <td align=left>{{ (slow_results.money_per_part * slow_results.total_parts) | round(2) }}</td>
-    </tr>
-    <tr>
-      <td colspan=2 align=center>.</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 1part:</td>
-      <td align=left>{{ matrix.slow.parts1 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 2part:</td>
-      <td align=left>{{ matrix.slow.parts2 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 3part:</td>
-      <td align=left>{{ matrix.slow.parts3 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 4part:</td>
-      <td align=left>{{ matrix.slow.parts4 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 5part:</td>
-      <td align=left>{{ matrix.slow.parts5 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 6part:</td>
-      <td align=left>{{ matrix.slow.parts6 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 7part:</td>
-      <td align=left>{{ matrix.slow.parts7 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW one share 8part:</td>
-      <td align=left>{{ matrix.slow.parts8 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td colspan=2 align=center>.</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 1part:</td>
-      <td align=left>{{ matrix.slow.total_parts1 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 2part:</td>
-      <td align=left>{{ matrix.slow.total_parts2 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 3part:</td>
-      <td align=left>{{ matrix.slow.total_parts3 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 4part:</td>
-      <td align=left>{{ matrix.slow.total_parts4 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 5part:</td>
-      <td align=left>{{ matrix.slow.total_parts5 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 6part:</td>
-      <td align=left>{{ matrix.slow.total_parts6 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 7part:</td>
-      <td align=left>{{ matrix.slow.total_parts7 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td align=right>SLOW shares*parts 8part:</td>
-      <td align=left>{{ matrix.slow.total_parts8 | round(2) }}</td>
-    </tr>
-    <tr>
-      <td colspan=2 align=center>.</td>
-    </tr>
-    <tr>
       <td align=right>FAST 1+ count:</td>
-      <td align=left>{{ matrix.fast.count }}</td>
+      <td align=left colspan=2>{{ matrix.fast.count }}</td>
     </tr>
     <tr>
       <td align=right>FAST total parts:</td>
-      <td align=left>{{ fast_results.total_parts }}</td>
+      <td align=left colspan=2>{{ fast_results.total_parts }}</td>
     </tr>
     <tr>
       <td align=right>FAST money per part:</td>
-      <td align=left>{{ fast_results.money_per_part | round(2) }}</td>
+      <td align=left colspan=2>{{ fast_results.money_per_part | round(2) }}</td>
     </tr>
     <tr>
       <td align=right>FAST money:</td>
-      <td align=left>{{ (fast_results.money_per_part * fast_results.total_parts) | round(2) }}</td>
+      <td align=left colspan=2>{{ (fast_results.money_per_part * fast_results.total_parts) | round(2) }}</td>
     </tr>
     <tr>
-      <td colspan=2 align=center>.</td>
+      <td colspan=3 align=center>.</td>
     </tr>
     <tr>
       <td align=right>FAST one share 1part:</td>
       <td align=left>{{ matrix.fast.parts1 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts1_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 2part:</td>
       <td align=left>{{ matrix.fast.parts2 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts2_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 3part:</td>
       <td align=left>{{ matrix.fast.parts3 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts3_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 4part:</td>
       <td align=left>{{ matrix.fast.parts4 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts4_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 5part:</td>
       <td align=left>{{ matrix.fast.parts5 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts5_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 6part:</td>
       <td align=left>{{ matrix.fast.parts6 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts6_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 7part:</td>
       <td align=left>{{ matrix.fast.parts7 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts7_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST one share 8part:</td>
       <td align=left>{{ matrix.fast.parts8 | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts8_count }}</td>
     </tr>
     <tr>
-      <td colspan=2 align=center>.</td>
+      <td colspan=3 align=center>.</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 1part:</td>
-      <td align=left>{{ matrix.fast.total_parts1 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts1_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts1_count }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 2part:</td>
-      <td align=left>{{ matrix.fast.total_parts2 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts2_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts2_count * 2 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 3part:</td>
-      <td align=left>{{ matrix.fast.total_parts3 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts3_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts3_count * 3 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 4part:</td>
-      <td align=left>{{ matrix.fast.total_parts4 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts4_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts4_count * 4 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 5part:</td>
-      <td align=left>{{ matrix.fast.total_parts5 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts5_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts5_count * 5 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 6part:</td>
-      <td align=left>{{ matrix.fast.total_parts6 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts6_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts6_count * 6 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 7part:</td>
-      <td align=left>{{ matrix.fast.total_parts7 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts7_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts7_count * 7 }}</td>
     </tr>
     <tr>
       <td align=right>FAST shares*parts 8part:</td>
-      <td align=left>{{ matrix.fast.total_parts8 | round(2) }}</td>
+      <td align=left>{{ matrix.fast.parts8_total | round(2) }}</td>
+      <td align=right>{{ matrix.fast.parts8_count * 8 }}</td>
     </tr>
   </table>
   <p>
