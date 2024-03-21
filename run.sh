@@ -4,4 +4,8 @@ bash ci/build.sh
 
 bash kill.sh
 
-bash ci/run.sh daemon
+if [ -z "$1" ]; then
+  bash ci/run.sh
+else
+  bash ci/run.sh daemonize
+fi

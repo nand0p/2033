@@ -34,7 +34,12 @@ else
               --env "STOCKS=${STOCKS}" \
               ${TAG})
 
+
+fi
+
+if [ -z "$1" ]; then
+  docker logs -f ${CONTAINER}
+else
   echo "=====> container ${CONTAINER}"
   echo "=====> docker logs -f ${CONTAINER}"
-
 fi
