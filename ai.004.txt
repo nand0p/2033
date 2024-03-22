@@ -1,0 +1,57 @@
+
+    AI Startups:
+        C3.ai (AI) - $AI
+        UiPath (RPA) - $PATH
+        Palantir Technologies (AI analytics) - $PLTR
+        CrowdStrike Holdings (AI cybersecurity) - $CRWD
+        Upstart Holdings (AI lending) - $UPST
+        BigBear.ai Holdings (AI analytics) - $BBAI
+        Bright Machines (AI manufacturing) - $BMBM
+        SoundHound AI (Conversational AI) - $SOUN
+        DataRobot (AutoML) - $DRVN
+        Remark AI (Computer vision) - $RMRK
+    AI Software and Services Providers:
+        Microsoft (Azure AI) - $MSFT
+        Google (Cloud AI) - $GOOGL
+        IBM (Watson AI) - $IBM
+        Amazon (AWS AI) - $AMZN
+        Salesforce (Einstein AI) - $CRM
+        Oracle (AI cloud) - $ORCL
+        Splunk (AI observability) - $SPLK
+        Dynatrace (AI cloud monitoring) - $DT
+        Teradata (AI analytics) - $TDC
+        NICE (Analytics AI) - $NICE
+    AI Hardware and Chips:
+        NVIDIA (AI chips/systems) - $NVDA
+        Intel (AI accelerators) - $INTC
+        AMD (AI chips) - $AMD
+        Marvell Technology (AI processors) - $MRVL
+        Xilinx (AI FPGAs) - $XLNX
+        Qualcomm (AI mobile chips) - $QCOM
+        Micron Technology (AI memory/storage) - $MU
+        Cambricon (AI chips) - $688768.SS
+        SambaNova Systems (AI systems) - Private
+        Kneron (AI sensors/IoT chips) - Private
+    AI Cybersecurity:
+        Palo Alto Networks (AI security) - $PANW
+        Fortinet (AI cybersecurity) - $FTNT
+        Zscaler (AI/ML security cloud) - $ZS
+        CrowdStrike Holdings - $CRWD
+        SentinelOne (AI endpoint security) - $S
+        Rapid7 (AI security analytics) - $RPD
+        Qualys (AI security platform) - $QLYS
+        BlackBerry (AI cybersecurity) - $BB
+        FireEye - $FEYE
+        Telos Corporation (AI cyber risk) - $TLS
+    AI Software/Services:
+        Microsoft (AI cloud) - $MSFT
+        Salesforce (Einstein AI) - $CRM
+        Adobe (AI/ML services) - $ADBE
+        Autodesk (AI design/engineering) - $ADSK
+        Intuit (AI financial software) - $INTU
+        Shopify (AI e-commerce) - $SHOP
+        Splunk (AI observability) - $SPLK
+        Veeva Systems (AI life sciences) - $VEEV
+        Smartsheet (AI work management) - $SMAR
+        HubSpot (AI customer service/marketing) - $HUBS
+

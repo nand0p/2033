@@ -1,0 +1,57 @@
+
+    AI Startups:
+        Anthropic
+        Recursion Pharmaceuticals
+        Vicarious
+        Anduril Industries
+        Covariant.AI (AI for robotic automation)
+        Openai
+        Hugging Face
+        Robust AI (AI safety)
+        Althea (AI drug discovery)
+        Encompass Biomedicine (AI drug discovery)
+    AI Software and Services Providers:
+        Cloudera
+        DataRobot
+        H2O.ai
+        Indico
+        Databricks (AI/ML platform)
+        Domino Data Lab (MLOps platform)
+        Dataiku (AI/ML platforms)
+        Determined AI (AI training platform)
+        Weights & Biases (ML workflow tools)
+        Cnvrg.io (AI model management)
+    AI Hardware and Chip Companies:
+        Graphcore
+        Cerebras Systems
+        Mythic
+        Hailo (AI processors)
+        Blaize (AI edge computing)
+        Untether AI (AI chips)
+        Sambanova Systems (AI chips)
+        Groq (AI tensor chips)
+        Esperanto Technologies (AI chips)
+        Syntiant (AI voice processors)
+    AI-enabled Cybersecurity Companies:
+        Darktrace
+        Cylance
+        SparkCognition
+        FireEye (AI cybersecurity)
+        Awake Security (AI network security)
+        Vectra AI (AI cybersecurity detection)
+        Deep Instinct (AI endpoint protection)
+        Versive (AI content security)
+        OnSecurity (AI threat detection)
+        BluVector (AI cybersecurity analytics)
+    AI-powered Software/Service Providers:
+        Appian
+        UiPath
+        Zoox
+        Lemonade
+        Tractable (AI for visual processing)
+        Suki AI (AI digital assistant for doctors)
+        Nauto (AI vehicle safety systems)
+        Olive AI (AI for healthcare operations)
+        Directly (AI customer service)
+        Logistiview (AI supply chain visibility)
+

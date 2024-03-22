@@ -1,0 +1,25 @@
+
+    AI startups:
+        Anthropic (AI safety and ethics)
+        Recursion Pharmaceuticals (AI-powered drug discovery)
+        Vicarious (AI software for robots and autonomous systems)
+        Anduril Industries (AI-powered defense technologies)
+    AI software and services providers:
+        Cloudera (AI and machine learning platform)
+        DataRobot (automated machine learning platform)
+        H2O.ai (open-source AI and machine learning platform)
+        Indico (AI-powered process automation)
+    AI hardware and chip companies:
+        Graphcore (AI accelerator chips)
+        Cerebras Systems (AI-optimized chip and system design)
+        Mythic (AI processor and hardware design)
+    AI-enabled cybersecurity companies:
+        Darktrace (AI-powered cyber threat detection)
+        Cylance (AI-based endpoint security)
+        SparkCognition (AI-driven cybersecurity and analytics)
+    AI-powered software and service providers:
+        Appian (AI-powered low-code automation platform)
+        UiPath (robotic process automation with AI capabilities)
+        Zoox (AI-powered autonomous driving technology)
+        Lemonade (AI-powered insurance platform)
+
