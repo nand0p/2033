@@ -193,21 +193,22 @@ def get_matrix(s_list,
 
     for k, v in r_dict.items():
       if k in source:
-        if k not in matrix['fast']:
-          matrix['fast'][k] = {}
-          matrix['fast'][k]['scores'] = []
+        if k != 'LIN':
+          if k not in matrix['fast']:
+            matrix['fast'][k] = {}
+            matrix['fast'][k]['scores'] = []
 
-        elif k not in matrix['slow']:
-          matrix['slow'][k] = {}
-          matrix['slow'][k]['scores'] = []
+          elif k not in matrix['slow']:
+            matrix['slow'][k] = {}
+            matrix['slow'][k]['scores'] = []
 
-        if slow_results[k]['category'] == category or category == '0':
+          if slow_results[k]['category'] == category or category == '0':
 
-          if 'fast' in key:
-            matrix['fast'][k]['scores'].append(round(v['score'], 2))
+            if 'fast' in key:
+              matrix['fast'][k]['scores'].append(round(v['score'], 2))
 
-          else:
-            matrix['slow'][k]['scores'].append(round(v['score'], 2))
+            else:
+              matrix['slow'][k]['scores'].append(round(v['score'], 2))
 
   fast_count = 0
   for stock in matrix['slow'].keys():

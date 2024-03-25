@@ -3,23 +3,27 @@ import requests
 import json
 
 
-debug = True
+debug = False
+speed = 'fast'
 
-r_fast = requests.get('http://localhost/fast_ordered')
-results_fast = json.loads(r_fast.text)
 
-r_slow = requests.get('http://localhost/slow_ordered')
-results_slow = json.loads(r_slow.text)
+if speed == 'fast':
+  r = requests.get('http://localhost/fast_ordered')
+  results = json.loads(r.text)
+
+elif speed == 'slow':
+  r = requests.get('http://localhost/slow_ordered')
+  results = json.loads(r.text)
+
 
 if debug:
-  pprint(type(results_fast))
-  pprint(results_fast)
-  pprint(type(results_slow))
-  pprint(results_slow)
+  pprint(type(results))
+  pprint(results)
+
 
 s = {}
 total = 0
-for stocks in results_fast:
+for stocks in results:
   if debug:
     print(type(stocks))
     print(stocks)
