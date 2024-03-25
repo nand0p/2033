@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, jsonify
 from flask_classful import FlaskView, route, request
 from utils import scores, shares
 from datetime import datetime
@@ -88,6 +88,8 @@ class X2030(FlaskView):
     scores.save_scores(matrix=self.matrix,
                        slow_results=self.slow_results,
                        fast_results=self.fast_results,
+                       slow_ordered=self.slow_ordered,
+                       fast_ordered=self.fast_ordered,
                        scores_key=self.scores_key,
                        savepath=self.savepath,
                        debug=self.debug)
@@ -111,16 +113,53 @@ class X2030(FlaskView):
     return '200 success'
 
 
+  @route('/slow_ordered')
+  def json_slow_ordered(self):
+    return send_from_directory(directory='static',
+                               path='slow_ordered.json',
+                               mimetype='application/json')
+
+
+  @route('/fast_ordered')
+  def json_fast_ordered(self):
+    return send_from_directory(directory='static',
+                               path='fast_ordered.json',
+                               mimetype='application/json')
+
+
+  @route('/slow_results')
+  def json_slow_results(self):
+    return send_from_directory(directory='static',
+                               path='slow_results.json',
+                               mimetype='application/json')
+
+
+  @route('/fast_results')
+  def json_fast_results(self):
+    return send_from_directory(directory='static',
+                               path='fast_results.json',
+                               mimetype='application/json')
+
+
+  @route('/matrix')
+  def json_matrix(self):
+    return send_from_directory(directory='static',
+                               path='scores_matrix.json',
+                               mimetype='application/json')
+
+
   @route('/robots.txt')
   def robots(self):
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'robots.txt', mimetype='text/plain')
+    return send_from_directory(directory='static',
+                               path='robots.txt',
+                               mimetype='text/plain')
 
 
   @route('/favicon.ico')
   def favicon(self):
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/x-icon')
+    return send_from_directory(directory='static',
+                               path='favicon.ico',
+                               mimetype='image/x-icon')
 
 
 X2030.register(app, route_base = '/')

@@ -127,6 +127,8 @@ def make_charts(matrix,
 def save_scores(matrix,
                 slow_results,
                 fast_results,
+                slow_ordered,
+                fast_ordered,
                 savepath,
                 scores_key,
                 bucket='2030.hex7.com',
@@ -139,20 +141,34 @@ def save_scores(matrix,
     s3_matrix.put(Body=(bytes(json.dumps(matrix).encode('UTF-8'))),
                   ACL='public-read')
 
-    s3_slow_results = s3.Object(bucket, 'results_slow.json')
+    s3_slow_results = s3.Object(bucket, 'slow_results.json')
     s3_slow_results.put(Body=(bytes(json.dumps(slow_results).encode('UTF-8'))),
                         ACL='public-read')
-
-    s3_fast_results = s3.Object(bucket, 'results_fast.json')
+    s3_fast_results = s3.Object(bucket, 'fast_results.json')
     s3_fast_results.put(Body=(bytes(json.dumps(fast_results).encode('UTF-8'))),
+                        ACL='public-read')
+
+    s3_slow_ordered = s3.Object(bucket, 'slow_ordered.json')
+    s3_slow_ordered.put(Body=(bytes(json.dumps(slow_ordered).encode('UTF-8'))),
+                        ACL='public-read')
+    s3_fast_ordered = s3.Object(bucket, 'fast_ordered.json')
+    s3_fast_ordered.put(Body=(bytes(json.dumps(fast_ordered).encode('UTF-8'))),
                         ACL='public-read')
 
   if not os.path.exists(savepath):
     print('Making savepath: ' + savepath)
     os.makedirs(savepath)
 
-  with open(savepath + scores_key, 'w') as out:
-    json.dump(matrix, out, ensure_ascii=True, indent=4)
+  with open(savepath + scores_key, 'w') as out1:
+    json.dump(matrix, out1, ensure_ascii=True, indent=4)
+  with open(savepath + 'slow_ordered.json', 'w') as out2:
+    json.dump(slow_ordered, out2, ensure_ascii=True, indent=4)
+  with open(savepath + 'fast_ordered.json', 'w') as out3:
+    json.dump(fast_ordered, out3, ensure_ascii=True, indent=4)
+  with open(savepath + 'slow_results.json', 'w') as out4:
+    json.dump(slow_results, out4, ensure_ascii=True, indent=4)
+  with open(savepath + 'fast_results.json', 'w') as out5:
+    json.dump(fast_results, out5, ensure_ascii=True, indent=4)
 
 
 def get_matrix(s_list,

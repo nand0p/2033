@@ -56,14 +56,6 @@ managed_accounts = ib.managedAccounts()
 pprint(managed_accounts)
 
 
-r = requests.get('http://2030.hex7.com/results.json')
-results = json.loads(r.text)
-
-for k, v in results.items():
-  if isinstance(v, dict):
-    if len(v) > 1:
-      print(k, v)
-
 if args.account_values:
   print()
   print('Account Values')
@@ -133,6 +125,7 @@ if args.positions:
   print('Positions')
   positions = ib.positions()
   pprint(positions)
+
 
 print('\n..::Exiting Session::..\n')
 ib.disconnect()
