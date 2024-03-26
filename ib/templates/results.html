@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>results - {{ speed }}</title>
+</head>
+
+<body>
+<center>
+SLOW
+<table border=2>
+  {% for stock in slow_final %}
+    {% for key, value in stock.items() %}
+      <tr>
+        <td>
+          {{ key }}
+        </td>
+        {% for k, v in value.items() %}
+          <td>
+            {{ k }} {{ v }}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  {% endfor %}
+</table>
+total cash: {{ total_slow }}
+<p>
+<br>
+<p>
+FAST
+<table border=2>
+  {% for stock in fast_final %}
+    {% for key, value in stock.items() %}
+      <tr>
+        <td>
+          {{ key }}
+        </td>
+        {% for k, v in value.items() %}
+          <td>
+            {{ k }} {{ v }}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  {% endfor %}
+</table>
+total cash: {{ total_fast }}
+<p>
+
+</body>
+</html>
