@@ -193,7 +193,7 @@ def get_matrix(s_list,
 
     for k, v in r_dict.items():
       if k in source:
-        if k != 'LIN':
+        if k != 'LIN' and k != 'COR':
           if k not in matrix['fast']:
             matrix['fast'][k] = {}
             matrix['fast'][k]['scores'] = []
