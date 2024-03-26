@@ -23,7 +23,7 @@ extra_args = {'ACL': 'public-read',
               'ContentType': 'text/html',
               'ContentLanguage': 'en-US'}
 
-datemade = datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T')
+datemade = ' - '.join(datetime.now(ZoneInfo('US/Eastern')).isoformat().split('T'))
 
 if args.debug:
   print(r.text)
@@ -123,7 +123,7 @@ j2_env = Environment(loader=j2_file_loader)
 j2_template = j2_env.get_template(args.outfile)
 j2_rendered = j2_template.render(slow_final=slow_final,
                                  fast_final=fast_final,
-                                 datemade=''.join(datemade),
+                                 datemade=datemade,
                                  total_slow=round(total_slow, 2),
                                  total_fast=round(total_fast, 2))
 

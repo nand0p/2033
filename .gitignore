@@ -1,6 +1,4 @@
 *.pyc
 **/tmp/*
-./ci/tmp/*
 .terraform/
 .DS_Store
-results/results/
