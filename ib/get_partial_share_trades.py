@@ -24,6 +24,7 @@ extra_args = {'ACL': 'public-read',
 if args.debug:
   print(r.text)
 
+
 url = 'http://' + args.host + '?cat=' + str(args.category) + '&cash=' + str(args.money)
 print('get current results: ' + url)
 r = requests.get(url)
@@ -31,6 +32,7 @@ if r.status_code == 200:
   print('success: ', r.status_code)
 else:
   raise Exception('API not available: ' + url)
+
 
 url = 'http://' + args.host + '/slow_ordered'
 print('parse slow results: ' + url)
@@ -40,6 +42,7 @@ if r_slow.status_code == 200:
 else:
   raise Exception('API not available: ' + url)
 
+
 url = 'http://' + args.host + '/fast_ordered'
 print('parse fast results: ' + url)
 r_fast = requests.get('http://' + args.host + '/fast_ordered')
@@ -48,8 +51,11 @@ if r_fast.status_code == 200:
 else:
   raise Exception('API not available: ' + url)
 
+
 fast_results = json.loads(r_fast.text)
 slow_results = json.loads(r_slow.text)
+
+
 if args.debug:
   pprint(type(fast_results))
   pprint(fast_results)
@@ -57,83 +63,55 @@ if args.debug:
   pprint(slow_results)
 
 
-s_slow = {}
-total_slow = 0
+def get_stocks(results, debug):
+  s = {}
+  for stocks in results:
+    if debug:
+      print(type(stocks))
+      print(stocks)
+
+    current = stocks['stock']
+    s[current] = {}
+
+    for key, value in stocks.items():
+      if key == 'shares':
+        if value > 0:
+          s[current]['shares'] = value
+
+      if key == 'price':
+        if 'shares' in s[current]:
+          s[current]['price'] = value
+
+  for key, value in s.items():
+    if value:
+      if debug:
+        print('key: ', key)
+        print('value: ', value)
+      s[key]['cash'] = round(value['shares'] * value['price'], 2)
+
+  final = []
+  total = 0
+  for key, value in s.items():
+    if len(value) > 0:
+      final.append({key: value})
+      money = round(value.get('shares', 0) * value.get('price', 0), 2)
+      if money > 0:
+        total = total + money
+
+  return final, total
+
+
 print('generate final slow results')
-for stocks in slow_results:
-  if args.debug:
-    print(type(stocks))
-    print(stocks)
-
-  current = stocks['stock']
-  s_slow[current] = {}
-
-  for key, value in stocks.items():
-    if key == 'shares':
-      if value > 0:
-        s_slow[current]['shares'] = value
-
-    if key == 'price':
-      if 'shares' in s_slow[current]:
-        s_slow[current]['price'] = value
-
-for key, value in s_slow.items():
-  if value:
-    if args.debug:
-      print('key: ', key)
-      print('value: ', value)
-    s_slow[key]['cash'] = round(value['shares'] * value['price'], 2)
-
-
-s_fast = {}
-total_fast = 0
+slow_final, total_slow = get_stocks(slow_results, args.debug)
 print('generate final fast results')
-for stocks in fast_results:
-  if args.debug:
-    print(type(stocks))
-    print(stocks)
+fast_final, total_fast = get_stocks(fast_results, args.debug)
 
-  current = stocks['stock']
-  s_fast[current] = {}
-
-  for key, value in stocks.items():
-    if key == 'shares':
-      if value > 0:
-        s_fast[current]['shares'] = value
-
-    if key == 'price':
-      if 'shares' in s_fast[current]:
-        s_fast[current]['price'] = value
-
-for key, value in s_fast.items():
-  if value:
-    if args.debug:
-      print('key: ', key)
-      print('value: ', value)
-    s_fast[key]['cash'] = round(value['shares'] * value['price'], 2)
-
-
-slow_final = []
-for key, value in s_slow.items():
-  if len(value) > 0:
-    slow_final.append({key: value})
-    money = round(value.get('shares', 0) * value.get('price', 0), 2)
-    if money > 0:
-      total_slow = total_slow + money
-
-
-fast_final = []
-for key, value in s_fast.items():
-  if len(value) > 0:
-    fast_final.append({key: value})
-    money = round(value.get('shares', 0) * value.get('price', 0), 2)
-    if money > 0:
-      total_fast = total_fast + money
 
 if args.debug:
   pprint(final)
   print('total cash fast: ', round(total_fast, 2))
   print('total cash slow: ', round(total_slow, 2))
+
 
 print('render jinja')
 j2_file_loader = FileSystemLoader('templates')
