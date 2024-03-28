@@ -1,24 +1,30 @@
 from argparse import ArgumentParser
 from pprint import pprint
 from ib_insync import *
+from prettytable import PrettyTable
 import requests
 import json
+import time
 
 
 ib = IB()
 
 parser = ArgumentParser()
-parser.add_argument('-p', '--port', type=int, default=4001, help='ib proxy port')
-parser.add_argument('-z', '--host', type=str, default='localhost', help='ib proxy hostname')
-parser.add_argument('-t', '--ticker', type=str, default='AAPL', help='ticker to execute')
-parser.add_argument('-as', '--account-summary', action='store_true', help='show account summary')
-parser.add_argument('-av', '--account-values', action='store_true', help='show account values')
-parser.add_argument('-o', '--open', action='store_true', help='show open orders')
-parser.add_argument('-c', '--closed', action='store_true', help='show closed orders')
-parser.add_argument('-d', '--debug', action='store_true', help='debug')
-parser.add_argument('-pl', '--pnl', action='store_true', help='profit and loss')
-parser.add_argument('-bm', '--buy-market', type=float, default=0.0001)
-parser.add_argument('-pos', '--positions', action='store_true', help='list positions')
+parser.add_argument('--port', type=int, default=4001, help='ib proxy port')
+parser.add_argument('--pause', type=int, default=1, help='sleep iteration')
+parser.add_argument('--host', type=str, default='localhost', help='ib proxy hostname')
+parser.add_argument('--ticker', type=str, default='AAPL', help='ticker to execute')
+parser.add_argument('--account-summary', action='store_true', help='show account summary')
+parser.add_argument('--account-values', action='store_true', help='show account values')
+parser.add_argument('--open', action='store_true', help='show open orders')
+parser.add_argument('--closed', action='store_true', help='show closed orders')
+parser.add_argument('--debug', action='store_true', help='debug')
+parser.add_argument('--pnl', action='store_true', help='profit and loss')
+parser.add_argument('--buy-market', action='store_true', help='execute buy as market')
+parser.add_argument('--buy-limit', action='store_true', help='execute buy as limit')
+parser.add_argument('--buy', action='store_true', help='execute buy from file')
+parser.add_argument('--positions', action='store_true', help='list positions')
+parser.add_argument('--portfolio', action='store_true', help='list portfolio')
 parser.add_argument('--confirm', action='store_true', help='flag required to execute trade')
 args = parser.parse_args()
 
@@ -106,26 +112,104 @@ if args.pnl:
   pnl_single = ib.pnlSingle()
   pprint(pnl_single)
 
-if args.confirm:
-  print('stock: ', args.ticker)
-  print('conId: ', conId)
-  print('buy_market: ', args.buy_market)
-  order = MarketOrder('BUY', args.buy_market)
-  trade = ib.placeOrder(contract, order)
-  print('Wait for Trade')
-  while not trade.isDone():
-    print(ib.waitOnUpdate())
-  print('Trade Log')
-  trade.log
+
+if args.buy:
+  if not args.confirm:
+    print()
+    print('====> DRY-RUN <====')
+    print()
+
+  with open('buy.json', 'r') as file:
+    data = json.load(file)
+
+  for x in data:
+    for stock, value in x.items():
+      shares = value[0]
+      price = value[1]
+      print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
+
+      if args.buy_limit:
+        order = LimitOrder('BUY', shares, price)
+      elif args.buy_market:
+        order = MarketOrder('BUY', shares)
+      else:
+        raise Exception('must select either --buy-limit or --buy-market')
+
+      contract = Stock(stock)
+      if args.debug:
+        print('------>', order)
+        print('------>', contract)
+
+      if args.confirm:
+        time.sleep(args.pause)
+
+        try:
+          orderId = ib.placeOrder(contract, order)
+        except IbEx as e:
+          print('ERROR: ', e.errCode, e.errMsg)
+        else:
+          print('SUCCESS: ', orderId)
+
+        print('Wait for Trade')
+        while not orderId.isDone():
+          print(ib.waitOnUpdate())
+        print('Trade Log')
+        print(orderId.log)
+
+  if not args.confirm:
+    print()
+    print('====> DRY-RUN <====')
+    print()
+
+
+if args.portfolio:
+  total = 0
+  profit = 0
+  portfolio = ib.portfolio()
+  if portfolio:
+    print("Current Portfolio:")
+    p = PrettyTable(['stock', 'shares', 'cost', 'value', 'price', 'pnl', 'unpnl'])
+    for position in portfolio:
+      if args.debug:
+        print('stock:', position.contact.symbol,
+              'shares: ', position.position,
+              'avgCost: ', round(position.avgCost, 2),
+              'marketValue: ', round(position.marketValue, 2),
+              'marketPrice: ', round(position.marketPrice, 2),
+              'realizedPNL: ', position.realizedPNL,
+              'unrealizedPNL: ', position.unrealizedPNL)
+      p.add_row([position.contract.symbol,
+                 position.position,
+                 round(position.averageCost, 2),
+                 round(position.marketValue, 2),
+                 round(position.marketPrice, 2),
+                 position.realizedPNL,
+                 position.unrealizedPNL])
+      total = total + position.marketValue
+      profit = profit + position.unrealizedPNL
+
+  print(p)
+  print()
+  print('total profit: ', round(profit, 2))
+  print('total value: ', round(total, 2))
+  print()
+
 
 if args.positions:
-  print('Portfolio')
-  portfolio = ib.portfolio()
-  pprint(portfolio)
-  print('Positions')
   positions = ib.positions()
-  pprint(positions)
+  if positions:
+    print("Current Positions:")
+    p = PrettyTable(['stock', 'shares', 'cost'])
+    for position in positions:
+      if args.debug:
+        print('stock:', position.contract.symbol,
+              'shares: ', position.position,
+              'avgCost: ', round(position.avgCost, 2))
+      p.add_row([position.contract.symbol,
+                 position.position,
+                 round(position.avgCost, 2)])
+
+  print(p)
 
 
-print('\n..::Exiting Session::..\n')
 ib.disconnect()
