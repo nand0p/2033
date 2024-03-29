@@ -12,17 +12,18 @@ parser.add_argument('--all', action='store_true', help='set all flags true')
 parser.add_argument('--exclude', action='store_true', help='excluded stocks')
 parser.add_argument('--include', action='store_true', help='included stocks')
 parser.add_argument('--toxic', action='store_true', help='excluded stocks')
+parser.add_argument('--skip-init', action='store_true', help='skip initialization')
 parser.add_argument('--speed', type=str, default='slow', help='fast or slow')
 parser.add_argument('--savefile', type=str, default='buy.json', help='json out file')
 parser.add_argument('--money', type=int, default=25, help='fast or slow')
 parser.add_argument('--limit', type=int, default=100, help='max stock price')
+parser.add_argument('--category', type=int, default=2, help='stock category')
 args = parser.parse_args()
 
 if args.all:
     args.verbose = True
     args.exclude = True
     args.include = True
-    args.toxic = True
     args.out = True
 
 s = {}
@@ -41,7 +42,18 @@ headers = [ 'count',
             'parts',
             'price' ]
 
-r = requests.get('http://localhost/' + args.speed + '_ordered')
+if not args.skip_init:
+  init = 'http://localhost/?cat=' + str(args.category)
+  print('hit results api: ', init)
+  q = requests.get(init)
+  if q.status_code != 200:
+    raise Exception('cannot hit url: ' + init)
+
+url = 'http://localhost/' + args.speed + '_ordered'
+print('get results data: ' + url)
+r = requests.get(url)
+if r.status_code != 200:
+  raise Exception('cannot hit url: ' + url)
 results = json.loads(r.text)
 
 if args.debug:
@@ -49,28 +61,30 @@ if args.debug:
 else:
   print('status: ', r.status_code)
 
+print('process results')
 for stocks in results:
-  if args.debug:
-    print(type(stocks))
-    print(stocks)
+  if stocks['stock'] != 'HCP' and stocks['stock'] != 'RXT':
+    if args.debug:
+      print(type(stocks))
+      print(stocks)
 
-  current = stocks['stock']
-  s[current] = {}
+    current = stocks['stock']
+    s[current] = {}
 
-  for key, value in stocks.items():
-    if key == 'shares':
-      if value > 0:
-        if value < 1:
-          s[current]['shares'] = 1
-        else:
-          s[current]['shares'] = int(value)
+    for key, value in stocks.items():
+      if key == 'shares':
+        if value > 0:
+          if value < 1:
+            s[current]['shares'] = 1
+          else:
+            s[current]['shares'] = int(value)
 
-    if key == 'parts':
-      s[current]['parts'] = value
+      if key == 'parts':
+        s[current]['parts'] = value
 
-    if key == 'price':
-      if 'shares' in s[current]:
-        s[current]['price'] = value
+      if key == 'price':
+        if 'shares' in s[current]:
+          s[current]['price'] = value
 
 
 print()
@@ -83,22 +97,24 @@ for key, value in s.items():
     if value['price'] < args.limit:
       x = value['parts'] * args.money
       shares = int(x / value['price'])
-      if shares > 0 or args.toxic:
+
+      if args.toxic:
+        shares = shares + 1
+        toxic.append(key)
+
+      if shares > 0:
         include.append(key)
         cash = round(shares * value['price'], 2)
         total = total + cash
         count = count + 1
         total_parts = total_parts + value['parts']
-        if shares > 0:
-          table.add_row([count,
-                         key,
-                         shares,
-                         cash,
-                         value['parts'],
-                         value['price']])
-          buy.append({key: [shares, value['price']]})
-        else:
-          toxic.append(key)
+        table.add_row([count,
+                       key,
+                       shares,
+                       cash,
+                       value['parts'],
+                       value['price']])
+        buy.append({key: [shares, value['price']]})
 
         if args.debug:
           print('x: ', x)
