@@ -21,6 +21,7 @@ parser.add_argument('--closed', action='store_true', help='show closed orders')
 parser.add_argument('--debug', action='store_true', help='debug')
 parser.add_argument('--wait-for-order', action='store_true', help='block on order execution')
 parser.add_argument('--pnl', action='store_true', help='profit and loss')
+parser.add_argument('--buy-file', type=str, default='../buy.json', help='file to source')
 parser.add_argument('--buy-file-market', action='store_true', help='execute buy from file')
 parser.add_argument('--buy-file-limit', action='store_true', help='execute buy from file')
 parser.add_argument('--buy-single-market', action='store_true', help='execute market buy from ticker arg')
@@ -158,13 +159,16 @@ if args.pnl:
 
 if args.buy_single_limit:
   if args.shares is not None and args.price is not None and args.ticker is not None:
+    print('BUY LIMIT:', args.ticker, ' \tshares:', args.shares, '\tprice:', args.price)
+    order = LimitOrder('BUY', args.shares, args.price)
+    contract = Stock(args.ticker)
+
     if not args.confirm:
       print()
       print('====> DRY-RUN <====')
       print()
-      print('BUY LIMIT:', args.ticker, ' \tshares:', args.shares, '\tprice:', args.price)
-      order = LimitOrder('BUY', args.shares, args.price)
-      contract = Stock(args.ticker)
+
+    else:
       place_order(order=order,
                   contract=contract,
                   pause=args.pause,
@@ -177,13 +181,16 @@ if args.buy_single_limit:
 
 if args.buy_single_market:
   if args.shares is not None and args.ticker is not None:
+    print('BUY MARKET:', args.ticker, '\tshares:', args.shares)
+    order = MarketOrder('BUY', args.shares)
+    contract = Stock(args.ticker)
+
     if not args.confirm:
       print()
       print('====> DRY-RUN <====')
       print()
-      print('BUY MARKET:', args.ticker, '\tshares:', args.shares)
-      order = MarketOrder('BUY', args.shares)
-      contract = Stock(args.ticker)
+
+    else:
       place_order(order=order,
                   contract=contract,
                   pause=args.pause,
@@ -195,48 +202,51 @@ if args.buy_single_market:
 
 
 if args.buy_file_limit:
-  if not args.confirm:
-    print()
-    print('====> DRY-RUN <====')
-    print()
+    with open(args.buy_file, 'r') as file:
+      data = json.load(file)
 
-  with open('buy.json', 'r') as file:
-    data = json.load(file)
+    for x in data:
+      for stock, value in x.items():
+        shares = value[0]
+        price = value[1]
+        print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
+        order = LimitOrder('BUY', shares, price)
+        contract = Stock(stock)
 
-  for x in data:
-    for stock, value in x.items():
-      shares = value[0]
-      price = value[1]
-      print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
-      order = LimitOrder('BUY', shares, price)
-      contract = Stock(stock)
-      place_order(order=order,
-                  contract=contract,
-                  pause=args.pause,
-                  debug=args.debug,
-                  wait_for_order=args.wait_for_order)
+        if not args.confirm:
+          print()
+          print('====> DRY-RUN <====')
+          print()
+
+        else:
+          place_order(order=order,
+                      contract=contract,
+                      pause=args.pause,
+                      debug=args.debug,
+                      wait_for_order=args.wait_for_order)
 
 
 if args.buy_file_market:
-  if not args.confirm:
-    print()
-    print('====> DRY-RUN <====')
-    print()
+    with open(args.buy_file, 'r') as file:
+      data = json.load(file)
 
-  with open('buy.json', 'r') as file:
-    data = json.load(file)
+    for x in data:
+      for stock, value in x.items():
+        shares = value[0]
+        print('BUY:', stock, ' \tshares:', shares)
+        order = MarketOrder('BUY', shares)
+        contract = Stock(stock)
+        if not args.confirm:
+          print()
+          print('====> DRY-RUN <====')
+          print()
 
-  for x in data:
-    for stock, value in x.items():
-      shares = value[0]
-      print('BUY:', stock, ' \tshares:', shares)
-      order = MarketOrder('BUY', shares)
-      contract = Stock(stock)
-      place_order(order=order,
-                  contract=contract,
-                  pause=args.pause,
-                  debug=args.debug,
-                  wait_for_order=args.wait_for_order)
+        else:
+          place_order(order=order,
+                      contract=contract,
+                      pause=args.pause,
+                      debug=args.debug,
+                      wait_for_order=args.wait_for_order)
 
 
 if args.portfolio:
