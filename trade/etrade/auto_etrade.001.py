@@ -1,16 +1,21 @@
 from argparse import ArgumentParser
 from prettytable import PrettyTable
 from rauth import OAuth1Service
+from pprint import pprint
 import webbrowser
+import xmltodict
 import requests
+import secrets
 import json
 import os
+
 
 
 parser = ArgumentParser()
 parser.add_argument('--pause', type=int, default=1, help='sleep iteration')
 parser.add_argument('--api', type=str, default='https://api.etrade.com', help='etrade api')
 parser.add_argument('--ticker', type=str, help='ticker to execute')
+parser.add_argument('--buy-file', type=str, default='../buy.json', help='file to execute')
 parser.add_argument('--institution', type=str, default='BROKERAGE', help='institution type')
 parser.add_argument('--shares', type=int, help='shares')
 parser.add_argument('--price', type=float, help='price')
@@ -26,11 +31,11 @@ parser.add_argument('--buy-single-limit', action='store_true', help='execute lim
 parser.add_argument('--confirm', action='store_true', help='flag required to execute trade')
 args = parser.parse_args()
 
-
 if args.all:
   args.balances = True
   args.portfolio = True
   args.account_summary = True
+
 
 etrade = OAuth1Service(name='etrade',
                        consumer_key=os.environ['ETRADE_KEY'],
@@ -50,11 +55,73 @@ session = etrade.get_auth_session(request_token,
                                   request_token_secret,
                                   params={'oauth_verifier': text_code})
 
+order_headers = {'accountIdKey': os.environ['ETRADE_ID'],
+                 'PlaceOrderRequest': { 'orderType': 'EQ',
+                                        'clientOrderId': secrets.token_hex(20),
+                                        'previewIds': [ previews ],
+                                        'order': 
+
+
+if args.debug:
+  print('text code: ', text_code)
+  print('session: ', session)
+
 
 if args.ticker:
-  #market = Market(session, base_url)
-  #market.quotes()
-  print('ticket: ', args.ticker)
+  url = 'https://api.etrade.com/v1/market/quote/' + args.ticker
+  response = session.get(url)
+  if response is None or response.status_code != 200:
+    raise Exception('url broken: ' + url + '\n--> response: ' + r.text)
+
+  q = xmltodict.parse(response.text)
+  if args.debug:
+    print()
+    print('api: ', url)
+    print('response text: ', response.text)
+    print('ticker: ', args.ticker)
+    print()
+
+  quote = q['QuoteResponse']['QuoteData']
+  print()
+  pprint(quote)
+  print()
+
+  ticker_table = PrettyTable([ 'last',
+                               'bid',
+                               'ask',
+                               'change',
+                               'change%' ])
+
+  ticker_table.add_row([ quote['All']['lastTrade'],
+                         quote['All']['bid'],
+                         quote['All']['ask'],
+                         quote['All']['changeClose'],
+                         quote['All']['changeClosePercentage'] ])
+
+         #<companyName>ALPHABET INC CAP STK CL C</companyName>
+         #<dividend>0.0</dividend>
+         #<eps>23.5639</eps>
+         #<high>1186.2856</high>
+         #<high52>1186.89</high52>
+         #<low>1171.76</low>
+         #<low52>894.79</low52>
+         #<open>1175.31</open>
+         #<previousClose>1168.06</previousClose>
+         #<previousDayVolume>1620909</previousDayVolume>
+         #<totalVolume>1167544</totalVolume>
+         #<marketCap>410276824480.00</marketCap>
+         #<sharesOutstanding>348952000</sharesOutstanding>
+         #<declaredDividend>0.0</declaredDividend>
+         #<pe>49.57</pe>
+         #<week52LowDate>1499110344</week52LowDate>
+         #<week52HiDate>1517257944</week52HiDate>
+         #<averageVolume>1451490</averageVolume>
+
+  print()
+  print(ticker_table)
+  print()
+
+
 
 
 if args.account_summary:
@@ -66,7 +133,7 @@ if args.account_summary:
     print('headers: ', response.request.headers)
     print('response: ', response.text)
 
-  if response.status_code == 200:
+  if response is not None and response.status_code == 200:
     accounts = response.json()["AccountListResponse"]["Accounts"]["Account"]
 
     p = PrettyTable([ 'AccountId',
@@ -156,3 +223,43 @@ if args.portfolio:
   print('Total Gain: ' + str(round(total_gain, 2)))
   print('Total Value: ' + str(round(total_value, 2)))
   print()
+
+
+if args.buy_file_market:
+  with open(args.buy_file, 'r') as file:
+  data = json.load(file)
+
+  for x in data:
+    for stock, value in x.items():
+      shares = value[0]
+      print('BUY:', stock, ' \tshares:', shares)
+      order = MarketOrder('BUY', shares)
+      contract = Stock(stock)
+      if not args.confirm:
+        print()
+        print('====> DRY-RUN <====')
+        print()
+
+      else:
+        print(https://api.etrade.com/v1/accounts/{accountIdKey}/orders/place)
+
+
+if args.buy_file_limit:
+  with open(args.buy_file, 'r') as file:
+    data = json.load(file)
+
+  for x in data:
+    for stock, value in x.items():
+      shares = value[0]
+      price = value[1]
+      print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
+      order = LimitOrder('BUY', shares, price)
+      contract = Stock(stock)
+
+      if not args.confirm:
+        print()
+        print('====> DRY-RUN <====')
+        print()
+
+      else:
+        print(https://api.etrade.com/v1/accounts/{accountIdKey}/orders/place)
