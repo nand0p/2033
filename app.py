@@ -10,20 +10,23 @@ app = Flask(__name__)
 
 class X2030(FlaskView):
   def __init__(self):
+
+    self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
+    self.period = '10y'
+    self.interval = '1d'
+    self.tolerance = 0.075
+    self.tolerance_averages = 0.01
+
     self.df = {}
     self.stocks = {}
     self.scores = {}
     self.results = {}
-    self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
-    self.period = '10y'
-    self.interval = '1d'
-    self.minimum_score = 25
-    self.data_dir = './data/'
-    self.s3_bucket = '2030.hex7.com'
-    self.tolerance = 0.075
-    self.tolerance_averages = 0.01
     self.category = 0
     self.speed = ''
+    self.data_dir = './data/'
+    self.s3_bucket = '2030.hex7.com'
+    self.categories_file = 'categories.json'
+    self.categories = stocks.get_categories(self.categories_file)
     self.debug = False
 
 
@@ -36,7 +39,8 @@ class X2030(FlaskView):
       self.stocks = {'AAPL': {'category': '9'}}
     else:
       self.stocks = stocks.get_stocks(os.environ.get('STOCKS'),
-                                      self.category)
+                                      self.category,
+                                      self.categories)
 
     for stock in self.stocks:
       self.df[stock] = yf.load_or_get_data(stock=stock,
@@ -91,6 +95,7 @@ class X2030(FlaskView):
                            debug=self.debug,
                            scores=self.scores,
                            stocks=self.stocks,
+                           categories=self.categories,
                            speed=self.speed)
 
 

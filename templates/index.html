@@ -2,9 +2,6 @@
 
 <html>
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3SZL2VYX8Q"></script>
-  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date()); gtag("config", "G-3SZL2VYX8Q");</script>
   <link rel="shortcut icon" href="favicon.ico">
   <title>Stock Hunter 2030</title>
 </head>
@@ -16,37 +13,19 @@
   <h2>
   <table width=100%>
     <tr width=100%>
-      <td bgcolor=red align=center><a href=/slow/>All</a></td>
-      <td bgcolor=red align=center><a href=/slow/1/>XL</a></td>
-      <td bgcolor=red align=center><a href=/slow/2/>Cloud</a></td>
-      <td bgcolor=red align=center><a href=/slow/3/>ETFs</a></td>
-      <td bgcolor=red align=center><a href=/slow/4/>BioTech</a></td>
-      <td bgcolor=red align=center><a href=/slow/5/>Sustainable</a></td>
-      <td bgcolor=red align=center><a href=/slow/6/>Crypto</a></td>
-      <td bgcolor=red align=center><a href=/slow/7/>Asia</a></td>
-      <td bgcolor=red align=center><a href=/slow/8/>Commodities</a></td>
+      {% for category in categories %}
+        <td bgcolor=red align=center><a href=/slow/{{loop.index}}/>{{ category }}</a></td>
+      {% endfor %}
     </tr>
     <tr width=100%>
-      <td bgcolor=green align=center><a href=/fast/>All</a></td>
-      <td bgcolor=green align=center><a href=/fast/1/>XL</a></td>
-      <td bgcolor=green align=center><a href=/fast/2/>Cloud</a></td>
-      <td bgcolor=green align=center><a href=/fast/3/>ETFs</a></td>
-      <td bgcolor=green align=center><a href=/fast/4/>BioTech</a></td>
-      <td bgcolor=green align=center><a href=/fast/5/>Sustainable</a></td>
-      <td bgcolor=green align=center><a href=/fast/6/>Crypto</a></td>
-      <td bgcolor=green align=center><a href=/fast/7/>Asia</a></td>
-      <td bgcolor=green align=center><a href=/fast/8/>Commodities</a></td>
+      {% for category in categories %}
+        <td bgcolor=green align=center><a href=/fast/{{loop.index}}/>{{ category }}</a></td>
+      {% endfor %}
     </tr>
     <tr width=100%>
-      <td align=center><a href=/results/>All</a></td>
-      <td align=center><a href=/results/1/>XL</a></td>
-      <td align=center><a href=/results/2/>Cloud</a></td>
-      <td align=center><a href=/results/3/>ETFs</a></td>
-      <td align=center><a href=/results/4/>BioTech</a></td>
-      <td align=center><a href=/results/5/>Sustainable</a></td>
-      <td align=center><a href=/results/6/>Crypto</a></td>
-      <td align=center><a href=/results/7/>Asia</a></td>
-      <td align=center><a href=/results/8/>Commodities</a></td>
+      {% for category in categories %}
+        <td align=center><a href=/results/>{{ category }}</a></td>
+      {% endfor %}
     </tr>
     <tr width=100%>
       {% if speed == "fast" %}

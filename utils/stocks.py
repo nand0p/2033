@@ -1,31 +1,23 @@
+import json
+
+def get_categories(catfile):
+
+  with open(catfile, 'r') as f:
+    categories = json.load(f)
+
+  return categories
 
 
-def get_stocks(stocks, cat):
-  stocks = sorted(set(stocks.strip('\"').upper().split()))
+
+def get_stocks(stocks, cat, categories):
   r = {}
+  stocks = sorted(set(stocks.strip('\"').upper().split()))
 
   for stock in stocks:
-    s, v = stock.split(':')
-    if v == cat or cat == '0':
-      r[s] = {}
-      r[s]['category'] = v
-      if v == '1':
-        r[s]['catname'] = 'Cloud XL'
-      elif v == '2':
-        r[s]['catname'] = 'Cloud Stocks'
-      elif v == '3':
-        r[s]['catname'] = 'ETF'
-      elif v == '4':
-        r[s]['catname'] = 'BioTech'
-      elif v == '5':
-        r[s]['catname'] = 'Sustainable Future'
-      elif v == '6':
-        r[s]['catname'] = 'Crypto'
-      elif v == '7':
-        r[s]['catname'] = 'Asia Emerging'
-      elif v == '8':
-        r[s]['catname'] = 'Cloud Growth'
-      else:
-        r[s]['catname'] = 'None'
+      s, v = stock.split(':')
+      if v == cat or cat == '0':
+          r[s] = {}
+          r[s]['category'] = cat
+          r[s]['catname'] = categories[int(v)] if v in categories else 'None'
 
   return r
