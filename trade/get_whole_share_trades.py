@@ -13,11 +13,12 @@ parser.add_argument('--exclude', action='store_true', help='excluded stocks')
 parser.add_argument('--include', action='store_true', help='included stocks')
 parser.add_argument('--toxic', action='store_true', help='excluded stocks')
 parser.add_argument('--skip-init', action='store_true', help='skip initialization')
+parser.add_argument('--outdir', type=str, default='./tmp/', help='out directory')
 parser.add_argument('--speed', type=str, default='slow', help='fast or slow')
-parser.add_argument('--savefile', type=str, default='buy.json', help='json out file')
 parser.add_argument('--money', type=int, default=25, help='fast or slow')
 parser.add_argument('--limit', type=int, default=100, help='max stock price')
 parser.add_argument('--category', type=int, default=2, help='stock category')
+parser.add_argument('--savefile', type=str, help='json out file')
 args = parser.parse_args()
 
 if args.all:
@@ -25,6 +26,10 @@ if args.all:
     args.exclude = True
     args.include = True
     args.out = True
+
+if not args.savefile:
+  args.savefile = 'buy_whole_' + args.speed + '_cat' + str(args.category) + '.json'
+
 
 s = {}
 buy = []
@@ -63,28 +68,27 @@ else:
 
 print('process results')
 for stocks in results:
-  if stocks['stock'] != 'HCP' and stocks['stock'] != 'RXT':
-    if args.debug:
-      print(type(stocks))
-      print(stocks)
+  if args.debug:
+    print(type(stocks))
+    print(stocks)
 
-    current = stocks['stock']
-    s[current] = {}
+  current = stocks['stock']
+  s[current] = {}
 
-    for key, value in stocks.items():
-      if key == 'shares':
-        if value > 0:
-          if value < 1:
-            s[current]['shares'] = 1
-          else:
-            s[current]['shares'] = int(value)
+  for key, value in stocks.items():
+    if key == 'shares':
+      if value > 0:
+        if value < 1:
+          s[current]['shares'] = 1
+        else:
+          s[current]['shares'] = int(value)
 
-      if key == 'parts':
-        s[current]['parts'] = value
+    if key == 'parts':
+      s[current]['parts'] = value
 
-      if key == 'price':
-        if 'shares' in s[current]:
-          s[current]['price'] = value
+    if key == 'price':
+      if 'shares' in s[current]:
+        s[current]['price'] = value
 
 
 print()
@@ -146,7 +150,10 @@ if args.out:
   print()
   print('Buy: ', buy)
 
-with open(args.savefile, 'w') as f:
+print('writing json: ', args.outdir, '\nfile: ', args.savefile)
+with open(args.outdir + args.savefile, 'w') as f:
+    json.dump(buy, f)
+with open('buy.json', 'w') as f:
     json.dump(buy, f)
 
 print()
