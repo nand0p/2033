@@ -67,7 +67,10 @@ def get_results(stocks,
         results[stock]['cash'] = round(money_per_part * results[stock]['parts'], 2)
         results[stock]['shares'] = round(results[stock]['cash'] / v['current_price'], 4)
         results[stock]['price'] = round(v['current_price'], 2)
+        results[stock]['category'] = v['category']
+
         ordered.append({'parts': results[stock]['parts'],
+                        'category': v['category'],
                         'stock': stock,
                         'shares': results[stock]['shares'],
                         'score': v['score'],

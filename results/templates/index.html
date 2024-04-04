@@ -13,28 +13,28 @@
   <table width=100%>
     <tr>
       {% for category in categories %}
-        {% if loop.index == 0 %}
+        {% if loop.index == 1 %}
           <td align=center bgcolor=green><a href=/fast/>All</a></td>
 	{% else %}
-	  <td align=center bgcolor=green><a href=/fast/{{ loop.index }}/>{{ category }}</a></td>
+	  <td align=center bgcolor=green><a href=/fast/{{ loop.index - 1}}/>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
     <tr>
       {% for category in categories %}
-        {% if loop.index == 0 %}
+        {% if loop.index == 1 %}
           <td align=center bgcolor=red><a href=/slow/>All</a></td>
 	{% else %}
-	  <td align=center bgcolor=red><a href=/slow/{{ loop.index }}/>{{ category }}</a></td>
+	  <td align=center bgcolor=red><a href=/slow/{{ loop.index - 1 }}/>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
     <tr>
       {% for category in categories %}
-        {% if loop.index == 0 %}
+        {% if loop.index == 1 %}
           <td align=center><a href=/results/>All</a></td>
 	{% else %}
-	<td align=center><a href=/results/{{ loop.index }}/>{{ category }}</a></td>
+	  <td align=center><a href=/results/{{ loop.index - 1 }}/>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
@@ -88,7 +88,7 @@
   <br>
   <p>
   <table border=2>
-    <tr><td colspan=7 align=center><b>SLOW</b></td></td>
+    <tr><td colspan=8 align=center><b>SLOW</b></td></td>
     {% for v in slow_ordered %}
       <tr>
         <td>{{ loop.revindex }}</td>
@@ -98,6 +98,7 @@
         <td>score: {{ v.score }}</td>
         <td>price: {{ v.price }}</td>
         <td>parts: {{ v.parts }}</td>
+        <td>category: {{ v.category }}</td>
         <td>shares: {{ v.shares }}</td>
         <td>cash: {{ v.cash }}</td>
       </tr>
@@ -214,7 +215,7 @@
   <br>
   <p>
   <table border=2>
-    <tr><td colspan=7 align=center><b>FAST</b></td></td>
+    <tr><td colspan=8 align=center><b>FAST</b></td></td>
     {% for v in fast_ordered %}
       <tr>
         <td>{{ loop.revindex }}</td>
@@ -224,6 +225,7 @@
         <td>score: {{ v.score }}</td>
         <td>price: {{ v.price }}</td>
         <td>parts: {{ v.parts }}</td>
+        <td>category: {{ v.category }}</td>
         <td>shares: {{ v.shares }}</td>
         <td>cash: {{ v.cash }}</td>
       </tr>
