@@ -12,37 +12,31 @@
   <h2>
   <table width=100%>
     <tr>
-      <td align=center bgcolor=green><a href=/fast/>All</a></td>
-      <td align=center bgcolor=green><a href=/fast/1/>XL</a></td>
-      <td align=center bgcolor=green><a href=/fast/2/>Cloud</a></td>
-      <td align=center bgcolor=green><a href=/fast/3/>ETFs</a></td>
-      <td align=center bgcolor=green><a href=/fast/4/>BioTech</a></td>
-      <td align=center bgcolor=green><a href=/fast/5/>Sustainable</a></td>
-      <td align=center bgcolor=green><a href=/fast/6/>Crypto</a></td>
-      <td align=center bgcolor=green><a href=/fast/7/>Asia</a></td>
-      <td align=center bgcolor=green><a href=/fast/8/>Commodities</a></td>
+      {% for category in categories %}
+        {% if loop.index == 0 %}
+          <td align=center bgcolor=green><a href=/fast/>All</a></td>
+	{% else %}
+	  <td align=center bgcolor=green><a href=/fast/{{ loop.index }}/>{{ category }}</a></td>
+	{% endif %}
+      {% endfor %}
     </tr>
     <tr>
-      <td align=center bgcolor=red><a href=/slow/>All</a></td>
-      <td align=center bgcolor=red><a href=/slow/1/>XL</a></td>
-      <td align=center bgcolor=red><a href=/slow/2/>Cloud</a></td>
-      <td align=center bgcolor=red><a href=/slow/3/>ETFs</a></td>
-      <td align=center bgcolor=red><a href=/slow/4/>BioTech</a></td>
-      <td align=center bgcolor=red><a href=/slow/5/>Sustainable</a></td>
-      <td align=center bgcolor=red><a href=/slow/6/>Crypto</a></td>
-      <td align=center bgcolor=red><a href=/slow/7/>Asia</a></td>
-      <td align=center bgcolor=red><a href=/slow/8/>Commodities</a></td>
+      {% for category in categories %}
+        {% if loop.index == 0 %}
+          <td align=center bgcolor=red><a href=/slow/>All</a></td>
+	{% else %}
+	  <td align=center bgcolor=red><a href=/slow/{{ loop.index }}/>{{ category }}</a></td>
+	{% endif %}
+      {% endfor %}
     </tr>
     <tr>
-      <td align=center><a href=/results/>All</a></td>
-      <td align=center><a href=/results/1/>XL</a></td>
-      <td align=center><a href=/results/2/>Cloud</a></td>
-      <td align=center><a href=/results/3/>ETFs</a></td>
-      <td align=center><a href=/results/4/>BioTech</a></td>
-      <td align=center><a href=/results/5/>Sustainable</a></td>
-      <td align=center><a href=/results/6/>Crypto</a></td>
-      <td align=center><a href=/results/7/>Asia</a></td>
-      <td align=center><a href=/results/8/>Commodities</a></td>
+      {% for category in categories %}
+        {% if loop.index == 0 %}
+          <td align=center><a href=/results/>All</a></td>
+	{% else %}
+	<td align=center><a href=/results/{{ loop.index }}/>{{ category }}</a></td>
+	{% endif %}
+      {% endfor %}
     </tr>
     <tr width=100%>
       <td bgcolor=green width=100% align=center colspan=9>results</td>
@@ -56,13 +50,23 @@
   <br>API Scores: {{ req_scores }}
   <p>
   {% if debug %}
+    <p>req: {{ req }}</p>
+    <p>req_scores: {{ req_scores }}</p>
+    <p>debug: {{ debug }}</p>
+    <p>datemade: {{ datemade }}</p>
+    <p>share_one: {{ share_one }}</p>
+    <hr>
+    <p>categories: {{ categories }}</p>
+    <hr>
     <p>slow results: {{ slow_results }}</p>
     <p>fast results: {{ fast_results }}</p>
+    <hr>
     <p>slow ordered: {{ slow_ordered }}</p>
     <p>fast ordered: {{ fast_ordered }}</p>
+    <hr>
     <p>s_list: {{ s_list }}</p>
+    <hr>
     <p>matrix: {{ matrix }}</p>
-    <p>share_one: {{ share_one }}</p>
   {% endif %}
   <br>
   <center>

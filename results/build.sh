@@ -15,7 +15,9 @@ VERSION=$(cat VERSION)
 #TAG="${NAME}:${VERSION}"
 TAG="${REPO}/${NAME}:${VERSION}"
 
-cp -v ../2030.txt .
+cp -v ../2030.txt 2030.txt
+cp -v ../categories.json categories.json
+cp -v ../utils/stocks.py utils/stocks.py
 
 if [ -n ${VERSION} ]; then
   echo "building docker image ${NAME}:${VERSION}"
@@ -31,6 +33,8 @@ else
 fi
 
 rm -fv 2030.txt
+rm -fv categories.json
+rm -fv utils/stocks.py
 
 docker images --no-trunc --all
 docker images

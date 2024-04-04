@@ -1,6 +1,6 @@
 from flask import Flask, render_template, send_from_directory, jsonify
 from flask_classful import FlaskView, route, request
-from utils import scores, shares
+from utils import scores, shares, stocks
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -34,6 +34,8 @@ class X2030(FlaskView):
     self.share_one = 0
     self.category = 0
     self.source_file = '2030.txt'
+    self.categories_file = 'categories.json'
+    self.categories = stocks.get_categories(self.categories_file)
     self.debug = True
 
   @route('/', methods = ['GET'])
@@ -54,12 +56,14 @@ class X2030(FlaskView):
     self.slow_results, \
     self.slow_ordered = scores.get_results(stocks=self.slow_dict,
                                            category=self.category,
+                                           categories=self.categories,
                                            total_money=self.total_money,
                                            source_file=self.source_file,
                                            debug=self.debug)
     self.fast_results, \
     self.fast_ordered = scores.get_results(stocks=self.fast_dict,
                                            category=self.category,
+                                           categories=self.categories,
                                            total_money=self.total_money,
                                            source_file=self.source_file,
                                            debug=self.debug)
@@ -105,6 +109,7 @@ class X2030(FlaskView):
                            fast_results=self.fast_results,
                            slow_ordered=self.slow_ordered,
                            fast_ordered=self.fast_ordered,
+                           categories=self.categories,
                            matrix=self.matrix)
 
 

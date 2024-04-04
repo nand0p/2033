@@ -8,6 +8,7 @@ def get_results(stocks,
                 source_file,
                 debug=False,
                 category='0',
+                categories=[],
                 total_money=1000):
 
   results = {}
