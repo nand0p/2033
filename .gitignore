@@ -1,5 +1,5 @@
 *.pyc
+buy.json
 **/tmp/*
-**/buy.json
-.terraform/
+**/.terraform/
 .DS_Store
