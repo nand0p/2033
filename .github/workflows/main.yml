@@ -54,7 +54,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: nand0p/X2033:${{ env.APP_VERSION }}
+          tags: nand0p/x2033:${{ env.APP_VERSION }}
           build-args: DATE=$(date),REVISION=${{ github.sha }}
 
       - name: echo digest
@@ -309,4 +309,4 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/scores_matrix.json
 
       - name: publish docker
-        run: docker push nand0p/X2033-results:${{ env.APP_VERSION }}
+        run: docker push nand0p/x2033-results:${{ env.APP_VERSION }}
