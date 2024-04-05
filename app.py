@@ -96,6 +96,7 @@ class X2033(FlaskView):
                            scores=self.scores,
                            stocks=self.stocks,
                            categories=self.categories,
+                           cat_num=self.category,
                            speed=self.speed)
 
 

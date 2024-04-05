@@ -110,6 +110,7 @@ class X2033(FlaskView):
                            slow_ordered=self.slow_ordered,
                            fast_ordered=self.fast_ordered,
                            categories=self.categories,
+                           cat_num=self.category,
                            matrix=self.matrix)
 
 
