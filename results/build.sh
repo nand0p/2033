@@ -5,7 +5,7 @@
 # bash -ex ci/build.sh
 
 
-NAME=x2030-results
+NAME=X2033-results
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7
@@ -15,7 +15,7 @@ VERSION=$(cat VERSION)
 #TAG="${NAME}:${VERSION}"
 TAG="${REPO}/${NAME}:${VERSION}"
 
-cp -v ../2030.txt 2030.txt
+cp -v ../2033.txt 2033.txt
 cp -v ../categories.json categories.json
 cp -v ../utils/stocks.py utils/stocks.py
 
@@ -32,7 +32,7 @@ else
   exit 1
 fi
 
-rm -fv 2030.txt
+rm -fv 2033.txt
 rm -fv categories.json
 rm -fv utils/stocks.py
 

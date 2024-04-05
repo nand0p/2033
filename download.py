@@ -4,7 +4,7 @@ import os
 
 img_path = 'images/stocks/'
 data_path = 'data/stocks/'
-text_file = open("2030.txt", "r")
+text_file = open("2033.txt", "r")
 lines = text_file.readlines()
 text_file.close()
 

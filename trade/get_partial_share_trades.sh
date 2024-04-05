@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 echo
-echo 2030 Stock Hunter
+echo 2033 Stock Hunter
 echo
 echo auto-generate all possible buy json
 echo

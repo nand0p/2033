@@ -5,8 +5,8 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket  = "2030-tf"
-    key     = "x2030.tfstate"
+    bucket  = "2033-tf"
+    key     = "X2033.tfstate"
     region  = "us-east-1"
     encrypt = true
     profile = "default"

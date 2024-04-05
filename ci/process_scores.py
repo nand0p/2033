@@ -5,7 +5,7 @@ import json
 
 debug=False
 prefix='scores/'
-bucket='2030.hex7.com'
+bucket='2033.hex7.com'
 scores_list_name='scores_list.json'
 
 

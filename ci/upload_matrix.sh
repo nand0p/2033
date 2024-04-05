@@ -8,7 +8,7 @@ which aws
 
 
 CONTAINER=$(docker ps --latest --format {{.ID}})
-S3_BUCKET=2030.hex7.com
+S3_BUCKET=2033.hex7.com
 SAVE_FILE=scores_matrix.json
 SAVE_PATH=tmp
 
@@ -35,4 +35,4 @@ echo upload to s3
 aws s3 cp ${SAVE_PATH}/${SAVE_FILE} s3://${S3_BUCKET}/${SAVE_FILE}
 
 echo set acl
-aws s3api put-object-acl --bucket 2030.hex7.com --key ${SAVE_FILE} --acl public-read
+aws s3api put-object-acl --bucket 2033.hex7.com --key ${SAVE_FILE} --acl public-read

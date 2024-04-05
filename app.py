@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 
-class X2030(FlaskView):
+class X2033(FlaskView):
   def __init__(self):
 
     self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
@@ -24,7 +24,7 @@ class X2030(FlaskView):
     self.category = 0
     self.speed = ''
     self.data_dir = './data/'
-    self.s3_bucket = '2030.hex7.com'
+    self.s3_bucket = '2033.hex7.com'
     self.categories_file = 'categories.json'
     self.categories = stocks.get_categories(self.categories_file)
     self.debug = False
@@ -141,7 +141,7 @@ class X2030(FlaskView):
                                'favicon.ico', mimetype='image/x-icon')
 
 
-X2030.register(app, route_base = '/')
+X2033.register(app, route_base = '/')
 
 
 if __name__ == "__main__":

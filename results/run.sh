@@ -6,7 +6,7 @@ TEST_RUN=0
 
 
 REPO=nand0p
-NAME=x2030-results
+NAME=X2033-results
 VERSION=$(cat VERSION)
 PORTS=80:5000
 

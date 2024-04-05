@@ -4,9 +4,9 @@
 DRY_RUN=0
 
 REPO=nand0p
-NAME=x2030
+NAME=X2033
 VERSION=$(cat VERSION)
-STOCKS=$(cat 2030.txt)
+STOCKS=$(cat 2033.txt)
 PORTS="80:5000"
 
 #TAG="${NAME}:${VERSION}"

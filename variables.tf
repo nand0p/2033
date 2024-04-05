@@ -1,12 +1,12 @@
 variable "user_name" {
   type    = string
-  default = "x2030"
+  default = "X2033"
 }
 
 variable "tags" {
   type    = map
   default = {
-    product = "x2030"
+    product = "X2033"
   }
 }
 

@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 
 
-class X2030(FlaskView):
+class X2033(FlaskView):
   def __init__(self):
     self.total_money = 1000
     self.s_list = []
@@ -20,7 +20,8 @@ class X2030(FlaskView):
     self.prefix = 'scores/'
     self.scores_key = 'scores_matrix.json'
     self.scores_file = 'scores_list.json'
-    self.bucket = '2030.hex7.com'
+    self.bucket = '2033.hex7.com'
+    self.source_file = '2033.txt'
     self.api = 'http://' + self.bucket + '/'
     self.api_scores = self.api + self.prefix
     self.date = ''
@@ -33,7 +34,6 @@ class X2030(FlaskView):
     self.matrix = {}
     self.share_one = 0
     self.category = 0
-    self.source_file = '2030.txt'
     self.categories_file = 'categories.json'
     self.categories = stocks.get_categories(self.categories_file)
     self.debug = True
@@ -80,7 +80,7 @@ class X2030(FlaskView):
     self.matrix = scores.get_matrix(s_list=self.s_list,
                                     slow_results=self.slow_results,
                                     fast_results=self.fast_results,
-                                    source_file='2030.txt',
+                                    source_file=self.source_file,
                                     bucket=self.bucket,
                                     category='0',
                                     debug=self.debug)
@@ -167,7 +167,7 @@ class X2030(FlaskView):
                                mimetype='image/x-icon')
 
 
-X2030.register(app, route_base = '/')
+X2033.register(app, route_base = '/')
 
 
 if __name__ == "__main__":

@@ -80,7 +80,7 @@ def get_results(stocks,
   return results, sorted(ordered, key=lambda d: d['score'])
 
 
-def get_scores_list(api='http://2030.hex7.com/',
+def get_scores_list(api='http://2033.hex7.com/',
                     scores_file='scores_list.json',
                     debug=False):
 
@@ -135,7 +135,7 @@ def save_scores(matrix,
                 fast_ordered,
                 savepath,
                 scores_key,
-                bucket='2030.hex7.com',
+                bucket='2033.hex7.com',
                 save_to_s3=False,
                 debug=False):
 
@@ -178,8 +178,8 @@ def save_scores(matrix,
 def get_matrix(s_list,
                slow_results,
                fast_results,
-               source_file='2030.txt',
-               bucket='2030.hex7.com',
+               source_file='2033.txt',
+               bucket='2033.hex7.com',
                category='0',
                debug=False):
 

@@ -18,7 +18,7 @@ wget --no-directories \
        "localhost?cat=0"
 
 mv -v "${OUT}/index.html?cat=0.html" ${OUT}/index.html
-sed -i.b1 "s/\/static/http:\/\/2030.hex7.com\/results/g" ${OUT}/index.html
+sed -i.b1 "s/\/static/http:\/\/2033.hex7.com\/results/g" ${OUT}/index.html
 sed -i.b2 "s/SEDME/${SHA}/g" ${OUT}/index.html
 rm -vf ${OUT}/index.html.b1 ${OUT}/index.html.b2
 sleep 1
@@ -39,11 +39,11 @@ for BASE in 1 2 3 4 5 6 7 8; do
        "localhost?cat=${BASE}"
 
   mv -v "${OUT}/${BASE}/index.html?cat=${BASE}.html" ${OUT}/${BASE}/index.html
-  sed -i.b1 "s/\/static/http:\/\/2030.hex7.com\/results/g" ${OUT}/${BASE}/index.html
+  sed -i.b1 "s/\/static/http:\/\/2033.hex7.com\/results/g" ${OUT}/${BASE}/index.html
   sed -i.b2 "s/SEDME/${SHA}/g" ${OUT}/${BASE}/index.html
   rm -vf ${OUT}/index.html.b1 ${OUT}/${BASE}/index.html.b2
   sleep 1
 done
 
 echo publish to s3
-aws s3 sync --acl public-read ${OUT} s3://2030.hex7.com/${OUT}
+aws s3 sync --acl public-read ${OUT} s3://2033.hex7.com/${OUT}

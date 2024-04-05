@@ -2,12 +2,12 @@
 
 
 DOWNLOAD_SITE=1
-S3_BUCKET=2030.hex7.com
+S3_BUCKET=2033.hex7.com
 
-echo "build 2030 docker container"
+echo "build 2033 docker container"
 bash ci/build.sh
 
-echo "run 2030 docker container"
+echo "run 2033 docker container"
 bash ci/run.sh daemonize
 
 

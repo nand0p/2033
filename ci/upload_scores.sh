@@ -9,7 +9,7 @@ which aws
 
 CONTAINER=$(docker ps --latest --format {{.ID}})
 DATE=$(date +%Y-%m-%d)
-S3_BUCKET=2030.hex7.com
+S3_BUCKET=2033.hex7.com
 FILE_FAST=fast-${DATE}.json
 FILE_SLOW=slow-${DATE}.json
 SAVE_PATH=tmp
