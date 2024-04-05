@@ -23,8 +23,7 @@ args = parser.parse_args()
 
 if args.all:
     args.verbose = True
-    args.exclude = True
-    args.include = True
+    args.toxic = True
     args.out = True
 
 if not args.savefile:
@@ -134,27 +133,27 @@ for key, value in s.items():
     else:
       exclude.append(key)
 
-if args.verbose:
-  print(table)
+print(table)
 
-if args.include:
+if args.include or args.verbose:
   print('Included: ', include)
 
-if args.exclude:
+if args.exclude or args.verbose:
   print('Excluded: ', exclude)
 
-if args.toxic:
+if args.toxic or args.verbose:
   print('Toxic: ', toxic)
+
+if args.verbose:
+  print('Buy: ', buy)
 
 if args.out:
   print()
-  print('Buy: ', buy)
-
-print('writing json: ', args.outdir, '\nfile: ', args.savefile)
-with open(args.outdir + args.savefile, 'w') as f:
-    json.dump(buy, f)
-with open('buy.json', 'w') as f:
-    json.dump(buy, f)
+  print('writing json: ', args.outdir, '\nfile: ', args.savefile)
+  with open(args.outdir + args.savefile, 'w') as f:
+      json.dump(buy, f)
+  with open('buy.json', 'w') as f:
+      json.dump(buy, f)
 
 print()
 print('total stocks: ', count)
