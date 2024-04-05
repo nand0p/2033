@@ -14,27 +14,27 @@
   <table width=100%>
     <tr width=100%>
       {% for category in categories %}
-        <td bgcolor=red align=center><a href=/slow/{{loop.index}}/>{{ category }}</a></td>
+        <td bgcolor=red align=center><a href=/slow/{{loop.index}}/index.html>{{ category }}</a></td>
       {% endfor %}
     </tr>
     <tr width=100%>
       {% for category in categories %}
-        <td bgcolor=green align=center><a href=/fast/{{loop.index}}/>{{ category }}</a></td>
+        <td bgcolor=green align=center><a href=/fast/{{loop.index}}/index.html>{{ category }}</a></td>
       {% endfor %}
     </tr>
     <tr width=100%>
       {% for category in categories %}
-        <td align=center><a href=/results/>{{ category }}</a></td>
+        <td align=center><a href=/results/index.html>{{ category }}</a></td>
       {% endfor %}
     </tr>
     <tr width=100%>
       {% if speed == "fast" %}
         <td bgcolor=green width=100% align=center colspan=9>
-          <a href=/slow>rolling fast</a>
+          <a href=/slow/index.html>rolling fast</a>
         </td>
       {% else %}
         <td bgcolor=red width=100% align=center colspan=9>
-          <a href=/fast>rolling slow</a>
+          <a href=/fast/index.html>rolling slow</a>
         </td>
       {% endif %}
     </tr>

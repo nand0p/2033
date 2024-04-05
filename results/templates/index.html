@@ -14,27 +14,27 @@
     <tr>
       {% for category in categories %}
         {% if loop.index == 1 %}
-          <td align=center bgcolor=green><a href=/fast/>All</a></td>
+          <td align=center bgcolor=green><a href=/fast/index.html>All</a></td>
 	{% else %}
-	  <td align=center bgcolor=green><a href=/fast/{{ loop.index - 1}}/>{{ category }}</a></td>
+	  <td align=center bgcolor=green><a href=/fast/{{ loop.index - 1}}/index.html>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
     <tr>
       {% for category in categories %}
         {% if loop.index == 1 %}
-          <td align=center bgcolor=red><a href=/slow/>All</a></td>
+          <td align=center bgcolor=red><a href=/slow/index.html>All</a></td>
 	{% else %}
-	  <td align=center bgcolor=red><a href=/slow/{{ loop.index - 1 }}/>{{ category }}</a></td>
+	  <td align=center bgcolor=red><a href=/slow/{{ loop.index - 1 }}/index.html>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
     <tr>
       {% for category in categories %}
         {% if loop.index == 1 %}
-          <td align=center><a href=/results/>All</a></td>
+          <td align=center><a href=/results/index.html>All</a></td>
 	{% else %}
-	  <td align=center><a href=/results/{{ loop.index - 1 }}/>{{ category }}</a></td>
+	  <td align=center><a href=/results/{{ loop.index - 1 }}/index.html>{{ category }}</a></td>
 	{% endif %}
       {% endfor %}
     </tr>
