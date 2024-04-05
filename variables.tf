@@ -19,3 +19,8 @@ variable "aws_profile" {
   type    = string
   default = "default"
 }
+
+variable "s3_bucket" {
+  type    = string
+  default = "2033.hex7.com"
+}

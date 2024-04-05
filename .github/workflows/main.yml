@@ -1,4 +1,4 @@
-name: x2030
+name: X2033
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy_2030:
+  deploy_2033:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +33,7 @@ jobs:
           env
           TIMEZONE=EST5EDT
           APP_VERSION=$(cat VERSION)
-          S3_PUBLIC_BUCKET=2030.hex7.com
+          S3_PUBLIC_BUCKET=2033.hex7.com
           S3_SCORES_PREFIX=scores
           AWS_REGION=us-east-1
           echo "TZ=${TIMEZONE}"
@@ -54,7 +54,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: nand0p/x2030:${{ env.APP_VERSION }}
+          tags: nand0p/X2033:${{ env.APP_VERSION }}
           build-args: DATE=$(date),REVISION=${{ github.sha }}
 
       - name: echo digest
@@ -78,7 +78,7 @@ jobs:
       - name: deploy top level index
         run: |
           aws s3 cp static/index.html s3://${{ env.S3_PUBLIC_BUCKET }}/index.html
-          aws s3api put-object-acl --bucket 2030.hex7.com --key index.html --acl public-read
+          aws s3api put-object-acl --bucket 2033.hex7.com --key index.html --acl public-read
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
@@ -225,9 +225,9 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/${{ env.S3_SCORES_PREFIX }}/${{ steps.scores.outputs.FILE_SLOW }}
 
 
-  deploy_2030_results:
+  deploy_2033_results:
     runs-on: ubuntu-latest
-    needs: deploy_2030
+    needs: deploy_2033
 
     steps:
       - name: check out repo
@@ -246,7 +246,7 @@ jobs:
           env
           TIMEZONE=EST5EDT
           APP_VERSION=$(cat ./results/VERSION)
-          S3_PUBLIC_BUCKET=2030.hex7.com
+          S3_PUBLIC_BUCKET=2033.hex7.com
           S3_SCORES_PREFIX=scores
           AWS_REGION=us-east-1
           echo "TZ=${TIMEZONE}"
@@ -309,4 +309,4 @@ jobs:
           curl http://${{ env.S3_PUBLIC_BUCKET }}/scores_matrix.json
 
       - name: publish docker
-        run: docker push nand0p/x2030-results:${{ env.APP_VERSION }}
+        run: docker push nand0p/X2033-results:${{ env.APP_VERSION }}
