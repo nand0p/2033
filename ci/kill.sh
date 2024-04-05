@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 
-NAME=X2033
+NAME=x2033
 VERSION=$(cat VERSION)
 
 KILL=$(docker container ls --filter label=repo=${NAME} --format {{.ID}})

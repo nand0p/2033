@@ -5,7 +5,7 @@
 # bash -ex ci/build.sh
 
 
-NAME=X2033
+NAME=x2033
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7

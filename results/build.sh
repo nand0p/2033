@@ -5,7 +5,7 @@
 # bash -ex ci/build.sh
 
 
-NAME=X2033-results
+NAME=x2033-results
 REPO=nand0p
 AUTHOR=nando
 OWNER=hex7
