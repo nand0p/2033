@@ -11,6 +11,7 @@ PORTS="80:5000"
 
 #TAG="${NAME}:${VERSION}"
 TAG="${REPO}/${NAME}:${VERSION}"
+RUN="${REPO}-${NAME}-${VERSION}-$$"
 
 echo "running ${NAME}:${VERSION} with"
 STOCKS="\"$(echo ${STOCKS})\""
@@ -22,7 +23,8 @@ if [ "${DRY_RUN}" == "1" ]; then
   echo
   echo "DRY_RUN = 1"
   echo
-  echo "docker run --publish ${PORTS}"
+  echo "docker run --name ${RUN}"
+  echo "           --publish ${PORTS}"
   echo "           --env STOCKS=${STOCKS}"
   echo "           ${TAG}"
   echo 
@@ -30,9 +32,10 @@ if [ "${DRY_RUN}" == "1" ]; then
 
 else
   CONTAINER=$(docker run --detach \
-              --publish ${PORTS} \
-              --env "STOCKS=${STOCKS}" \
-              ${TAG})
+                         --name ${RUN} \
+                         --publish ${PORTS} \
+                         --env "STOCKS=${STOCKS}" \
+                         ${TAG})
 
 
 fi
