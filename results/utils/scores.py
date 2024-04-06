@@ -195,24 +195,25 @@ def get_matrix(s_list,
     r = requests.get(req)
     r_dict = json.loads(r.text)
 
-    for k, v in r_dict.items():
-      if k in source:
-        if k != 'LIN' and k != 'COR':
-          if k not in matrix['fast']:
-            matrix['fast'][k] = {}
-            matrix['fast'][k]['scores'] = []
+    if isinstance(r_dict, dict):
+      for k, v in r_dict.items():
+        if k in source:
+          if k != 'LIN' and k != 'COR':
+            if k not in matrix['fast']:
+              matrix['fast'][k] = {}
+              matrix['fast'][k]['scores'] = []
 
-          elif k not in matrix['slow']:
-            matrix['slow'][k] = {}
-            matrix['slow'][k]['scores'] = []
+            elif k not in matrix['slow']:
+              matrix['slow'][k] = {}
+              matrix['slow'][k]['scores'] = []
 
-          if slow_results[k]['category'] == category or category == '0':
+            if slow_results[k]['category'] == category or category == '0':
 
-            if 'fast' in key:
-              matrix['fast'][k]['scores'].append(round(v['score'], 2))
+              if 'fast' in key:
+                matrix['fast'][k]['scores'].append(round(v['score'], 2))
 
-            else:
-              matrix['slow'][k]['scores'].append(round(v['score'], 2))
+              else:
+                matrix['slow'][k]['scores'].append(round(v['score'], 2))
 
   fast_count = 0
   for stock in matrix['slow'].keys():
