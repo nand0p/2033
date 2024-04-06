@@ -118,7 +118,7 @@ def make_charts(matrix,
 
   for stock in slow.keys():
     plt.ticklabel_format(useOffset=False, style='plain')
-    plt.xlabel('time')
+    plt.xlabel('Dias Desde FEB 26 2024')
     plt.ylabel('scores')
     plt.title(stock + ' scores')
     plt.ylim(-100, 100)
