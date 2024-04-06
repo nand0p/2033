@@ -1,10 +1,11 @@
 #/bin/bash -ex
 
 
-HTML=1
 DOWNLOAD=0
 UPLOAD=0
 DEBUG=1
+HTML=1
+S3=1
 
 
 SOURCE_BUCKET=2030.hex7.com
@@ -15,6 +16,7 @@ mkdir -pv ${TMP_DIR}
 
 
 SCORES_LIST=$(aws s3api list-objects --bucket ${DEST_BUCKET} --prefix ${S3_PREFIX} --query Contents[*].Key --output text)
+SCORES_JSON=$(aws s3api list-objects --bucket ${DEST_BUCKET} --prefix ${S3_PREFIX} --query Contents[*].Key --output json)
 
 
 echo
@@ -67,6 +69,12 @@ done
 if [[ "${HTML}" == "1" ]]; then
   echo "</body></html>" | tee -a ${TMP_DIR}/index.html >/dev/null
   aws s3 cp --acl public-read ${TMP_DIR}/index.html s3://${DEST_BUCKET}/${S3_PREFIX}
+fi
+
+
+if [[ "${S3}" == "1" ]]; then
+  echo ${SCORES_JSON} | tee ${TMP_DIR}/scores_list.json
+  aws s3 cp --acl public-read ${TMP_DIR}/scores_list.json s3://${DEST_BUCKET}
 fi
 
 
