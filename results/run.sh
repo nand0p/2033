@@ -15,7 +15,7 @@ PLATFORM=linux/arm64/v8
 
 #TAG=${NAME}:${VERSION}
 TAG=${REPO}/${NAME}:${VERSION}
-RUN=${REPO}_${NAME}_${VERSION}_$$
+RUN=${REPO}-${NAME}-${VERSION}-$$
 
 echo
 echo "running ${TAG}"
@@ -56,7 +56,8 @@ elif [ "${TEST_RUN}" == "1" ]; then
 
 
 else
-  CONTAINER=$(docker run --detach \
+  CONTAINER=$(docker run --name ${RUN} \
+                         --detach \
                          --publish ${PORTS} \
                            ${TAG})
 
