@@ -7,9 +7,11 @@ HTML=1
 SOURCE_BUCKET=2030.hex7.com
 DEST_BUCKET=2033.hex7.com
 S3_PREFIX="scores"
-SCORES_LIST=$(aws s3 ls s3://${SOURCE_BUCKET}/${S3_PREFIX}/ | cut -d' ' -f9)
 TMP_DIR="./tmp"
 mkdir -pv ${TMP_DIR}
+
+SCORES_LIST=$(aws s3 ls s3://${DEST_BUCKET}/${S3_PREFIX}/ | cut -d' ' -f9)
+#SCORES_LIST=$(aws s3 ls s3://${SOURCE_BUCKET}/${S3_PREFIX}/ | cut -d' ' -f9)
 
 echo
 echo "scores transfer init"

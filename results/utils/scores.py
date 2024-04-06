@@ -86,10 +86,12 @@ def get_scores_list(api='http://2033.hex7.com/',
 
   url = api + scores_file
   r = requests.get(url)
-  scores_list = json.loads(r.text)
+  scores_list = [s_file for s_file in json.loads(r.text) if s_file != 'index.html']
 
   if debug:
-    print(scores_list)
+    print('r: ', r)
+    print('url: ', url)
+    print('scores_list: ', scores_list)
 
   return scores_list
 
