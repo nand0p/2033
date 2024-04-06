@@ -3,10 +3,11 @@
 DEBUG=0
 DOWNLOAD=0
 UPLOAD=0
-HTML=0
+HTML=1
 SOURCE_BUCKET=2030.hex7.com
 DEST_BUCKET=2033.hex7.com
-SCORES_LIST=$(aws s3 ls s3://${SOURCE_BUCKET}/scores/ | cut -d' ' -f9)
+S3_PREFIX="scores"
+SCORES_LIST=$(aws s3 ls s3://${SOURCE_BUCKET}/${S3_PREFIX}/ | cut -d' ' -f9)
 TMP_DIR="./tmp"
 mkdir -pv ${TMP_DIR}
 
@@ -27,23 +28,24 @@ echo
 
 if [[ "${HTML}" == "1" ]]; then
   echo "<html><head><title>scores</title><body>" | tee ${TMP_DIR}/index.html >/dev/null
+  echo "<h1>SCORES DATA</h1><p><br><p>" | tee ${TMP_DIR}/index.html >/dev/null
 fi
 
 for SCORES_FILE in ${SCORES_LIST}; do
   echo "====> SCORES_FILE: ${SCORES_FILE}"
 
   if [[ "${DOWNLOAD}" == "1" ]]; then
-    aws s3 cp s3://${SOURCE_BUCKET}/scores/${SCORES_FILE} ${TMP_DIR}/${SCORES_FILE}
+    aws s3 cp s3://${SOURCE_BUCKET}/${S3_PREFIX}/${SCORES_FILE} ${TMP_DIR}/${SCORES_FILE}
     echo "======> copy from source success"
   fi
 
   if [[ "${UPLOAD}" == "1" ]]; then
-    aws s3 cp --acl public-read ${TMP_DIR}/${SCORES_FILE} s3://${DEST_BUCKET}/scores/${SCORES_FILE}
+    aws s3 cp --acl public-read ${TMP_DIR}/${SCORES_FILE} s3://${DEST_BUCKET}/${S3_PREFIX}/${SCORES_FILE}
     echo "======> copy to dest success"
   fi
 
   if [[ "${HTML}" == "1" ]]; then
-    echo "<a href=/scores/${SCORES_FILE}>${SCORES_FILE}</a>" |tee -a ${TMP_DIR}/index.html >/dev/null
+    echo "<a href=http://${DEST_BUCKET}/${S3_PREFIX}/${SCORES_FILE}>${SCORES_FILE}</a><br>" |tee -a ${TMP_DIR}/index.html >/dev/null
     echo "======> generate html success"
   fi
 
@@ -51,6 +53,7 @@ done
 
 if [[ "${HTML}" == "1" ]]; then
   echo "</body></html>" | tee -a ${TMP_DIR}/index.html >/dev/null
+  aws s3 cp --acl public-read ${TMP_DIR}/index.html s3://${DEST_BUCKET}/${S3_PREFIX}/index.html
 fi
 
 echo

@@ -266,6 +266,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
 
+      - name: post process scores
+        run: bash -ex ./ci/post_process_scores.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_USER }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+
       - name: build container
         working-directory: ./results/
         run: |
