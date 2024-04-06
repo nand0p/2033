@@ -86,11 +86,15 @@ def get_scores_list(api='http://2033.hex7.com/',
 
   url = api + scores_file
   r = requests.get(url)
-  scores_list = [s_file for s_file in json.loads(r.text) if s_file != 'index.html']
+
+  if r.status_code != 200:
+    raise Exception('scores broken: ' + str(url))
+
+  scores_list = [ s for s in r.json() if s != 'scores/index.html' ]
 
   if debug:
-    print('r: ', r)
     print('url: ', url)
+    print('r text: ', r.text)
     print('scores_list: ', scores_list)
 
   return scores_list
@@ -192,10 +196,23 @@ def get_matrix(s_list,
   with open(source_file, 'r') as file:
     source = file.read().replace('\n', '').upper()
 
+  if debug:
+    print('source: ', source)
+    print('s_list: ', s_list)
+
   for key in s_list:
-    if key != 'index.html':
-      req = 'http://' + bucket + '/' + key
-      r = requests.get(req)
+    if key != 'scores/index.html':
+      url = 'http://' + bucket + '/' + key
+      r = requests.get(url)
+
+      if r.status_code != 200:
+        raise Exception('scores file broken: ', url)
+
+      if debug:
+        print('url: ', url)
+        print('r_text: ', r.text)
+        print('r_json: ', r.json())
+
       r_dict = json.loads(r.text)
 
       for k, v in r_dict.items():
