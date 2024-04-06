@@ -191,11 +191,11 @@ def get_matrix(s_list,
     source = file.read().replace('\n', '').upper()
 
   for key in s_list:
-    req = 'http://' + bucket + '/' + key
-    r = requests.get(req)
-    r_dict = json.loads(r.text)
+    if key != 'index.html':
+      req = 'http://' + bucket + '/' + key
+      r = requests.get(req)
+      r_dict = json.loads(r.text)
 
-    if isinstance(r_dict, dict):
       for k, v in r_dict.items():
         if k in source:
           if k != 'LIN' and k != 'COR':
