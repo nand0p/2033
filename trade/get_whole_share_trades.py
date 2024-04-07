@@ -12,23 +12,29 @@ parser.add_argument('--all', action='store_true', help='set all flags true')
 parser.add_argument('--exclude', action='store_true', help='excluded stocks')
 parser.add_argument('--include', action='store_true', help='included stocks')
 parser.add_argument('--toxic', action='store_true', help='excluded stocks')
+parser.add_argument('--fast', action='store_true', help='stocks for fast')
+parser.add_argument('--slow', action='store_true', help='stocks for slow')
 parser.add_argument('--skip-init', action='store_true', help='skip initialization')
 parser.add_argument('--outdir', type=str, default='./tmp/', help='out directory')
-parser.add_argument('--speed', type=str, default='slow', help='fast or slow')
-parser.add_argument('--money', type=int, default=25, help='fast or slow')
+parser.add_argument('--money', type=int, default=25, help='money per part')
 parser.add_argument('--limit', type=int, default=100, help='max stock price')
 parser.add_argument('--category', type=int, default=2, help='stock category')
 parser.add_argument('--savefile', type=str, help='json out file')
 args = parser.parse_args()
 
 if args.all:
-    args.verbose = True
-    args.toxic = True
-    args.out = True
+  args.verbose = True
+  args.toxic = True
+  args.out = True
 
-if not args.savefile:
-  args.savefile = 'buy_whole_' + args.speed + '_cat' + str(args.category) + '.json'
-
+if args.fast:
+  if not args.savefile:
+    args.savefile = 'buy_whole_fast_cat' + str(args.category) + '.json'
+elif args.slow:
+  if not args.savefile:
+    args.savefile = 'buy_whole_slow_cat' + str(args.category) + '.json'
+else:
+  raise Exception('please specify --fast or --slow')
 
 s = {}
 buy = []
@@ -53,7 +59,11 @@ if not args.skip_init:
   if q.status_code != 200:
     raise Exception('cannot hit url: ' + init)
 
-url = 'http://localhost/' + args.speed + '_ordered'
+if args.fast:
+  url = 'http://localhost/fast_ordered'
+elif args.slow:
+  url = 'http://localhost/slow_ordered'
+
 print('get results data: ' + url)
 r = requests.get(url)
 if r.status_code != 200:
@@ -101,10 +111,6 @@ for key, value in s.items():
       x = value['parts'] * args.money
       shares = int(x / value['price'])
 
-      if args.toxic:
-        shares = shares + 1
-        toxic.append(key)
-
       if shares > 0:
         include.append(key)
         cash = round(shares * value['price'], 2)
@@ -117,7 +123,7 @@ for key, value in s.items():
                        cash,
                        value['parts'],
                        value['price']])
-        buy.append({key: [shares, value['price']]})
+        buy.append([key, shares, value['price']])
 
         if args.debug:
           print('x: ', x)
@@ -132,6 +138,9 @@ for key, value in s.items():
         exclude.append(key)
     else:
       exclude.append(key)
+  else:
+    toxic.append(key)
+
 
 print(table)
 
@@ -145,11 +154,10 @@ if args.toxic or args.verbose:
   print('Toxic: ', toxic)
 
 if args.verbose:
-  print('Buy: ', buy)
+  print('\nBuy: ', buy)
 
 if args.out:
-  print()
-  print('writing json: ', args.outdir, '\nfile: ', args.savefile)
+  print('\njson dir: ', args.outdir, '\njson file: ', args.savefile)
   with open(args.outdir + args.savefile, 'w') as f:
       json.dump(buy, f)
   with open('buy.json', 'w') as f:
