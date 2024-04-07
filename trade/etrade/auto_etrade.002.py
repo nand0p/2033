@@ -26,11 +26,13 @@ parser.add_argument('--transactions', action='store_true', help='show transactio
 parser.add_argument('--debug', action='store_true', help='debug')
 parser.add_argument('--verbose', action='store_true', help='verbose output')
 parser.add_argument('--all', action='store_true', help='store all true')
-parser.add_argument('--buy-file-market', action='store_true', help='execute buy from file')
-parser.add_argument('--buy-file-limit', action='store_true', help='execute buy from file')
-parser.add_argument('--buy-single-market', action='store_true', help='execute market buy from ticker arg')
-parser.add_argument('--buy-single-limit', action='store_true', help='execute limit buy from ticker arg')
 parser.add_argument('--confirm', action='store_true', help='flag required to execute trade')
+
+buy_type = parser.add_mutually_exclusive_group(required=False)
+buy_type.add_argument('--buy-file-market', action='store_true', help='execute buy from file')
+buy_type.add_argument('--buy-file-limit', action='store_true', help='execute buy from file')
+buy_type.add_argument('--buy-single-market', action='store_true', help='execute market buy from ticker arg')
+buy_type.add_argument('--buy-single-limit', action='store_true', help='execute limit buy from ticker arg')
 args = parser.parse_args()
 
 if args.all:
@@ -55,6 +57,7 @@ if args.debug:
   pprint(tokens)
   print()
 
+
 #authManager = pyetrade.authorization.ETradeAccessManager(
 #                consumer_key,
 #                consumer_secret,
@@ -69,14 +72,82 @@ accounts = pyetrade.ETradeAccounts(consumer_key,
 
 
 if args.ticker:
-  market = pyetrade.ETradeMarket(
-    consumer_key,
-    consumer_secret,
-    tokens['oauth_token'],
-    tokens['oauth_token_secret'],
-    dev=False)
+  market = pyetrade.ETradeMarket( consumer_key,
+                                  consumer_secret,
+                                  tokens['oauth_token'],
+                                  tokens['oauth_token_secret'],
+                                  dev=False )
 
-  print('\n', market.get_quote([args.ticker.upper()],resp_format='json'), '\n')
+  r = market.get_quote([args.ticker.upper()],resp_format='json')['QuoteResponse']['QuoteData'][0]
+  if args.verbose:
+    p = PrettyTable([ 'dateTime',
+                      'ask',
+                      'bid',
+                      'changeClose',
+                      'dividend',
+                      'eps',
+                      'high',
+                      'high52',
+                      'lastTrade',
+                      'low',
+                      'low52',
+                      'open',
+                      'previousClose',
+                      'symbolDescription',
+                      'totalVolume',
+                      'marketCap',
+                      'sharesOutstanding',
+                      'pe',
+                      'symbol' ])
+
+    p.add_row([ r['dateTime'],
+                r['All']['ask'],
+                r['All']['bid'],
+                r['All']['changeClose'],
+                r['All']['dividend'],
+                r['All']['eps'],
+                r['All']['high'],
+                r['All']['high52'],
+                r['All']['lastTrade'],
+                r['All']['low'],
+                r['All']['low52'],
+                r['All']['open'],
+                r['All']['previousClose'],
+                r['All']['symbolDescription'],
+                r['All']['totalVolume'],
+                r['All']['marketCap'],
+                r['All']['sharesOutstanding'],
+                r['All']['pe'],
+                r['Product']['symbol'] ])
+
+  else:
+    p = PrettyTable([ 'dateTime',
+                      'ask',
+                      'bid',
+                      'high',
+                      'high52',
+                      'lastTrade',
+                      'low',
+                      'low52',
+                      'open',
+                      'previousClose',
+                      'symbol' ])
+
+    p.add_row([ r['dateTime'],
+                r['All']['ask'],
+                r['All']['bid'],
+                r['All']['high'],
+                r['All']['high52'],
+                r['All']['lastTrade'],
+                r['All']['low'],
+                r['All']['low52'],
+                r['All']['open'],
+                r['All']['previousClose'],
+                r['Product']['symbol'] ])
+
+  print()
+  print(p)
+  print()
 
 
 if args.account_summary:
@@ -289,45 +360,54 @@ if args.buy_file_market or args.buy_file_limit:
   with open(args.buy_file, 'r') as file:
     data = json.load(file)
 
+  p = PrettyTable([ 'stock', 'shares', 'price' ])
+  total_cost = 0
   for x in data:
-    for stock, value in x.items():
-      shares = value[0]
+    stock = x[0]
+    shares = x[1]
+    price = x[2]
+    total_cost = total_cost + shares * price
+    if args.debug:
       print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
-      if not args.confirm:
-        print()
-        print('====> DRY-RUN <====')
-        print()
+    p.add_row([ stock, shares, price ])
+    orders = pyetrade.ETradeOrder(consumer_key,
+                                  consumer_secret,
+                                  tokens['oauth_token'],
+                                  tokens['oauth_token_secret'],
+                                  dev=True)
 
-      else:
-        orders = pyetrade.ETradeOrder(consumer_key,
-                                      consumer_secret,
-                                      tokens['oauth_token'],
-                                      tokens['oauth_token_secret'],
-                                      dev=True)
+    if not args.confirm:
+      if args.debug:
+        print('====> DRY-RUN: ', shares, ' ', stock, ' @ ', price)
 
-        if args.buy_file_limit:
-          resp = order.place_option_order(resp_format = 'json',
-                                          accountId = account_id,
-                                          symbol = stock,
-                                          limitPrice = price,
-                                          quantity = shares,
-                                          orderAction = 'BUY_OPEN',
-                                          priceType = 'LIMIT',
-                                          orderTerm = 'GOOD_FOR_DAY',
-                                          allOrNone = False,
-                                          clientOrderId = secrets.token_hex(20),
-                                          marketSession = 'REGULAR')
+    else:
+      if args.buy_file_limit:
+        resp = orders.place_option_order(resp_format = 'json',
+                                         accountId = account_id,
+                                         symbol = stock,
+                                         limitPrice = price,
+                                         quantity = shares,
+                                         orderAction = 'BUY_OPEN',
+                                         priceType = 'LIMIT',
+                                         orderTerm = 'GOOD_FOR_DAY',
+                                         allOrNone = False,
+                                         clientOrderId = secrets.token_hex(20),
+                                         marketSession = 'REGULAR')
 
-        elif args.buy_file_market:
-          resp = order.place_option_order(resp_format = 'json',
-                                          accountId = account_id,
-                                          symbol = stock,
-                                          quantity = shares,
-                                          orderAction = 'BUY_OPEN',
-                                          priceType = 'MARKET',
-                                          orderTerm = 'GOOD_FOR_DAY',
-                                          allOrNone = False,
-                                          clientOrderId = secrets.token_hex(20),
-                                          marketSession = 'REGULAR')
+      elif args.buy_file_market:
+        resp = order.place_option_order(resp_format = 'json',
+                                        accountId = account_id,
+                                        symbol = stock,
+                                        quantity = shares,
+                                        orderAction = 'BUY_OPEN',
+                                        priceType = 'MARKET',
+                                        orderTerm = 'GOOD_FOR_DAY',
+                                        allOrNone = False,
+                                        clientOrderId = secrets.token_hex(20),
+                                        marketSession = 'REGULAR')
 
-        pprint(resp)
+      pprint(resp)
+
+  print('\n', p, '\n\nTotal Cost: ', round(total_cost, 2), '\n')
+  if not args.confirm:
+    print('\n\nrequires --confirm to execute live buy\n\n')
