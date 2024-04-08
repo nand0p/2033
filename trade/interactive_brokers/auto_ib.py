@@ -19,8 +19,10 @@ parser.add_argument('--account-values', action='store_true', help='show account 
 parser.add_argument('--open', action='store_true', help='show open orders')
 parser.add_argument('--closed', action='store_true', help='show closed orders')
 parser.add_argument('--debug', action='store_true', help='debug')
-parser.add_argument('--wait-for-order', action='store_true', help='block on order execution')
+parser.add_argument('--no-wait', action='store_true', help='dont block on order execution')
 parser.add_argument('--pnl', action='store_true', help='profit and loss')
+parser.add_argument('--verbose', action='store_true', help='verbose')
+parser.add_argument('--exchange', type=str, default='SMART', help='exchange')
 parser.add_argument('--buy-file', type=str, default='../buy.json', help='file to source')
 parser.add_argument('--buy-file-market', action='store_true', help='execute buy from file')
 parser.add_argument('--buy-file-limit', action='store_true', help='execute buy from file')
@@ -31,6 +33,10 @@ parser.add_argument('--portfolio', action='store_true', help='list portfolio')
 parser.add_argument('--confirm', action='store_true', help='flag required to execute trade')
 args = parser.parse_args()
 
+if args.no_wait:
+  wait_for_order = False
+else:
+  wait_for_order = True
 
 print('Connect')
 ib = IB()
@@ -53,7 +59,7 @@ def wait(orderId):
     print(ib.waitOnUpdate())
 
   print('Trade Log')
-  print(orderId.log)
+  pprint(orderId.log)
 
 
 def place_order(order, contract, pause, debug, wait_for_order):
@@ -69,7 +75,12 @@ def place_order(order, contract, pause, debug, wait_for_order):
     except IbEx as e:
       print('ERROR: ', e.errCode, e.errMsg)
     else:
-      print('SUCCESS: ', orderId)
+      print('\nSUCCESS:\n')
+      print('====> Contract: ', orderId.contract)
+      print('====> Order: ', orderId.order)
+      print('====> Status: ', orderId.orderStatus)
+      print('====> Fills: ', orderId.fills)
+      print()
 
     if wait_for_order:
       wait(orderId)
@@ -78,8 +89,8 @@ def place_order(order, contract, pause, debug, wait_for_order):
 if args.ticker:
   print('Stock: ', args.ticker)
   stock = Stock(symbol=args.ticker,
-                exchange='SMART',
-                primaryExchange='SMART',
+                exchange=args.exchange,
+                primaryExchange=args.exchange,
                 currency='USD')
 
   stock_obj = ib.qualifyContracts(stock)
@@ -88,8 +99,8 @@ if args.ticker:
                       secType='STK',
                       symbol=args.ticker,
                       currency='USD',
-                      exchange='SMART',
-                      primaryExchange='SMART')
+                      exchange=args.exchange,
+                      primaryExchange=args.exchange)
 
   if args.debug:
     pprint(conId)
@@ -125,27 +136,32 @@ if args.account_summary:
 
 
 if args.open:
-  print('Open Trades')
-  open_trades = ib.openTrades()
-  pprint(open_trades)
-  print('Orders')
   orders = ib.orders()
-  pprint(orders)
+
+  if args.verbose:
+    print('Orders')
+    pprint(orders)
+    open_trades = ib.openTrades()
+    print('Open Trades')
+    pprint(open_trades)
+
   print('Open Orders')
   open_orders = ib.openOrders()
   pprint(open_orders)
 
 
 if args.closed:
-  print('Trades')
-  trades = ib.trades()
-  pprint(trades)
+  if args.verbose:
+    print('Trades')
+    trades = ib.trades()
+    pprint(trades)
+    print('Exections')
+    executions = ib.executions()
+    pprint(executions)
+
   print('Fills')
   fills = ib.fills()
   pprint(fills)
-  print('Exections')
-  executions = ib.executions()
-  pprint(executions)
 
 
 if args.pnl:
@@ -159,21 +175,20 @@ if args.pnl:
 
 if args.buy_single_limit:
   if args.shares is not None and args.price is not None and args.ticker is not None:
-    print('BUY LIMIT:', args.ticker, ' \tshares:', args.shares, '\tprice:', args.price)
+    print('\n==> BUY LIMIT: ', args.ticker, ' \tshares:', args.shares, '\tprice:', args.price)
     order = LimitOrder('BUY', args.shares, args.price)
-    contract = Stock(args.ticker)
+    contract = Stock(args.ticker, exchange=args.exchange)
 
     if not args.confirm:
-      print()
-      print('====> DRY-RUN <====')
-      print()
+      print('====> DRY-RUN: ', contract, '\n')
 
     else:
+      print('====> EXEC: ', contract, '\n')
       place_order(order=order,
                   contract=contract,
                   pause=args.pause,
                   debug=args.debug,
-                  wait_for_order=args.wait_for_order)
+                  wait_for_order=wait_for_order)
 
   else:
     raise Exception('needs: --shares --price --ticker')
@@ -181,21 +196,20 @@ if args.buy_single_limit:
 
 if args.buy_single_market:
   if args.shares is not None and args.ticker is not None:
-    print('BUY MARKET:', args.ticker, '\tshares:', args.shares)
+    print('\n==> BUY MARKET: ', args.ticker, '\tshares:', args.shares)
     order = MarketOrder('BUY', args.shares)
     contract = Stock(args.ticker)
 
     if not args.confirm:
-      print()
-      print('====> DRY-RUN <====')
-      print()
+      print('====> DRY-RUN: ', contract, '\n')
 
     else:
+      print('====> EXEC: ', contract, '\n')
       place_order(order=order,
                   contract=contract,
                   pause=args.pause,
                   debug=args.debug,
-                  wait_for_order=args.wait_for_order)
+                  wait_for_order=wait_for_order)
 
   else:
     raise Exception('needs: --shares --ticker')
@@ -206,47 +220,75 @@ if args.buy_file_limit:
       data = json.load(file)
 
     for x in data:
-      for stock, value in x.items():
-        shares = value[0]
-        price = value[1]
-        print('BUY:', stock, ' \tshares:', shares, '\tprice:', price)
-        order = LimitOrder('BUY', shares, price)
-        contract = Stock(stock)
+      stock = x[0]
+      shares = x[1]
+      price = x[2]
+      print('\n==> BUY: ', stock, ' \tshares:', shares, '\tprice:', price)
+      order = LimitOrder('BUY', shares, price)
+      s = Stock(symbol=stock,
+                exchange=args.exchange,
+                primaryExchange=args.exchange,
+                currency='USD')
 
-        if not args.confirm:
-          print()
-          print('====> DRY-RUN <====')
-          print()
+      s_obj = ib.qualifyContracts(s)
+      contract = Contract(conId=s_obj[0].conId,
+                          secType='STK',
+                          symbol=stock,
+                          currency='USD',
+                          exchange=args.exchange,
+                          primaryExchange=args.exchange)
 
-        else:
-          place_order(order=order,
-                      contract=contract,
-                      pause=args.pause,
-                      debug=args.debug,
-                      wait_for_order=args.wait_for_order)
+      if not args.confirm:
+        print('====> DRY-RUN: ', contract, '\n')
+
+      else:
+        print('====> EXEC: ', contract, '\n')
+        place_order(order=order,
+                    contract=contract,
+                    pause=args.pause,
+                    debug=args.debug,
+                    wait_for_order=wait_for_order)
 
 
 if args.buy_file_market:
     with open(args.buy_file, 'r') as file:
       data = json.load(file)
 
-    for x in data:
-      for stock, value in x.items():
-        shares = value[0]
-        print('BUY:', stock, ' \tshares:', shares)
-        order = MarketOrder('BUY', shares)
-        contract = Stock(stock)
-        if not args.confirm:
-          print()
-          print('====> DRY-RUN <====')
-          print()
+    if args.debug:
+      print('data: ', data)
 
-        else:
-          place_order(order=order,
-                      contract=contract,
-                      pause=args.pause,
-                      debug=args.debug,
-                      wait_for_order=args.wait_for_order)
+    for x in data:
+      if args.debug:
+        print('x: ', x)
+
+      stock = x[0]
+      shares = x[1]
+      print('\n==> BUY:', stock, ' \tshares:', shares)
+      order = MarketOrder('BUY', shares)
+      s = Stock(symbol=stock,
+                exchange=args.exchange,
+                primaryExchange=args.exchange,
+                currency='USD')
+
+      s_obj = ib.qualifyContracts(s)
+      contract = Contract(conId=s_obj[0].conId,
+                          secType='STK',
+                          symbol=stock,
+                          currency='USD',
+                          exchange=args.exchange,
+                          primaryExchange=args.exchange)
+
+
+      if not args.confirm:
+        print('====> DRY-RUN: ', contract, '\n')
+
+      else:
+        print('====> EXEC: ', contract, '\n')
+        place_order(order=order,
+                    contract=contract,
+                    pause=args.pause,
+                    debug=args.debug,
+                    wait_for_order=wait_for_order)
 
 
 if args.portfolio:
