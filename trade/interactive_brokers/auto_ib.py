@@ -9,13 +9,14 @@ import time
 
 parser = ArgumentParser()
 parser.add_argument('--port', type=int, default=4001, help='ib proxy port')
-parser.add_argument('--pause', type=int, default=1, help='sleep iteration')
+parser.add_argument('--pause', type=int, default=5, help='sleep iteration')
 parser.add_argument('--host', type=str, default='localhost', help='ib proxy hostname')
 parser.add_argument('--ticker', type=str, help='ticker to execute')
 parser.add_argument('--shares', type=int, help='shares')
 parser.add_argument('--price', type=float, help='price')
 parser.add_argument('--account-summary', action='store_true', help='show account summary')
 parser.add_argument('--account-values', action='store_true', help='show account values')
+parser.add_argument('--logout', action='store_true', help='logout session')
 parser.add_argument('--open', action='store_true', help='show open orders')
 parser.add_argument('--closed', action='store_true', help='show closed orders')
 parser.add_argument('--debug', action='store_true', help='debug')
@@ -294,6 +295,7 @@ if args.buy_file_market:
 if args.portfolio:
   total = 0
   profit = 0
+  cost = 0
   portfolio = ib.portfolio()
   if portfolio:
     print("Current Portfolio:")
@@ -314,18 +316,21 @@ if args.portfolio:
                  round(position.marketPrice, 2),
                  position.realizedPNL,
                  position.unrealizedPNL])
+      cost = cost + position.averageCost * position.position
       total = total + position.marketValue
       profit = profit + position.unrealizedPNL
 
   print(p)
   print()
   print('total profit: ', round(profit, 2))
+  print('total cost: ', round(cost, 2))
   print('total value: ', round(total, 2))
   print()
 
 
 if args.positions:
   positions = ib.positions()
+  total = 0
   if positions:
     print("Current Positions:")
     p = PrettyTable(['stock', 'shares', 'cost'])
@@ -337,8 +342,9 @@ if args.positions:
       p.add_row([position.contract.symbol,
                  position.position,
                  round(position.avgCost, 2)])
+      total = total + position.avgCost * position.position
 
-  print(p)
+  print('\n', p, '\n', 'total cost: ', round(total, 2), '\n')
 
-
-ib.disconnect()
+if args.logout:
+  ib.disconnect()
