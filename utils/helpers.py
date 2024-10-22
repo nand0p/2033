@@ -5,7 +5,9 @@ import math
 import os
 
 
-def get_current_price(df, precise=5):
+def get_current_price(df, precise=5, debug=False):
+  if debug == True:
+    print('dataframe head - {}'.format(df.head()))
   return round(df.Close.tail(1).values[0], precise)
 
 

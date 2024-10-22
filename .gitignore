@@ -3,3 +3,4 @@ buy.json
 **/tmp/*
 **/.terraform/
 .DS_Store
+data/

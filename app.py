@@ -5,14 +5,14 @@ import json
 import os
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='/static')
 
 
 class X2033(FlaskView):
   def __init__(self):
 
     self.avg_periods = [ 9, 21, 50, 100, 200, 365, 420, 500, 1000 ]
-    self.period = '10y'
+    self.period = 'max'
     self.interval = '1d'
     self.tolerance = 0.075
     self.tolerance_averages = 0.01
@@ -38,7 +38,9 @@ class X2033(FlaskView):
     if self.category == '9':
       self.stocks = {'AAPL': {'category': '9'}}
     else:
-      self.stocks = stocks.get_stocks(os.environ.get('STOCKS'),
+      with open ("2033.txt", "r") as stock_file:
+        stock_data = stock_file.read()
+      self.stocks = stocks.get_stocks(stock_data,
                                       self.category,
                                       self.categories)
 
@@ -50,7 +52,8 @@ class X2033(FlaskView):
       self.stocks[stock]['averages'] = {}
       self.stocks[stock]['low'] = helpers.get_low_price(df=self.df[stock])
       self.stocks[stock]['high'] = helpers.get_high_price(df=self.df[stock])
-      self.stocks[stock]['current_price'] = helpers.get_current_price(self.df[stock])
+      self.stocks[stock]['current_price'] = helpers.get_current_price(self.df[stock],
+                                                                      self.debug)
       self.stocks[stock]['current_color'] = helpers.get_current_color(
                                               current=self.stocks[stock]['current_price'],
                                               high=self.stocks[stock]['high'],
