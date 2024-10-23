@@ -45,5 +45,9 @@ for BASE in 1 2 3 4 5 6 7 8; do
   sleep 1
 done
 
-echo publish to s3
-aws s3 sync --acl public-read ${OUT} s3://2033.hex7.com/${OUT}
+if test -v GITHUB_ACTIONS; then
+  echo publish to s3
+  aws s3 sync --acl public-read ${OUT} s3://2033.hex7.com/${OUT}
+else
+  echo running locally no publish
+fi
